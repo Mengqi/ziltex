@@ -1,31 +1,61 @@
-nginx:
+version: "3"
+
+services:
+  nginx:
+    depends_on:
+      - node
+      - wordpress
     build: ./nginx
-    links:
-        - node1:node1
-        - node2:node2
-        - node3:node3
+    image: zongmengqi/ziltex-nginx
     ports:
-        - "80:80"
-node1:
+      - "80:80"
+    networks:
+      - webnet
+  node:
+    depends_on:
+      - redis
     build: ./node
-    links:
-        - redis
+    image: zongmengqi/ziltex-node
     ports:
-        - "8080"
-node2:
-    build: ./node
-    links:
-        - redis
-    ports:
-        - "8080"
-node3:
-    build: ./node
-    links:
-        - redis
-    ports:
-        - "8080"
-redis:
+      - "8080:8080"
+    networks:
+      - webnet
+  redis:
     image: redis
     ports:
-        - "6379"
-
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - webnet
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    networks:
+      - webnet
+  wordpress:
+    depends_on:
+      - mysql
+    image: wordpress:latest
+    ports:
+      - "8000:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    networks:
+      - webnet
+volumes:
+  mysql_data:
+  redis_data:
+networks:
+  webnet:
