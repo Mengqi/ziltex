@@ -1,0 +1,1361 @@
+Note - The Statistical Sleuth
+
+**********************************************
+  Chapter 1 Drawing Statistical Conclusions
+**********************************************
+
+1. Causal Inference
+
+Statistical inferences of cause-and-effect relationship can be drawn
+from randomized experiments, but not from observational studies.
+
+A confounding variable is related both to group membership and to the
+outcome. Its presence makes it hard to estabblish the outcome as being
+a direct consequence of group membership.
+
+* Note: randomized experiments = allocation of units to group by
+  randomization. But the causal inference is not necessarily
+  applicable to the population because whether sample selection is
+  randomized or not is unknown. For example, the study units of
+  "motivation and creativity" is self-selected, not random selected.
+
+2. Inference to Populations
+
+Inferences to populations can be drawn from random sampling studies,
+but not otherwise.
+
+* Note: random sampling studies = selection of units by
+  randomization. On the other side, inference to populations is not
+  necessarily a causal inference. For example, mean and median. 
+
+3. Simple Random Sampling
+
+The most basic form of random sampling is simple random sampling: A
+simple random sample of size n from a population is a subset of the
+population consisting of n members selected in such a way that every
+subset of size n is afforded the same chance of being selected.
+
+4. Statistical Inference and Chance Mechanisms
+
+An inference is a conclusion that patterns in the data are present in
+some broader context.
+
+A statistical inference is an inference justified by a probability
+model linking the data to the broader context.
+
+* Note: Since statistical inference is making inference from available
+  data (not from a theoretical perspective), then no inference to the
+  broader context is absolutely certain. So every statistical
+  inference is associated with a measure of uncertainty, that is,
+  probability.
+* And what is probability? It means when repeating the procedure a
+  large amount of times, some certain number of times proportional to
+  the probability, the result is correct.
+
+5. A test statistic
+
+A statistic is a numerical quantity calculated from data. A test
+statistic used to measure the plausibility of an alternative
+hypotheses relative to a null hypotheses.
+
+6. Randomization Distribution of the Test statistic
+
+   Why try to regroup (p11)?
+
+   To begin with, we already know that there is a difference between
+   intrinsic group and extrinsic group. But what we are not sure is
+   whether the difference is caused by questionnaire's IQ only, or
+   there is an additive treatment effect. So the question arise, how
+   do we know if there is an additive treatment effect? (Note that it
+   is a causal inference. And we are trying to get a "cause and
+   effect" from the treatment to the creativity score on *only* the 47
+   people).
+
+   Remember that we assigned the two groups randomly. That means the
+   probability of that there is a tremendous difference between the
+   two groups' study units are relatively low. In other words, the
+   probability of two groups' candidates are on the same level is
+   quite high. So, when we are using random assignment, we are
+   actually kind of assuming that there is no or little difference
+   (the difference is so trivial that it can't influence our judgment)
+   between the two samples.
+
+   * note this is exactly a simple random sampling.
+
+   Now, back to the topic, what can regrouping bring us? On a high
+   perspective, it can help us to measure the probability of the
+   measurement error (observational error, or random error). 
+
+   Now to the details, according to the null hypothesis that "there is
+   no additive treatment effect", if the null hypothesis is true, then
+   by regrouping, we can get the distribution of Y_2 - Y_1. With the
+   distribution (most of the time, estimated distribution), we can get
+   the probability of such a Y_2 - Y_1 happens (And this probability
+   is actually the p-value). Now, with this probability, we can know
+   that it's not that frequent for us to get such an extreme Y_2 -
+   Y_1. What does this mean? Probably the null hypothesis is not
+   correct! That also means that the probability of we are such
+   unlucky(measurement error - bad sample) is this low. 
+
+   * Note: think it in the other way, what if null hypothesis is not
+     true? Are we still able to get the distribution?
+     No. Since the two group's creativity score is based on different
+     equations (i.e. they are no longer the same thing). Then regroup
+     will become meaningless here.
+   * What is p-value? It is the confidence parameter in PAC learning
+     model.
+   * Regrouping is different with the common notion of random
+     experiments. Regrouping here is just a way to calculate the
+     distribution. Then to calculate the p-value to make a conclusion
+     regarding the two hypothesis. Note that the whole experiment is
+     randomized because it allocated the study units randomly.
+
+7. p-value
+
+In a randomized experiment the p-value is the probability that
+randomization alone leads to a test statistic as extreme or more
+extreme than the one observed.
+
+   a) one-sided p-value: it only counts those outcomes with test
+   statistics as large as or larger than the observed one.
+   b) two-sided p-value: Statistics that are the same extreme on the
+   opposite side may also provide equally strong evidence against the
+   null hypothesis. 
+
+8. Measuring Uncertainty in Observational Studies
+
+For observational studies, there is no such chance mechanism for group
+assignment, so the thinking about statistical inference has to be
+different.
+
+* Note: In creativity test, tester can still randomly allocate the
+  study units. So it is still a controlled study. In observational
+  study, no such thing at all. Sample selection, fixed. Units
+  allocation, fixed.
+
+8. Testing for a Difference in the Sex Discrimination Study
+
+One fictious probability model for examining the difference between
+the average starting salary given to males and the average starting
+salary given to females assumes the employer assigned the set of
+starting salaries to the employees at random. That is, the employer
+shuffled a set of cards, each having one of the starting salaries
+written on it and dealt them out.
+
+* Note: If there is no sex discrimination, then it means that the
+  difference in starting salaries is caused by randomization only.
+
+
+**********************************************
+  Chapter 2 Inference Using t-Distributions
+**********************************************
+
+1. The Sampling Distribution of a Sample Average
+
+The distribution is about every sample's average.
+
+If a population has mean \mu and standard deviation \sigma, then the
+mean of the sampling distribution of the average is also \mu, the
+standard deviation of the sampling is \sigma / (\sqrt n), and the
+distribution is more nearly normal than is the shape of the population
+distribution.
+
+The standard deviation in the sampling distribution of an average,
+denoted by SD(\bar {Y}), is the typical size of (\bar {Y} - \mu), the
+error in using \bar {Y} as an estimate of \mu. This standard deviation
+gets smaller as the sample size increases.
+
+2. The Standard Error of an Average in Random Sampling
+
+The standard error of any static is an estimate of the standard
+deviation in its sampling distribution. It is therefore the best guess
+about the likely size of the difference between a statistic used to
+estimate a parameter and the parameter itself.
+
+* Standard error - sample
+  Standard deviation - distribution
+
+Associated with every standard error is a measure of the amount of
+information used to estimate variability, called its degrees of
+freedom, denoted d.f. Degrees of freedom are measured in units of
+"equivalent numbers of independent observations." 
+
+3. The Standard Error for a Sample Average
+
+   SE(\bar {Y}) = s / (\sqrt n),   d.f. = (n - 1)
+
+4. The Z-Ratio
+
+For any parameter and its sample estimate, its Z-ratio is defined as
+Z = (Estimate - Parameter) / SD(Estimate). If the sampling
+distribution of the estimate is normal, then the sampling distribution
+of Z is standard normal, where the mean is 0 and the standard
+deviation is 1.
+
+If the standard deviation of the estimate is known, this permits an
+understanding of the likely size of the estimation error.
+
+* Note: Z-Ratio use "standard deviation", which is a parameter
+  describing the population.
+* What does Z-Ratio mean?
+  It means how much error does your current estimate make?
+  1 - Normal
+  2 - 1 time more than regular error.
+  ...
+* The distribution with \mu = 0 and \sigma^2 = 1 is called standard
+  normal.
+
+5. The t-Ratio
+
+Replace SD(Estimate) in Z-Ratio with SE(Estimate).
+
+   t-ratio = (Estimate - Parameter) / SE(Estimate)
+
+The t-ratio does not have a standard normal distribution, because
+there is extra variability due to estimating the standard
+deviation. The fewer the degrees of freedom, the greater is this extra
+variability. Under some conditions, however, the sampling distribution
+of the t-ratio is known.
+
+If \bar {Y} is the average in a random sample of size n from a
+normally distributed population, the sampling distribution of its
+t-ratio is described by a Student's t-distribution on n - 1 degrees of
+freedom.
+
+For large degrees of freedom, t-distributions differ very little from
+the standard normal. For smaller degrees of freedom, they have longer
+tails than normal.
+
+6. The interpretation of a Confidence Interval
+
+A 95% confidence interval will contain the parameter if the t-ratio
+from the observed data happens to be one of those in the middle 95% of
+the sampling distribution. Since 95% of all possible pairs of samples
+lead to such t-ratios, the procedure of constructing a 95% confidence
+interval is successful in capturing the parameter of interest in 95%
+of its applications. It is impossible to say whether it is successful
+or not in any particular application.
+
+7. Sum up
+
+   a) We assume all data is from a normal distribution (every data has
+   the same probability to be chosen).
+   b) In this way, we can get a sample average distribution. And the
+   standard deviation of the sample average distribution is
+          SD(\bar {Y}) =  \sigma / (\sqrt n),
+   where \sigma is the standard deviation of the data distribution.
+   c) What you get is only one sample. And by this only sample, you
+   can't calculate the data distribution, and the sample average
+   distribution. How could we know this sample's average is accurate or
+   not?
+   d) Here, we use standard error to replace standard deviation since we
+   don't know the population's standard deviation.
+          SE(\bar {Y}) =  s / (\sqrt n),
+   where s is the sample's standard deviation. So, here we are using
+   sample's standard deviation to replace the population's standard
+   deviation.
+   e) With standard error, then we get a way to calculate how much
+   error our average make by using t-ratio:
+   	  t-ratio = (Estimate - Parameter) / SE(Estimate).
+   Of course, we don't know the Parameter. But with sample's size, we
+   know the distribution of the t-ratio. Given a inferred parameter,
+   we can calculate the t-ratio to see how much mistake this parameter
+   make. Or calculate the 95% confidence interval to indicate the 95%
+   of the time what value parameter will be.
+
+8. A t-Ratio for Two-sample Inference
+
+The sampling distribution has 
+SD(\bar {Y_1} - \bar {Y_2})
+    	 = \sqrt {\sigma_1^2 / n_1 + \sigma_2^2 / n_2} 
+
+Pooled Standard Deviation for Two Independent Samples
+
+s_p = \sqrt {((n_1 - 1)s_1^2 + (n_2 - 1)s_2^2) / (n_1 + n_2 -2)}
+d.f. = n_1 + n_2 -2
+
+Standard Error for the Difference
+
+SE(\bar {Y_1} - \bar {Y_2})
+	= s_p * \sqrt { 1 / n_1 + 1 / n_2}
+* Note: we are assuming \sigma_1 = \sigma_2 here.
+
+9. t-statistic
+
+t-statistic = ((\bar {Y_2} - \bar {Y_1}) - [Hypothesized value for
+   	      (\mu_2 - \mu_1)]) / SE(\bar {Y_2} - \bar {Y_1})
+
+
+The p-value for a t-test is the probability of obtaining a t-ratio as
+extreme or more extreme than the t-statistic in its evidence against
+the null hypothesis, if the null hypothesis is correct.
+
+10. Interpretation of p-Values
+
+The hypothesis is or is not correct, and there is no probability
+associated with that. The probability arises from the uncertainty in
+the data.
+
+11. The Rejection Region Approach to Hypothesis Testing
+
+Although important for leading to advances in the theory of
+statistics, the rejection region approach has largely been discarded
+for practical applications and p-values are reported. P-values give
+the reader more information for judging the significance of findings.
+
+
+**********************************************
+  Chapter 3 A Closer Look at Assumptions
+**********************************************
+
+1. The Meaning of Robustness
+
+A statistical procedure is robust to departures from a particular
+assumption if it is valid even when the assumption is not met.
+
+2. Robustness Against Departures from Normality
+
+The Central Limit Theorem asserts that averages based on large samples
+have approximately normal sampling distributions, regardless of the
+shape of the population distribution.
+
+This suggests that underlying normality is not a serious issue, as
+long as sample sizes are reasonably large. The theorem provides only
+partial reassurance of applicability with respect to t-tools. It
+states what the sampling distribution of an average should be, but it
+does not address the effects of estimating a population standard
+deviation. Many empirical investigations and related theory, however,
+confirm that the t-tools remain reasonably valid in large samples,
+with many nonnormal populations.
+
+* Note: a) The sampling distribution of an average is fine now.
+  	b) CLT does not assure the population standard deviation is
+  	the same as it is in the normal distribution. What does this
+  	mean? Recall that t-ratio needs SE(\bar {Y}), which is a
+  	approximation of SD(\bar {Y}), which requires population
+  	standard deviation \sigma.
+	
+	So, if the standard deviation is not assured as the same in
+	the normal distribution, then it means they are quite
+	different. Then the SE(\bar {Y}) is not accurate as it is
+	assumed in the assumption. So, estimated t-ratio may be quite
+	different from the real one. However, based on empirical
+	experiences, it's not a big deal on most cases. 
+
+3. The relative effects of skewness and long-tailedness (kurtosis)
+
+   a) If the two populations have the same standard deviations and
+   approximately the same shapes, and if the sample sizes are about
+   equal, then the validity of the t-tools is affected moderately by
+   long-tailedness and very little by skewness.
+   b) If the two populations have the same standard deviations and
+   approximately the same shapes, but if the sample sizes are not
+   approximately the same, then the validity of the t-tools is
+   affected moderately by long-tailedness and substantially by
+   skewness. The adverse effects diminish, however, with increasingly
+   large sample sizes.
+   c) If the skewness in the two populations differs considerably, the
+   tools can be very misleading with small and moderate sample sizes.
+
+4. Robustness Against Differing Standard Deviation
+
+More serious problems may arise when the standard deviations of the
+two populations are substantially unequal. In this case, the pooled
+estimate of standard deviation does not estimate any population
+parameter and the standard error formula, which uses the pooled
+estimate of standard deviation, no longer estimates the standard
+deviation of the difference between sample averages. As a result, the
+t-ratio does not have a t-distribution.
+
+Theory shows that the t-tools remain fairly valid when the standard
+deviations are unequal, as long as the sample sizes are roughly the
+same. That is, unequal population standard deviations have little
+effect on validity if the sample sizes are equal.
+
+5. Cluster Effects and Serial Effects
+
+The first type of dependence is caused by cluster effect, which
+sometimes occurs when the data have been collected in subgroups.
+
+The second type of dependence is caused by serial effect, in which
+measurements are taken over time and observations close together in
+time tend to be more similar (or perhaps more different) than
+observations collected at distant time points. This can also occur if
+measurements are made at different locations, and measurements
+physically close to each other tend to be more similar than those
+farther apart. In the latter case the dependence pattern is called
+spatial correlation.
+
+6. The Effects of Lack of Independence on the Validity of the t-Tools
+
+When the independence assumptions are violated, the standard error of
+the difference of averages (SE(\bar {Y})) is an inappropriate estimate
+of the standard deviation of the difference in averages (SD(\bar {Y})).
+The t-ratio no longer has a t-distribution, and the t-tools may give
+misleading results.
+
+7. Outliers and Resistance
+
+An outlier is an observation judged to be far from its group average.
+
+Long-tailed population distributions are not the only explanation for
+outliers, however. The populations of interest may be normal but the
+sample may be contaminated by one or more observations that do not
+come from the population of interest.
+
+Often it is philosophically difficult and practically irrelevant to
+distinguish between a natural long-tailed distribution and one that
+includes outlier s that result from contamination, although in some
+cases the identification of clear contamination may dictate an obvious
+course of action.
+
+A statistical procedure is resistant if it does not change very much
+when a small part of the data changes, perhaps drastically.
+
+* Resistance of t-Tools: Since t-tools are based on averages, they are
+  not resistant. Its breakdown point is 0.
+* A conclusion that hinges on one or two data points must be viewed as
+  quite fragile.
+
+8. A Strategy for Dealing with Outliers
+
+   a) Employ a resistant statistical tool, in which case there is no
+   compelling reason to ponder whether the offending observations are
+   natural, the result of contamination, or simply blunders.
+   b) Adopt the careful examination strategy (Display 3.6).
+
+9. The Logarithm Transformation
+
+   If the ratio of the largest to the smallest measurement in a group
+   is greater than 10, then the data are probably more conveniently
+   expressed on the log scale. Also, if the graphical displays of the
+   two samples show them both to be skewed and if the group with the
+   larger average also has the larger spread, the log transformation
+   is likely to be a good choice.
+
+* logarithmic scale: Richter scale for measuring earthquake strength;
+  pH for measuring acidity is a negative log of ion concentration.
+
+10. Interpretation After Log Transformation (Randomized Experiment)
+
+Suppose Z = logY. It is estimated that the response of an experimental
+unit to treatment 2 will be exp(\bar {Z_2} - \bar {Z_1}) times as
+large as its response to treatment 1 (where \bar {Z_1} = average of
+log(Y_1)).
+
+11. Interpretation After Log Transformation (Observation Study)
+
+It is estimated that the median for population 2 is exp(\bar {Z_2} -
+\bar {Z_1}) times as large as the median for population 1.
+
+********************************************
+  Chapter 4  Alternatives to the t-Tools
+********************************************
+
+1. The Rank-Sum Test
+
+The rank-sum test is a resistant alternative to the two-sample
+t-test. It performs nearly as well as the t-test when the two
+populations are normal and considerably better when there are extreme
+outliers. Its drawbacks are that associated confidence intervals are
+not computed by most of the statistical computer packages and that it
+does not easily extend to more complicated situations.
+
+2. The Rank Transformation
+
+The purpose behind using ranks is not to transform the data to
+approximate normality but to transform the data to a scale that
+eliminates the importance of the population distributions together.
+
+The shape of the distribution of measurements has no effect on the
+ranks. In addition, any statistic based on ranks is resistant to
+outliers. 
+
+A feature of the rank-sum test that makes in an attractive choice for
+cognitive load experiment is its ability to deal with censored
+observations, observations that are only known to be greater than some
+number. 
+
+3. Finding a p-Value by Normal Approximation
+
+The rank-sum procedure is used to test the null hypothesis of no
+treatment effect from a two-treatment randomized experiment and also
+to test the null hypothesis of identical distributions from two
+independent samples. If the null hypothesis is true in either case
+then the sample of n_1 ranks in group 1 is a random sample from the
+n_1 + n_2 available ranks.
+
+Because conversion to ranks avoids absurd distributional anomalies,
+the randomization distribution of T can be approximated accurately by
+a normal distribution in most situations.
+
+4. Continuity Correction
+
+The permutation distribution of T is discrete, meaning T can only take
+on a finite set of values. A continuity correction is an adjustment
+used to improve the normal approximation to the discrete distribution
+of a test statistic.
+
+5. Permutation Tests - An Alternative for Two Independent Samples
+
+
+
+6. The Sign Test - An Alternative for Paired Data
+
+The sign test is a tool for a quick analysis of paired data. If the
+sign test shows a substantial effect, that may be enough to resolve
+the answer to the question of interest. But it is not very
+efficient. If its results are inconclusive, the signed-rank test is a
+more powerful alternative.
+
+7. The Wilcoxon Signed-Rank Test
+
+
+
+*************************************************
+  Chapter 5  Comparisons Among Several Samples
+*************************************************
+
+1. The One-Way Analysis of Variance F-Test
+
+Are there differences between any of the means? The analysis of
+variance (ANOVA) F-test provides evidence in answer to this
+question. The term variance should not mislead; this is most
+definitely a test about means. It assesses mean differences by
+comparing the amounts of variability explained by different sources.
+
+1.1 The Extra-Sum-of-Squares Principle
+
+The term "extra-sum-of-squares" refers to a general idea for
+hypothesis testing, and is fundamental to a large class of tests.
+
+A full model is a general model that is found to adequately describe
+the data. The reduced model is a special case of the full model
+obtained by imposing the restrictions of the null hypothesis.
+
+1.2 General Form of the Extra-Sum-of-Squares F-Statistic
+
+Extra sum of squares = Residual sum of squares (reduced)
+- Residual sum of squares (full)
+
+A residual sum of squares measures the variability in the observations
+that remains unexplained by a model, so the extra sum of squares
+measures the amount of unexplained variability in the reduced model
+that is explained by the full model.
+
+F-statistic = (Extra sum of squares) / (Extra degrees of freedom)
+/ \hat {sigma}_full^2
+
+where the extra degrees of freedom are the number of parameters in the
+mean for the full model minus the number of parameters in the mean for
+the reduced model, and \hat {sigma}_full^2 is the estimate of \sigma^2
+based on the full model. Thus, the F-statistic is the extra sum of
+squares per extra degree of freedom, scaled by the best estimate of
+variance.
+
+1.3 The F-Test
+
+Large F-statistics are associated with large differences in the size
+of residuals from the two models. They supply evidence against the
+hypothesis of equal means and in favor of a model with different
+means. The test is summarized by its p-value, the chance of finding an
+F-statistic as large as or larger than the observed one when all means
+are, in fact, equal.
+
+1.4 F-Distributions
+
+If all means are equal, the sampling distribution of the F-statistic
+is that of an F-distribution, which depends on two known parameters:
+the numerator degrees of freedom and the denominator degrees of
+freedom. For each degrees of freedom pair, there is a separate
+F-distribution. The letter F was given to this class of distributions
+by George Snedecor, honoring the British statistician Sir Ronald
+Fisher.
+
+F values in the general range of 0.5 to 3.0 are fairly typical. An
+F-statistic in this range would not be considered as very strong
+evidence of unequal means for most degree of freedom combinations. An
+F-statistic in the range from 3.0 to 4.0 would be highly unlikely with
+large degrees of freedom in both numerator and denominator but would
+be only moderately suggestive of differences with smaller degrees of
+freedom. An F-statistic larger than 4.0 is strong evidence against
+equal means except for the smallest degrees of freedom, particularly
+in the denominator. (Note: all the curves have the same area below
+them. This means that the F_{2,2} and F_{30,2} curves must have
+considerable area, spread thinly, off the graph to the right.)
+
+2. Summary of ANOVA Tests Involving More Than Two Models
+
+The others-equal model (using two parameters to describe the means)
+lies intermediate between the equal-means model (with one parameter)
+and the separate-means model (with seven parameters). It is a
+simplification of the separate-means model, while the equal-means
+model is a simplification of it.
+
+**************************************************************
+  Chapter 7  Simple Linear Regression: A Model for the Mean
+**************************************************************
+
+1. Regression Terminology
+
+Regression analysis is used to describe the distribution of values of
+one variable, the response, as a function of other -- explanatory --
+variables.
+
+The regression of the response variable on the explanatory variable is
+a mathematical relationship between the means of these subpopulations
+and the explanatory variable.
+
+\mu {Y|X} = \beta_0 + \beta_1 X
+
+\beta_0 is the intercept of the line, measured in the same units as
+the response variable. \beta_1 is the slope of the line, equal to the
+rate of change in the mean response per one-unit increase in the
+explanatory variable. The units of \beta_1 are the ratio of the units
+of the response variable to the units of the explanatory variable.
+
+2. Model Assumptions
+
+a) There is a normally distributed subpopulation of responses for each
+value of the explanatory variable.
+b) The means of the subpopulations fall on a straight-line function of
+the explanatory variable.
+c) The subpopulation standard deviations are all equal (to \delta).
+d) The selection of an observation from any of the subpopulations is
+independent of the selection of any other observation.
+
+* Note that the model describes the distributions of responses, but it
+  says nothing about the distribution of the explanatory variable. In
+  various applications, X-values may be chosen by the researcher, or
+  they may themselves be random.
+
+3. Interpolation and Extrapolation
+
+Statements about the mean at values of X not in the data set, but
+within the range of the observed variable values, are called
+interpolations.
+
+Making statements for values outside of this range - extrapolation -
+is potentially dangerous, however, because the straight-line mode is
+not necessarily valid over a wider range of explanatory variable
+values.
+
+4. Least Squares Regression Estimation
+
+fit_i = \hat{\mu} {Y_i|X_i} = \hat{\beta}_0 + \hat{\beta}_1 X_i
+res_i = Y_i - fit_i
+
+...
+
+5. Estimation of \sigma form Residuals
+
+\hat{\sigma} = \sqrt {Sum of all squared residuals / Degrees of
+freedom}
+
+where the degrees of freedom are the sample size minus two, n-2. This
+is another instance of applying the general rule for finding
+the degree of freedom associated with residuals from estimating a
+model for the means.
+
+6. Rule for Determining Degrees of Freedom
+
+Degrees of freedom associated with a set of residuals = 
+   (Number of observations)
+      - (Number of parameters in the model for the means)
+
+7. Standard Errors
+
+...
+
+8. Notes About the Estimated Mean at Some Value of X
+
+1) Precision in estimating \mu{Y|X} is not constant for all values of
+X. The formula for the standard error indicates that the precision of
+the estimated mean response decrease as X_0 gets farther from the
+sample average of X's.
+2) Compound uncertainty in estimating several means simultaneously. To
+account for compound uncertainty in estimating mean responses at k
+different values of X, the Bonferroni procedure can be used. If k is
+very large, or if it is desired to obtain a procedure that projects
+against an unlimited number of comparisons, the Scheffe method can be
+used to construct a confidence band.
+3) Where is the regression line? (The Workman-Hotelling procedure)
+
+9. Prediction of a Future Response
+
+Prediction interval indicates likely values for a future value of a
+response variable at some specified value of the explanatory
+variable.
+
+10. Causation
+
+There is a tendency to think of the explanatory variable as a
+causative agent and the response as an effect, even with observational
+studies. But the same conditions apply here as before. With randomized
+experiments, cause-and-effect terminology is appropriate; with
+observational studies, it is not. With data from observational
+studies, the most satisfactory terminology describes an association
+between the mean response and the value of the explanatory variable.
+
+11. Correlation
+
+The sample correlation coefficient for describing the degree of linear
+association between any two variables X and Y is
+
+r_{XY} = \frac {\sum_{i=1}^n {(X_i - \bar {X})(Y_i - \bar {Y})}/(n-1)}
+       	       {S_X S_Y}
+
+where S_X and S_Y are the sample standard deviations. Unlike the
+estimated slope in regression, the sample correlation coefficient is
+symmetric in X and Y, so it does not depend on labeling one of them
+the response and one of them the explanatory variable.
+
+A correlation is dimension-free. It falls between -1 and +1, with the
+extremes corresponding to the situations where all the points in a
+scatterplot fall exactly on a straight line with negative and positive
+slopes, respectively. Correlation of zero corresponds to the situation
+where there is no linear association.
+
+It is a common mistake to base conclusions on correlations where the
+X's are not random. If the data are randomly selected pairs, then the
+sample correlation coefficient estimates a population correlation,
+\rho_{XY} = Mean{(X - \mu_X) (Y - \mu_Y) / (\sigma_X \sigma_Y)}.
+
+Correlation only measures the degree of linear association. It is
+possible for there to be an exact relationship between X and Y and yet
+the sample correlation coefficient is zero. This would be the case,
+for example, if there was a parabolic relationship with no linear
+component.
+
+************************************************************************
+  Chapter 8  A Closer Look at Assumptions for Simple Linear Regression
+************************************************************************
+
+1. Robustness of Least Squares Inference
+
+a) Linearity
+b) Constatnt variance
+c) Normality
+d) Independence
+
+The Linearity Assumption
+
+Two violations: A straight line may be an inadequate model for the
+regression (the regression might contain some curvature, for example);
+or a straight line may be appropriate for most of the data, but
+contamination from one or several outliers from different populations
+may render it inapplicable to the entire set.
+
+The Equal Spread Assumption
+
+Although the least squares estimates are still unbiased even if the
+variance is nonconstant, the standard errors inaccurately describe the
+uncertainty in the estimates. Tests and confidence intervals can be
+misleading.
+
+The Normality Assumption
+
+Estimates of the coefficients and their standard errors are robust to
+nonnormal distributions. Although the tests and confidence intervals
+originate from normal distributions, the consequences of violating
+this assumption are usually minor. The only situation of substantial
+concern is when the distributions have long tails (outliers are
+present) and sample sizes are moderate to small.
+
+If prediction intervals are used, on the other hand, departures from
+normality become important.  This is because the prediction intervals
+are based directly on the normality of the population distributions
+whereas tests and confidence intervals are based on the normality of
+the sampling distributions of the estimates (which may be
+approximately normal even when the population distributions are not).
+
+The Independence Assumption
+
+Lack of independence causes no bias in least squares estimates of the
+coefficients, but standard errors are seriously affected. As before,
+cluster and serial effects, if suspected, should be incorporated with
+more sophisticated models.
+
+2. Graphical Tools for Model Assessment
+
+a) Scatterplot of the Response Variable Versus the Explanatory Variable
+
+b) Scatterplot of Residuals Versus Fitted Values
+
+Scatterplots of the residuals versus the fitted values are better for
+finding patterns because the linear component of variation in the
+responses has been removed, leaving a clearer picture about curvature
+and spread. The residual plot alerts the user to nonlinearity,
+nonconstant variance and the presence of outliers.
+
+3. Interpretation After Log Transformations
+
+
+
+4. Assessment of Fit Using the Analysis of Variance
+
+1) Three Models for the Population Means
+
+a) Separate-means model
+b) Simple linear regression model
+c) Equal-means model
+
+A generalization of one model is another model that contains the same
+features but uses additional parameters to describe a more complex
+structure.
+
+2) The Analysis of Variance Table Associated with Simple Regression
+
+3) The Lack-of-Fit F-Test
+
+5. R-Squared: The Proportion of Variation Explained
+
+***********************************
+  Chapter 9  Multiple Regression
+***********************************
+
+1. Regression Coefficients
+
+The Multiple Linear Regression Model
+
+The regression of Y on X_1 and X_2 is a rule, such as an equation,
+that describes the mean of the distribution of a response variable (Y)
+for particular values of explanatory variables (X_1 and X_2, say).
+
+The regression rule giving the mean response for each combination of
+explanatory variables will not be very helpful if it is a huge list or
+a complicated function. Furthermore, it is usually unwise to think
+that there is some exact, discoverable regression equation. Many
+possible models are available, however, for describing the
+regression. Although they should not be thought of as the truth, one
+or two models may adequately approximate the mean of the response as a
+function of the explanatory variables, and conveniently allow for the
+questions of interest to be investigated.
+
+The constant variance assumption is important for two reasons: a) the
+regression interpretation is more straightforward when the explanatory
+variables are only associated with the mean of the response
+distribution and not other characteristics of it; and b) the
+assumption justifies the standard inferential tools.
+
+The effect of an explanatory variable is the change in the mean
+response that is associated with a one-unit increase in that variable
+while holding all other explanatory variables fixed.
+
+2. Specially Constructed Explanatory Variables
+
+A Squared Term for Curvature
+
+It is not necessary that this model corresponds to any natural law. It
+is, however, a convenient way to incorporate curvature in the
+regression of corn on rain. Remember that linear regression means
+linear in \beta's, not linear in X, so quadratic regression is a
+special case of multiple linear regression.
+
+Attempting to interpret the individual coefficients in this example is
+difficult and unnecessary. The statistical significance of the squared
+rainfall coefficien is that it highlights the inadequacy of the
+straight line regression model and suggests that increasing yield is
+associated with increasing rainfall only up to a point. In many
+applications squared terms are useful for incorporating slight
+curvature and the purpose of the analysis does not require that the
+coefficient of the squared term be interpreted. In specialized
+situations, higher-order polynomial terms may also be included
+as explanatory variables.
+
+A Product Term for Interaction
+
+Two explanatory variables are said to interact if the effect that one
+of them has on the mean response depends on the value of the other. In
+multiple regression, an explanatory variable for interaction can be
+constructed as the product of the two explanatory variables that are
+thought to interact.
+
+When to Include Interaction Terms
+
+Inclusion is indicated in three situations: when a question of
+interest pertains to interaction; when good reason exists to suspect
+interaction; or when interactions are proposed as a more general model
+for the purpose of examining the goodness of fit of a model without
+interaction.
+
+Except in special circumstances, a model including a product term for
+interaction between two explanatory variables should also include
+terms with each of the explanatory variables individually, even
+though their coefficients may not be significantly different from
+zero. Following this rule avoids the logical inconsistency of saying
+that the effect of X_1 depends on the level of X_2 but that there is
+no effect of X_1.
+
+**********************************************************
+  Chapter 10  Inferential Tools for Multiple Regression
+**********************************************************
+
+1. Inferences About Regression Coefficients
+
+
+2. 
+
+
+**********************************************
+  Chapter 11  Model Checking and Refinement
+**********************************************
+
+1. 
+
+
+
+
+
+
+
+
+
+
+**************************************************
+  Chapter 18  Comparisons of Proportions or Odds
+**************************************************
+
+1. Binary Response Variables
+
+Indicator variables with values of 0 or 1 have been used in previous
+chapters as explanatory variables in regression. They may also be used
+as response variables, in which case they are referred to as binary
+response variables. The average value of a binary response variable in
+a population is the proportion of members of the population that are
+classified as yes. The proportion of yes responses in the population
+is represented by the symbol \pi and is called the population
+proportion. If the population is hypothetical or if proportions are
+being compared in a randomized experiment, it is more common to refer
+to \pi as the probability of a yes response.
+
+2. The Variance of a Binary Response Variable
+
+Mean(Y) = \pi * 1 + (1 - \pi) * 0
+	= \pi
+
+Variance(Y) = Mean{(Y - \pi)^2}
+	    = \pi(1 - \pi)^2 + (1 - \pi)* (0 - \pi)^2
+	    = \pi(1 - \pi)[1 - \pi + pi]
+	    = \pi * (1 - \pi)
+
+Two features make this unlike the models for response variables
+considered in earlier chapters: there is no additional parameter, like
+\sigma^2; and the variance is a function of the mean.
+
+3. The Sample Total and the Binomial Distribution
+
+mean: n\pi
+variance: n\pi(1 - n\pi)
+
+The distribution of S is skewed except when \pi = /2. When the
+products n\pi and n(1 - \pi) are both of moderate size (>5), the
+normal distribution approximates binomial probabilities very closely
+-- a fact that motivates of the succeeding developments in this chapter.
+
+4. The Sample Proportion
+
+Let \hat{\pi} represent the average of the binary responses in a
+random sample. Although it is an average, the symbol \hat{\pi} is
+used rather than \bar{Y} to emphasize that it is also the sample
+proportion.
+
+5. The Sampling Distribution of the Sample Proportion
+
+Since \hat{\pi} is an average, standard statistical theory about the
+sampling distribution of an average applies:
+
+If \hat{\pi} is a sample proportion based on a sample of size n from a
+population with population proportion \pi, then
+   1. Mean{\hat{\pi}} = \pi
+   2. Var{\hat{\pi}} = \pi * (1 - \pi) / n
+   3. If n is large enough, the sampling distribution of \hat{\pi} is
+   approximately normal.
+
+How large must the sample size be? It is generally safe to rely on the
+normal approximation if n\pi_0 > 5 and n(1 - \pi_0) > 5.
+
+* It is important to realize that the t-distribution is not involved
+  here. The t-tools discussed earlier are based on normally
+  distributed responses. In particular, the degrees of freedom
+  attached to the t-tools are those associated with an estimate of
+  \sigma. For binomial responses the variance is a known function of
+  the mean, so there are no analogous degrees of freedom.
+
+6. Sampling Distribution for the Difference Between Two Sample
+Proportions
+
+If \hat{\pi_1} and \hat{\pi_2} are computed from independent random
+samples, the sampling distribution of their difference has these
+properties:
+
+   1) Mean(\hat{\pi_2} - \hat{\pi_1}) = \pi_2 - \pi_1
+   2) Variance(\hat{\pi_2} - \hat{\pi_1})
+      = (\pi_1(1 - \pi_1)) / n_1 + (\pi_2(1 - \pi_2)) / n_2
+   3) If n_1 and n_2 are large, the sampling distribution of
+      \hat{\pi_2} - \hat{\pi_1} is approximately normal.
+
+Usually, the procedure of checking whether n\hat{\pi} and
+n(1 - \hat{\pi}) are larger than 5 in both samples is adequate.
+
+7. Two Standard Errors for \hat{\pi_2} - \hat{\pi_1}
+
+Values of the best estimates depend on what model is being fit.
+
+SE: If the purpose is to get a confidence interval for
+\hat{\pi_2} - \hat{\pi_1}, then the model being fit is the one with
+separate population proportions; \pi_1 is then estimated by
+\hat{\pi_1}, and \pi_2 is estimated by \hat{\pi_2}. 
+
+SE_0: If the purpose is to test the equality of the two population
+proportions, the null hypothesis model is that the two proportions are
+equal. The best estimate of both \pi_1 and \pi_ in this model is
+\hat{\pi_c}, the sample proportion from the combined sample.
+
+The use of this different standard error for testing underscores the
+need to describe the sampling distribution of a test statistic
+supposing the null hypothesis is true. 
+
+8. Inferences About the Ratio of Two Odds
+
+The sample odds are \hat{\omega} = \hat{\pi} / (1 - \hat{pi})
+
+Here are some numerical facts about odds:
+   1) Whereas a proportion must be between 0 and 1, odds must be
+   greater than or equal to 0 but have no upper limit.
+   2) A proportion of 1/2 corresponds to odds of 1. Some common
+     nonscientific descriptions of this situation are "equal odds",
+     "even odds", and "the odds are fifty-fifty". 
+   3) If the odds of a yes outcome are \omega, the odds of a no
+     outcome are 1 / \omega. 
+   4) If the odds of a yes outcome are \omega, the probability of yes
+     (or the population proportion) is \pi = \omega / (1 + \omega). 
+
+The sample odds ratio, or estimated odds ratio is
+    \hat{\phi} = \hat{\omega_2} / \hat{\omega_1}
+
+The odds ratio is a more desirable measure than the difference in
+population proportions, for three reasons:
+   1) In practice, the odds ratio tends to remain more nearly constant
+   over levels of confounding variables.
+   2) The odds ratio is the only parameter that can be used to compare
+   two groups of binary responses from a retrospective study.
+   3) The comparison of odds extends nicely to regression analysis.
+
+9. Sampling Distribution of the Log of the Estimated Odds Ratio
+
+If \hat{\omega_1} and \hat{\omega_2} are computed from independent
+samples, the sampling distribution of the natural log of their ratio
+has these properties:
+    1) Mean{log(\hat{\omega_2} / \hat{omega_1})}
+       = log(\omega_2 / \omega_1)
+     * (approximately)
+    2) Var{log(\hat{\omega_2} / \hat{omega_1})}
+       = [n_1 \pi_1 (1 - \pi_1)]^{-1} + [n_2 \pi_2 (1 - \pi_2)]^{-1}
+     * (approximately)
+    3) If n_1 and n_2 are large, the sampling distribution of 
+       log(\hat{\omega_2} / \hat{omega_1}) is approximately normal.
+
+10. Inference from Retrospective Studies
+
+Retrospective sampling <-> Prospective sampling
+
+Smoking and lung cancer: smoking behavior is explanatory and lung
+cancer is the response. 
+
+11. Summary
+
+The odds are often more appropriate if the proportions are close to 0
+or 1. If the data are sampled retrospectively, only the odds ratio can
+be estimated.
+
+**************************************************
+  Chapter 19  More Tools for Tables of Counts
+**************************************************
+
+1. Hypotheses of Homogeneity and of Independence
+
+   H_0: \pi_2 - \pi_1 = 0
+   or
+   H_0: \omega_2 / \omega_1 =1
+
+Theses are often called hypotheses of homogeneity because interest is
+focused on whether the distribution of the binary response is
+homogeneous -- the same -- across populations.
+
+The hypothesis of independence, appropriate for some sampling schemes,
+is used to investigate an association between row and column factors
+without specifying one of them as a response. Although the hypothesis
+can be expressed in terms of parameters, the actual parameters used
+differ for different sampling schemes, and it is more convenient to
+use words:
+
+   H_0: The row categorization is independent of the column
+   categorization.
+
+One difference between hypothesis of homogeneity and of independence
+lies in whether one thinks of two populations, each with two
+categories of response, or of a single population with four
+categories of response (formed by two binary in a 2 * 2 table). The
+homogeneity hypothesis is appropriate for the first, and independence
+is appropriate for the second.
+
+2. Sampling Schemes Leading to 2 * 2 Tables
+
+   1) Poisson Sampling
+   One easy way to recognize this sampling scheme is to observe that
+   none of the marginal totals is known in advance of data collection.
+   2) Multinomial Sampling
+   This scheme is very similar to Poisson sampling except that the
+   total sample size (the grand total) is determined in advance The
+   term multinomial means that each subject selected in the sample is
+   categorized into one of several cells.
+   3) Prospective Product Binomial Sampling
+   The sampling scheme formed the basis for deriving the tools in the
+   previous chapter. The two populations defined by the levels of the
+   explanatory factor are identified, and random samples are selected
+   from each. The term binomial means that each woman (in each
+   population, obese or nonobese) falls into one of two categories The
+   term product binomial is a term whose statistical meaning reflects
+   there being more than one binomial population from which
+   independent samples have been taken.
+   4) Retrospective Product Binomial Sampling
+   The sampling scheme is technically the same as in the prospective
+   product binomial, except that the roles of response and explanatory
+   factors are reversed.
+   5) Randomized Binomial Experiment
+   Aside from the fact that randomization rather than random sampling
+   is used, the setup here is essentially the same as in prospective
+   product binomial sampling.
+   6) The Hypergeometric Probability Distribution
+   Although this type of hypergeometric experiment is rare, the
+   hypergeometric probability distribution is applied more
+   generally. If interest is strictly focused on the odds ratio,
+   statistical analysis may be conducted conditionally on the row and
+   column totals that were observed. Therefore, no matter which
+   sampling scheme produced the 2 * 2 table, one may use the
+   hypergeometric distribution to calculate a p-value. This is known
+   as Fisher's Exact Test.
+
+3. Testable Hypotheses and Estimable Parameters
+
+In prospective product binomial sampling and randomized experiments,
+it is very natural to draw inferences about the parameters \pi_1 and
+\pi_2 (or \omega_1 and \omega_2) describing the two binomial
+distributions. A test of homogeneity is used to determine whether the
+populations are identical. A confidence interval for \pi_1 - \pi_2 or
+for the odds ratio, \omega_1 / \omega_2, is used to describe the
+difference. Also, \omega_1 / \omega_2 is the only comparison parameter
+that may be if the sampling is retrospective.
+
+With Poisson and multinomial sampling, information is available about
+the single population with four categories, and independence may be
+tested without specifying either row or column factor as a
+response. Although the sample sizes may differ, the samples are indeed
+random samples from each subpopulation. Consequently, all inferential
+tools for prospective product binomial sampling may be used with
+Poisson and multinomial sampling as well.
+
+4. The Pearson Chi-Squared Test for Goodness of Fit
+
+This approach assumes that sampled units fall randomly into cells and
+that the chance of a unit falling into a particular cell can be
+estimated from the theory under test. The number of units that fall in
+a cell is the cell's observed count, and the number predicted by the
+theory to do is the cell's expected count.
+
+       \chi^2 = \Sum (Observed - Expected)^2 / Expected
+
+The sum is over all cells of the table. The name Pearson chi-square
+statistic attached to \chi^2 reflects its approximate sampling
+distribution, which is chi-squared if the theory (null hypothesis) is
+correct. The degrees of freedom are equal to (Number of cells) minus
+(Number of parameters estimated) minus 1.
+
+5. Chi-Squared Test of Independence in a 2 * 2 Table
+
+Testing the hypothesis of independence involves the following steps:
+
+  1) Estimate the expected cell counts from the preceding formulas.
+  2) Compute the Pearson \chi^2 statistic from the formula in the
+  previous box.
+  3) Find the p-value as the proportion of values from a chi-squared
+  distribution on one degree of freedom that are greater than \chi^2.
+
+A small p-value provides evidence that the row and column
+categorizations are not independent.
+
+6. The Chi-Squared Test for Homogeneity
+
+The chi-squared statistic is identical to the square of the
+Z-statistic for testing equal population proportions. Furthermore, the
+\chi^2 distribution on one degree of freedom is identical to the
+distribution of the square of a standard normal
+variable. Consequently, the p-values from the chi-squared test of
+independence and the chi-squared test of homogeneity are identical to
+the two-sided p-value from the Z-test of equal population proportions.
+
+The statistic \chi^2 has approximately a chi-squared distribution with
+one degree of freedom, under the independence or homogeneity
+hypothesis. The approximation is premised on there being large cell
+counts; all expected counts larger than 5 is the custoomary check for
+validity.
+
+An adjustment - the continuity correction - improves the approximation
+when sample sizes are not large.
+
+7. Fisher's Exact Test: The Randomization (Permutation) Test for 2 * 2
+Tables
+
+Fisher's Exact Test is appropriate for any sample size, for tests of
+homogeneity or of independence.
+
+The two sided p-value in Fisher's Exact Test is quite different from
+tiwce the one-sided p-value.
+
+8. Fisher's Exact Test for Observational Studies
+
+If the data are observational, Fisher's Exact Test is thought of as a
+permutation test, which is a useful interpretation when the entire
+population has been sampled or when the sample is not random. The
+permutation test here is also equivalent to a sampling distribution,
+thus allowing inference about population parameters with random
+samples from the Poisson, multinomial, or product binomial sampling
+schemes. As demonstrated, the calculations can be used to obtain exact
+p-values for tests of equal population proportions, of equal
+population odds, or for independence.
+
+9. Combining Results from Several Tables with Equal Odds Ratios
+
+Cause-and-effect conclusions cannot be drawn from observational
+studies, because the effect of confounding variables associated with
+both indicator variable (defining the populations) and the binary
+response cannot ruled out. As with regression, however, tools are
+available for taking the next step: conducting comparisons that
+account for the effect of a confounding variable.
+
+******************************************************************
+  Chapter 20  Logistic Regression for Binary Response Variables
+******************************************************************
+
+1. Linear regression models are usually inadequate for binary
+responses because they can permit probabilities less than zero and
+greater than one.
+
+One important alternative is logistic regression. This has a form in
+which a usual regression-like function of explanatory variables and
+regression coefficients describes a function of the mean (a function
+of the probability in this case) rather than the mean itself. The
+particular function is the logarithm of the odds.
+
+2. Logistic Regression as a Generalized Linear Model
+
+\mu = \beta_0 + \beta_1 X_1 + ... + \beta_p X_p;
+
+The special variables-indicator variables for categorical factors,
+polynomial terms for curvature, products for interactions-provide
+flexible and sensible ways to incorporate and evaluate explanatory
+information.
+
+3. Link Functions
+
+The appropriate link function depends on the distribution of the
+response variable.
+
+4. The Logit Link for Binary Responses
+
+The natural link for a binary response variable is the logit, or
+log-odds, function. The symbol \pi (rather than \mu) is used for the
+population mean, to emphasize that it is a proportion or
+probability. The logit link is g(\pi) = logit(\pi), which is defined
+as log[\pi / (1 - \pi)], and the logistic regression is
+
+logit[\pi] = \beta_0 + \beta_1 X_1 + ... + \beta_p X_p.
+
+The inverse of the logit function is called the logistic function. If
+logit(\pi) = \eta, then
+
+\pi = exp(\eta) / [1 + exp(\eta)].
+
+Logistic regression is a kind of nonlinear regression, since the
+equation for \mu{Y|X_1, ..., X_p} is not linear in \mu's. Its
+nonlinearity, however, is solely contained in the link function-hence
+the term generalized linear. The implication of this is that the
+regression structure can be used in much the same way as ordinary
+linear regression.
+
+*********************************************************
+  Chapter 22  Log-Linear Regression for Poisson Counts
+*********************************************************
+
+1. The Poisson Probability Distribution
+
+The Poisson distribution has several characteristic features:
+
+1) The variance is equal to the mean.
+2) The distribution tends to be skewed to the right, and this skewness
+is most pronounced when the mean is small.
+3) Poisson distribution with larger means tend to be well-approximated
+by a normal distribution.
+
+2. The Poisson Log-Linear Model
+
+Y is Poisson, with \mu{Y|X_1, X_2} = \mu
+
+log(\mu) = \beta_0 + \beta_1 X_1 + \beta_2 X_2
+
+3. Residuals
+
+The issues involved in using residuals are similar to those for
+binomial logistic regression. The formal definition of a deviance
+residual--as the maximum possible value of the logarithm of the
+likelihood at observation i minus the value of the logarithm of the
+likelihood estimated from the current model--remains
+unchanged. However, the definition leads to the following somewhat
+different formula for Poisson regression: 
+
+Deviance Residual for Poisson Regression
+&
+Pearson Residual for Poisson Regression
+
+If the Poisson means are large, the distributions of both deviance and
+Pearson residuals are approximately standard normal. Thus, problems
+are indicated if more than 5% of residuals exceed 2 in magnitude or if
+one or two residuals greatly exceed 2. If the Poisson means are small
+(<5), neither set of residuals follows a normal distribution very
+well, so comparison to a standard normal distribution provides a poor
+look at lack of fit.
+
+4. The Deviance Goodness-of-Fit Test
+
+Deviance Statistic = Sum of Squared Deviance Residuals
+
+Approximate p-value = Pr(\Xi_{n-p}^2 > Deviance Statistic).
+
+5. Inferences About Log-Linear Regression Coefficients
+
+5.1 Wald's Test and Confidence Interval for Single Coefficients
+5.2 The Drop-in-Deviance Test
+
+6. Extra-Poisson Variation and the Log-Linear Model
+
+Sometimes, however, unmeasured effects, clustering of events, or other
+contaminating influences combine to produce more variation in the
+responses than is predicted by the Poisson model.
+
+Using Poisson log-linear regression when such extra-Poisson variation
+is present has three consequences: parameter estimates are still
+roughly unbiased; but standard errors are smaller than they should be;
+and tests give smaller p-values than are truly warranted by the
+data. The last two consequences are problems that must be addressed.
+
+
+
+
+
+
+
+
+
+
+

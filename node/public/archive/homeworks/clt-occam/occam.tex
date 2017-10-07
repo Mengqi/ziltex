@@ -1,0 +1,335 @@
+\documentclass[12pt]{article}
+\parindent=.25in
+
+\setlength{\oddsidemargin}{0pt}
+\setlength{\textwidth}{440pt}
+\setlength{\topmargin}{0in}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{latexsym}
+\usepackage[center]{subfigure}
+\usepackage{epsfig}
+\usepackage{hyperref}
+
+\usepackage{amsthm}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}{Remark}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\noi}{{\noindent}}
+\newcommand{\ms}{{\medskip}}
+\newcommand{\msni}{{\medskip \noindent}}
+
+\newcommand{\la}{\langle}
+\newcommand{\ra}{\rangle}
+\newcommand{\calc}{{\cal C}}
+\newcommand{\cald}{{\cal D}}
+\newcommand{\calh}{{\cal H}}
+\newcommand{\cala}{{\cal A}}
+
+\newcommand{\sign}{\mathrm{sign}}
+\newcommand{\eps}{\epsilon} 
+\newcommand{\poly}{\mathrm{poly}}
+\newcommand{\size}{\mathrm{size}}
+\newcommand{\depth}{\mathrm{depth}} 
+
+\pagestyle{headings}    % Go for customized headings
+
+\newcommand{\handout}[5]{
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{
+    \parbox[t]{4in} {\bf #1 } \vspace{3mm}  {\hfill \bf #2 }
+       \vspace{2mm}
+       \hbox to 6.00in { {\Large \hfill #5  \hfill} }
+       \vspace{1mm}
+       \hbox to 6.00in { {\it #3 \hfill #4} }
+      }
+   }
+   \end{center}
+   \vspace*{1mm}
+}
+
+\begin{document}
+
+\setlength{\parindent}{0in}
+
+\handout{COMS 6253: Advanced Computational Learning Theory}{Spring 2012}
+{Lecturer: Rocco Servedio}
+{Scribe: Mengqi Zong}{PAC-learning, Occam Algortihm and Compression}
+
+\thispagestyle{plain}
+
+\section{Introduction}
+
+The distribution-independent model of concept learning (PAC-learning,
+for ``probably approximately correct learning'') was introduced by
+Valiant and has been widely used to investigate the phenomenon of
+learning from examples. \\
+
+In COMS 6253, we spent most of our time studying PAC-learning
+model. It's worthy for us to spend some time to take a closer look at
+this model. \\
+
+This lecture will talk about the relationship between PAC-learning
+model and Occam algorithm. Later, we will show that for many classes,
+PAC-learnability is equivalent to data compression.
+
+\section{PAC-learning and Occam algorithm}
+
+\subsection{Notation and Definitions}
+
+We describe a context for representing concepts over $X$. We define a
+class of representations to be a four-tuple ${\bf R} = (R, \Gamma, c,
+\Sigma)$. $\Sigma$ and $\Gamma$ are sets of characters. Strings
+composed of characters in $\Sigma$ are used to describe elements of
+$X$, and strings of characters in $\Gamma$ are used to describe
+concepts. $R \subseteq \Gamma^*$ is the set of strings that are
+concept descriptions or representations into concepts over
+$\Sigma$. $R$ may be thought of as a collection of names of concepts,
+and for any $r \in R$, $c(r) \subseteq \Sigma^*$ is the concepts named
+by $r$. \\
+
+We let $R^{[s]}$ denote the set $\{ r \in R: |r| \le s\}$; that is,
+the set of all representations from R of length at most $s$. If ${\bf
+  R} = (R, \Gamma, c, \Sigma)$ is a class of representations, $r \in
+R$, and $D$ is a probability distribution on $\Sigma^*$, then
+$EXAMPLE(D, r)$ is an oracle that, when called, randomly chooses an $x
+\in \Sigma^*$ according to distribution $D$ and returns the pair $(x,
+r(x))$. \\
+
+A randomized algorithm is an algorithm that behaves like a
+deterministic one with the additional property that, at one or more
+steps during its execution, the algorithm can flip a fair two-sided
+coin and use the result o the coin flip in its ensuing computation.
+
+\begin{definition}
+The representation class ${\bf R} = (R, \Gamma, c, \Sigma)$ is
+PAC-learnable if there exists a (possibly randomized) algorithm L and
+a polynomial $p_L$ such that for all $s, n \ge 1$, for all $\epsilon$
+and $\delta$, $0 < \epsilon, \delta < 1$, for all $r \in R^{[s]}$, and
+for all probability distributions $\cald$ on $\Sigma^{[n]}$, if L is
+given as input the parameters $s, \epsilon$, and $\delta$, and may
+access the oracle EXAMPLE($\cald$, r), then L halts in time $p_L(n, s,
+1/\epsilon, 1/\delta)$ and, with probability at least $1 - \delta$,
+outputs a representation $r' \in R$ such that $\cald (r' \oplus r) \le 
+\epsilon$. Such an algorithm L is a polynomial-time learning algorithm
+for {\bf R}.
+\end{definition}
+
+\begin{definition}
+A randomized polynomial-time (length-based) Occam algorithm for a
+class of representations ${\bf R} = (R, \Gamma, c, \Sigma)$ is a
+(possibly randomized) algorithm $O$ such that there exists a constant
+$\alpha < 1$ and a polynomial $p_O$, and such that for all $m, n, s
+\ge 1$ and $r \in R^{[s]}$, if $O$ is given as input any sample $M
+\subseteq S_{m,n,r}$ and $1 / \gamma$, and, with probability at least
+$1 - \gamma$, outputs a representation $r' \in R$ that is consistent
+with M, and such that $|r'| \le p_O(n, s, 1 / \gamma)m^{\alpha}$.
+\end{definition}
+
+\subsection{Example: Learning Boolean conjunctions}
+
+In the book ``An Introduction to Computational Learning Theory'',
+learning Boolean conjunctions has been given as an example to compare
+PAC-learning and Occam algorithm. \\
+
+For PAC-learning, the regular approach is to use inequality and union
+bounds to calculate a probability of $m$ examples satisfy the
+needs. And the number of examples from PAC-learning is
+
+\begin{eqnarray*}
+m_{PAC} \ge (2n / \epsilon) (\ln {(2n)} + \ln {(1 / \delta)})
+\end{eqnarray*}
+
+As for Occam's algorithm, the approach is simply to take a look at the
+representation class $H_n$ of Boolean conjunctions and see what we can
+get there. The number of examples from Occam' algorithm is
+
+\begin{eqnarray*}
+m_{Occam} \ge \frac {1}{\epsilon} \log {\frac {1}{\delta}} + n /
+\epsilon
+\end{eqnarray*}
+
+Note that Occam's algorithm is an improvement by a logarithmic factor
+over the bound $m_{PAC}$. But the improvement doesn't happen
+always. For this example, the reason why Occam's algorithm gives a
+tighter bound is probably due to the union bounds used in the
+PAC-learning. \\
+
+As we can see, Occam's algorithm is a naive approach for learning. And
+on most cases, the bound given by Occam's algorithm is a general
+complexity bound for PAC-learning.
+
+\subsection{The sufficient condition}
+
+We now show that the existence of an Occam algorithm for a class of
+concepts is a sufficient condition for the PAC-learnability of that
+class. 
+
+\begin{theorem}
+Let ${\bf R} = (R, \Gamma, c, \Sigma)$ be a class of representations
+with $\gamma$ finite. If there exists a randomized polynomial-time
+(length-based) Occam algorithm for ${\bf R}$, then ${\bf R}$ is
+PAC-learnable.
+\end{theorem}
+
+This theorem shows that the existence of an Occam algorithm for a
+class of concepts is a sufficient condition for the PAC-learnability
+of that class. \\
+
+However, it was left as an {\bf open problem} whether PAC-learnability
+is equivalent to the existence of Occam algorithms; i.e. whether the
+existence of an Occam algorithm is also a necessary condition for 
+PAC-learnability.
+
+\subsection{Exception list}
+
+\begin{definition}
+A class ${\bf R} = (R, \Gamma, c, \Sigma)$ is polynomially closed
+under exception lists if there exists an algorithm EXLIST and a
+polynomial $p_{EX}$ such that for all $n \ge 1$, on input of any $r
+\in R$ and any finite set $E \subset \Sigma^{[n]}$, EXLIST halts in
+time $p_{EX}(n, |r|, |E|)$ and outputs a representation $EXLIST(r, E)
+= r_E \in R$ such that $c(r_E) = c(r) \oplus E$. Note that the
+polynomial running time of EXLIST implies that $|r_E| \le p_1(n, |r|,
+\log |E|) + p_2(n, \log |r|, \log |E|)|E|$ is satisfied, then we say
+that ${\bf R}$ is strongly polynomially closed under exception lists.
+\end{definition}
+
+Clearly, any representation class that is strongly polynomially closed
+is also polynomially closed. The definition of polynomial closure is
+above is easily understood - it asserts that the representation $r_E$
+that incorporates exceptions $E$ into the representation r has size at
+most polynomially larger than the size of $r$ and the total size of
+$E$, the latter of which is at most $n|E|$.
+
+\subsection{Results for finite representation alphabets}
+
+We consider the case in which the alphabet $\Gamma$ (over which the
+representations of concepts are described) is finite. This typically
+occurs when concepts are defined over discrete domains (e.g. Boolean
+formulas, automata, etc.).
+
+\begin{theorem}
+If ${\bf R} = (R, \Gamma, c, \Sigma)$ is strongly polynomially closed
+under exception lists and ${\bf R}$ is PAC-learnable, then there
+exists a randomized polynomial-time (length-based) Occam algorithm for
+${\bf R}$.
+\end{theorem}
+
+\begin{corollary}
+Let $\Gamma$ be a finite alphabet. If ${\bf R} = (R, \Gamma, c,
+\Sigma)$ is strongly polynomially closed under exception lists, then
+${\bf R}$ is PAC-learnable if and only if there exists a randomized
+polynomial-time (length-based) Occam algorithm for ${\bf R}$.
+\end{corollary}
+
+\section{PAC-learning and Compression}
+
+\subsection{Learning versus Prediction}
+
+There are two common variants on the standard definition of
+PAC-learning. Under these alternative definitions, the hypothesis
+output by the learning is not required to be of the same form as the
+target concept description. \\
+
+The notion of learning one representation class ${\bf R} = (R, \Gamma,
+c, \Sigma)$ in terms of another representation class ${\bf R'} = (R',
+\Gamma', c', \Sigma')$ was introduced. Under this definition, a
+learning algorithm for ${\bf R}$ is required to output hypotheses in
+$R'$ rather than in R. A representation class ${\bf R}$ is
+polynomially predictable if there exists a representation class R'
+with a uniform polynomial-time evaluation procedure procedures such
+that ${\bf R}$ is PAC-learnable.
+
+\begin{example}
+Fixed encoding and Huffman encoding.
+\end{example}
+
+\subsection{Data compression}
+
+Now we talk about the relationship between learning and data
+compression. It has been shown that, if any sample can be
+compressed-that is, represented by a prediction rule significantly
+smaller than the original sample-then this compression algorithm can be
+converted into a PAC-learning algorithm. \\
+
+Suppose $C_n$ is a learnable concept class and that we have been given
+$m$ examples $(v_1, c(v_1)), (v_2, c(v_2)),..., (v_m, c(v_m))$ where
+each $v_i \in X_n$ and $c$ is a concept in $C_n$ of size $s$. These
+examples need not have been chosen at random. The data compression
+problem is to find a small representation for the data, that is, an
+hypothesis $h$ that is significantly smaller than the original data
+set with the property that $h(v_i) = c(v_i)$for each $v_i$. An
+hypothesis with this last property is said to be consistent with the
+sample.
+
+\begin{theorem}
+Let C be a learnable concept class. Then there exists an efficient
+algorithm that, given $0 < \delta \le 1$ and $m$ (distinct) examples
+of a concept $c \in C_n$ of size $s$, outputs with probability at
+least $1 - \delta$ a deterministic hypothesis consistent with the
+sample and of size polynomial in $n$, $s$, and $\log m$.
+\end{theorem}
+
+\subsection{Future Research}
+
+\begin{itemize}
+\item Motivation: it is useful.
+
+  Machine learning techniques have been widely used in lots of fields,
+  including data compression. And it seems quite hard to do the
+  analysis from a theoretical perspective. We need a theoretical model
+  to help us do the analysis.
+\item PAC-learning and lossy data compression: graphics.
+
+  The symmetric difference of $c$ and $h$: $c \Delta h = (c \backslash
+  h) \cup (h \backslash c)$. We could drop the part we don't care-the
+  $\epsilon$ part.
+\item Exact-learning and lossless data compression: r-junta.
+
+  The general description length of an r-junta
+  \begin{eqnarray*}
+    DL_{general} = n \cdot \log n + 2^n
+  \end{eqnarray*}
+  The probably best description length of an r-junta
+  \begin{eqnarray*}
+    DL_{best} = r \cdot \log r + 2^r
+  \end{eqnarray*}
+  As we can see, by using $DL_{best}$, we achieve a compression rate of
+  \begin{eqnarray*}
+    r \approx = 1 - \frac {2^r}{2^n} = 1 - 2^{r-n}
+  \end{eqnarray*}
+  That is, we saved about $1 - 2^{r-n} \time 100\%$ of the space.
+\item The compression model is already complicated enough.
+
+  This is a long and winding road.
+\end{itemize}
+
+\section{References}
+
+\begin{itemize}
+\item Raymond Board, Leonard Pitt (1990). \emph {On the necessity of
+    Occam algorithms}.
+\item Robert E. Schapire (1990). \emph {The Strength of Weak
+    Learnability}.
+\item Micheal J. Kearns, Umesh V. Vazirani. \emph {An introduction to
+    computational learning theory}.
+\item Elchanan Mossel, Ryan O'Donnell, Rocco A. Servedio (2003). \emph
+  {Learning Juntas}.
+\end{itemize}
+
+\end{document}

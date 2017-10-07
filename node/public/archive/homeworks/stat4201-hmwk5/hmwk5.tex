@@ -1,0 +1,197 @@
+\documentclass[12pt]{article}
+\parindent=.25in
+
+\setlength{\oddsidemargin}{0pt}
+\setlength{\textwidth}{440pt}
+\setlength{\topmargin}{0in}
+
+\usepackage{amsmath}
+\usepackage[dvips]{graphicx}
+\usepackage{verbatim}
+\usepackage{appendix}
+
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{latexsym}
+\usepackage[center]{subfigure}
+\usepackage{epsfig}
+\usepackage{hyperref}
+
+\title{Stat 4201 Homework 5}
+\author{Mengqi Zong $<mz2326@columbia.edu>$}
+
+\begin{document}
+
+\maketitle
+
+\setlength{\parindent}{0in}
+
+\section*{Question 1}
+
+1. I use two models to predict 'bwt' birth weight in grams.
+
+\begin{itemize}
+\item OLS\\
+
+  Here is the output from R:
+
+\begin{verbatim}
+Call:
+lm(formula = bwt ~ x.p1)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-991.22 -300.96   -5.39  277.74 1637.80 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  3612.508    229.457  15.744  < 2e-16 ***
+x.p1low     -1131.217     73.957 -15.296  < 2e-16 ***
+x.p1age        -6.245      6.347  -0.984 0.326416    
+x.p1lwt         1.051      1.133   0.927 0.355085    
+x.p1race     -100.905     38.544  -2.618 0.009605 ** 
+x.p1smoke    -174.116     72.000  -2.418 0.016597 *  
+x.p1ptl        81.340     68.552   1.187 0.236980    
+x.p1ht       -181.955    137.661  -1.322 0.187934    
+x.p1ui       -336.776     93.314  -3.609 0.000399 ***
+x.p1ftv        -7.578     30.992  -0.245 0.807118    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+Residual standard error: 433.7 on 179 degrees of freedom
+Multiple R-squared: 0.6632,	Adjusted R-squared: 0.6462 
+F-statistic: 39.16 on 9 and 179 DF,  p-value: < 2.2e-16 
+\end{verbatim}
+
+\item Least Median Squares of Regression\\
+
+  Here is the output from R:
+
+\begin{verbatim}
+(Intercept)         low         age         lwt        race       smoke 
+3357.730179 -902.755007  -16.416823   -2.374312  165.496582  280.624997 
+        ptl          ht          ui         ftv 
+ -32.316607 -861.834171 -354.088095   48.165829 
+\end{verbatim}
+
+\end{itemize}
+
+I choose LMS as the optimal model due to its robustness.
+
+\section*{Question 2}
+
+i) I use VIF to decide whether there is multicollinearity. Here is the
+output from R:
+
+\begin{verbatim}
+stack.x[, 1] stack.x[, 2] stack.x[, 3] 
+    2.906484     2.572632     1.333587 
+\end{verbatim}
+
+As we can see, none of these VIF is greater than 10. So there is no
+serious multicollinearity among variables. \\
+
+ii) \\
+a) I use OLS to fit the data. Here is the output from R:
+
+\begin{verbatim}
+Call:
+lm(formula = stack.loss ~ Air.Flow + Water.Temp + Acid.Conc.)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-232.72  -82.09  -53.22  -18.43 1312.54 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept) 1045.451   1260.498   0.829    0.418
+Air.Flow       1.899     10.657   0.178    0.861
+Water.Temp    -6.285      8.811  -0.713    0.485
+Acid.Conc.   -10.837     16.110  -0.673    0.510
+
+Residual standard error: 333.1 on 17 degrees of freedom
+Multiple R-squared: 0.03577,	Adjusted R-squared: -0.1344 
+F-statistic: 0.2102 on 3 and 17 DF,  p-value: 0.8879 
+\end{verbatim}
+
+b) Here are the influential points identified by different methods:
+
+\begin{itemize}
+\item DFFITS\\
+  The influential points are sample 13 and sample 20. $DFFITS_{13} =
+  -2.55103$, $DFFITS_{20} = 97.32509$. They are the only two samples
+  that $|DFFITS_i| > 1$.
+\item DFBETAS
+  \begin{itemize}
+  \item Intercept\\
+    The influential points are sample 10, sample 17 and sample
+    20. $DFBETAS_{intercept_{13}} = 1.015542, DFBETAS_{intercept_{17}}
+    = 1.540897, DFBETAS_{intercept_{20}} = -2.398968$. They are the
+    only three samples that $|DFBETAS_{intercept_{i}}| > 1$.
+  \item Air.Flow\\
+    The influential points are sample 20. $DFBETAS_{Air.Flow_{20}} =
+    7.578975$. It is the only sample that $|DFBETAS_{Air.Flow_{i}}| >
+    1$.
+  \item Water.Temp\\
+    The influential points are sample 17. $DFBETAS_{Water.Temp_{17}} =
+    -1.34151$. It is the only sample that $|DFBETAS_{Water.Temp_{i}}|
+    > 1$.
+  \item Acid.Conc.\\
+    The influential points are sample 17. $DFBETAS_{Acid.Conc._{17}} =
+    -1.302743$. It is the only sample that $|DFBETAS_{Acid.Conc._{i}}|
+    > 1$.
+  \end{itemize}
+\item Studentized Deleted Residuals\\
+  Since $n = 21, p = 3$, so we will use $t_{.975/44,16} = 2.5101$ to
+  decide the Y outliers. The only Y outlier is sample 20, since 
+  $T_{(20)} = 316.4351 > t_{.975/44,16}$.
+\item Cooks' Distance\\
+  Since $n = 21, p = 3$, so we will use $F_{.975, 4, 17} = 0.1161$ to
+  decide the influential points. The influential points are sample 13,
+  sample 17 and sample 20. $D_{13} = 1.7266663, D_{17} = 0.1418525,
+  D_{20} = 0.4019801$. They are the only three samples that $|D_i| >
+  F_{.975, 4, 17}$.
+\end{itemize}
+
+c) The coefficients of different methods before and after the changes
+are listed in Table~\ref{tab:q3}.
+
+\begin{table}[!hbp]
+  \begin{center}
+    \begin{tabular}{|l|c|c|c|c|}
+      \hline
+      \hline
+      OLS    & Intercept & Air.Flow & Water.Temp & Acid.Conc \\ \hline
+      Before &  -39.9197 &   0.7157 &     1.2953 & -0.1521   \\ \hline
+      After  &  1045.451 &    1.899 &     -6.285 & -10.837   \\ \hline
+      \hline
+      LMS    & Intercept & Air.Flow & Water.Temp & Acid.Conc \\ \hline
+      Before & -3.425000e+01 & 7.142857e-01 & 3.571429e-01 &
+      -3.185417e-16 \\ \hline 
+      After  & -3.425000e+01 & 7.142857e-01 & 3.571429e-01 &
+      -3.185417e-16  \\ \hline 
+      \hline
+      LTS    & Intercept & Air.Flow & Water.Temp & Acid.Conc \\ \hline
+      Before & -3.429167e+01 & 7.142857e-01 & 3.571429e-01 &
+      -8.192168e-18 \\ \hline
+      After  & -3.630556e+01 & 7.291667e-01 & 4.166667e-01 &
+      -6.029813e-18 \\ \hline
+      \hline
+      RLM    & Intercept & Air.Flow & Water.Temp & Acid.Conc \\ \hline
+      Before & -41.0265311 & 0.8293739 & 0.9261082 & -0.1278492 \\ \hline
+      After  & -41.0265311 & 0.8293739 & 0.9261082 & -0.1278492 \\ \hline
+      \hline
+    \end{tabular}
+  \end{center}
+  \caption{Coefficients before and after the change \label{tab:q3}}
+\end{table}
+
+\appendix
+\appendixpage
+\addappheadtotoc
+
+The code is listed below:
+
+\verbatiminput{hmwk5.r}
+
+\end{document} 

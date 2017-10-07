@@ -1,0 +1,12 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}
+\BOOKMARK [1][-]{section.2}{PAC-learning and Occam algorithm}{}
+\BOOKMARK [2][-]{subsection.2.1}{Notation and Definitions}{section.2}
+\BOOKMARK [2][-]{subsection.2.2}{Example: Learning Boolean conjunctions}{section.2}
+\BOOKMARK [2][-]{subsection.2.3}{The sufficient condition}{section.2}
+\BOOKMARK [2][-]{subsection.2.4}{Exception list}{section.2}
+\BOOKMARK [2][-]{subsection.2.5}{Results for finite representation alphabets}{section.2}
+\BOOKMARK [1][-]{section.3}{PAC-learning and Compression}{}
+\BOOKMARK [2][-]{subsection.3.1}{Learning versus Prediction}{section.3}
+\BOOKMARK [2][-]{subsection.3.2}{Data compression}{section.3}
+\BOOKMARK [2][-]{subsection.3.3}{Future Research}{section.3}
+\BOOKMARK [1][-]{section.4}{References}{}

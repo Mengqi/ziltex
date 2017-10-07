@@ -1,0 +1,108 @@
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+	PLEASE TELL ME DIRECTLY IF THIS QUESTION IS TOO GEEKY
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+Spoiler Alert: There is gonna be lots of stupid questions. Watch out!
+
+
+******************
+    Project
+******************
+
+1. What do you think of?
+
+*****************
+    Lecture 1
+*****************
+
+0. What do you think of distribution?
+
+3. M estimate?
+
+*****************
+    Lecture 2
+*****************
+
+1. What particular field is lecture 2 talking about?
+
+2. Difference between probability theory & statistics?
+
+8. Sufficient?
+
+9. Complete?
+
+11. Association?
+
+13. Bootstrap non-parametric?
+
+15. Conjugate Prior?
+
+16. Credible interval?
+
+17. Bayesian vs. Frequentist?
+
+18. Binomial frequentist or Bayesian? Only apply to integer?
+
+19. Pooled SD?
+
+*****************
+    Lecture 3
+*****************
+
+
+
+*****************
+    Lecture 4
+*****************
+
+1. For all responses, which one is the most accurate one?
+
+
+
+2. Intuitively, why there is \bar {X} in the standard error of X_0?
+
+
+
+3. Compound uncertainty?
+
+
+
+4. Bonferroni procedure?
+
+
+
+5. What is the regression line?
+
+
+
+6. t-multiplier? And Scheffe multiplier? And F-percentile?
+
+
+
+7. Remember that linear regression means linear in \beta's, not linear
+in X, so quadratic regression is a special case of multiple linear
+regression?
+
+*****************
+    Lecture 5
+*****************
+
+1. The C_p Criterion ?
+
+WTF?
+
+
+*****************
+    Lecture 8
+*****************
+
+1. Y is Guassian?
+
+ppt p2
+
+2. Error terms uncorrelated?
+
+

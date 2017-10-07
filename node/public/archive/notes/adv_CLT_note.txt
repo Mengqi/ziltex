@@ -1,0 +1,2332 @@
+Note - Advanced Topics in Computational Learning Theory
+
+************************
+  Lecture 1	1/19
+************************
+
+1. Topics Today
+
+   Motivation
+   Admin
+   First Learning Model (PAC)
+   classes of functions
+   PAC learning Lefts
+   Lefts
+   DST
+
+2. CLT - 2 parts
+   1) unsupervised		2) supervised
+   unlabeled data		data labeled examples (x,y) y=f(x)
+   clustering 			f = labeling function
+   learning distributions	fundamental: f is a Boolean function
+   learning a unknown graph		     f: X -> {0,1}
+
+3. Theoretical CS Point of View
+
+   Super clear about assumptions and models
+   (Try to) give provably correct efficient algorithm for learning
+   types of Boolean functions of interest to Theoretical Computer
+   Science:
+   	 decision trees, disjunctions, conjunctions, half-spaces, DNF,
+   	 CNF, shallow Boolean circuits,...
+
+4. This course: tough problems
+
+   functions are complex
+   learning with noise etc.
+
+5. Flavor: learning, algorithms, concrete complexity (low level)
+
+   12 lectures and 2 student lectures
+
+6. Requirement
+
+   Scribe
+   1 Problem
+   Project:	1) make up scribe notes (1 to 2 lecture notes)
+   		2) Original Portion
+		   made a theory attempt at least
+
+7. 3 units
+
+   a) PAC learning
+      PTFs
+   b) PAC learning under the uniform distribution
+      Fourier
+   c) Learning with noise, agnostic
+      whatever works
+
+8. Basics:
+
+   classes of functions
+   Bshouty / Kushielevitz Sec 1-4
+
+   X = domain "instance space" X = {0,1}^n, X = {-1,1}^n
+   x \in X "example"
+   f, c: X-> {0,1} "concept"
+
+   c \subsets X
+   c is a function
+   X is a function that result could be anything for a given input
+
+   C = concept class: set of concepts
+
+   C is "known"
+   target concept \in C "unknown"
+
+   Given access to labeled example (x, c(x))
+   learner's goal is to \epsilon-approximate c
+
+10. Some concept classes:
+
+   1) NF formulas: IRS of Ands of literals
+      Can be treated by a Boolean circuits, trees
+      size of a NF: #term e.g. 3 term DNF
+      Every Boolean function can be expressed as DNF
+      => Universal Representation Scheme
+      Intuition: DNF is a union of sub-cubes
+      		 sub-cube of {0,1}^n of co-dimension 3
+      can need 2^(n-1): parity
+      PAR(x_1,...,x_n) = (x_1 + ... + x_n) mod 2
+
+      k-DNF: each term contains  <= k literals
+      for k <= n-1, not a universal function <> parity function
+
+   2) Decision Tree
+      	Ex:	x_7
+	     	x_5		x_4
+	     	x_2    1   	x_5	x_6
+		1 0    		0 1	x_2	1
+		  		  	1 0
+		  !x_7 ^ !x5 ^ x_2
+      Universal Representation Scheme
+      depth n, 2^n leaves
+      size of DT: #leaves
+
+      decision tree with size s
+      s_0 + s_1 = s
+      Geometric insight:
+      0-inputs: disjoint union of s_0 sub-cubes
+      1-inputs: disjoint union of s_1 sub-cubes
+
+      Claim: if c has a size-s DT, then
+      	     c has an s-term DNF
+	     c has an s-clause CNF (!c has s-term DNF)
+
+	     DT -> DNF, we only care those s_1 leaves, so c has an
+	     s_1-term DNF
+	     DNF -> CNF, so c has an s_1-clause CNF
+	     To negate a decision tree c, we just need to flip output
+	     bits. So, !c has s_0 leaves with output 1, so !c has an
+	     s_0-term DNF
+
+      To negate a decision tree c, flip output bits. And that is the
+      original meaning of negation, flip outputs.
+
+      Specialization of DTs: decision lists
+	DL: DT where every var (internal) node has >=1
+	    child that's a leaf
+	K-DL: DL but where each internal node has a conjunction of <=k
+	      literals
+
+	x1 ^ !x4  ->  x1 ^ x5  ->  x2 ^ x4 -> 0
+	0    	      0	       	   1
+
+   3) LTFs: Linear Threshold Functions
+       A function c: {0,1}^n -> {-1,1} is an LTF if \exists w1,...wn
+       \theta \in R s.t.
+       \forall x \in {0,1}^n,c(x) = sign (w.x- \theta)
+       sign(z) = +1  z >= 0
+       	       	 -1  z <= 0
+
+       Not universal representation, because there are some function
+       that can not be linear classified.
+       parody function:
+
+       	   (-1,1)  (1,1)
+       	      -      +
+	   (-1,-1) (1,-1)
+       	      +      -
+
+       Fact: any 1-DL is an LTF
+
+       x1 -> !x2 -> !x3 ... -> xn -> -1
+       -1    +1	    -1 	       +1
+
+       -2^n x1  +2^{n-1} * (1 - x2) - 2^{n-2} (1 - x3) ... >= 0
+
+       MAJ(x) = sign(x1 + .. + xn)
+       => an LTF not an 1-DL
+
+11. PAC Learning Model
+
+    setup: PAC algorithm for learning C using hypothesis class H
+    	   unknown target concept c \in C
+	   unknown arbitrary distr. D over X
+	   learner gets (x, c(x)), each x is draw from D => data set
+	   learner outputs a hypothesis h: X -> {0,1}
+	   Given c, h: X-> {0,1}, error of h w.r.t c under D
+	   	 = Pr_{x from D} [c(x) != h(x)]
+
+    Def: Algorithm A PAC learns C using hypothesis class H
+    means:
+	   	  \forall distr. D over X
+		  \forall \epsilon, \delta > 0
+		  \forall c \in C
+    If A is given \epsilon, \delta and access example oracle, A
+    outputs a h \in H s. with probability >= 1 - \delta
+    have Pr(c(x) != h(x)) <= \epsilon
+
+    m = # oracle calls of examples
+    Running time of A? depends on  n, \epsilon, \delta, s = size(c)
+    Goal: time poly(n, 1/ \epsilon, s, log(1 / \delta))
+
+12. PAC Learning LTFs
+
+    Theorem: There is a poly(n, ...) tune PAC learning alg. for
+    C = {all LTFs over {0,1}^n}
+
+    Algorithm in brief:
+    Draw m = O(1 / \epsilon) * (n + log(1 / \delta)) ex. (xi,yi)...
+    Use poly(n,m) algorithm to find some consistent hypothesis sign(wx -
+    \theta) correct  on all examples
+
+    LP: say target LTF is v1x1 + ...+ vnxn >= \tau
+    Ex(1101, +) any (w,\theta) must satisfy w1 + w3 + w4 >= \theta
+    Ex(0011, -) w3+w4 < \theta
+
+    2 ingredient to prove theorem:
+    statistical LT: for all distributions D, a half-space hypothesis
+    consistent with m examples drawn from D will be \epsilon-accurate
+    with probability at least 1 - \delta
+
+    concept class of LTFs has VCDIM <= n + 1
+
+    Algorithm component: poly-time LP
+
+13. PTFs
+
+    Given f: {0,1}^n -> {-1,+1} Polynomial p(x1,...,xn) gives a PTF
+    for f if \forall x \in {0,1}^n, f(x) = sign(p(x))
+
+    The PTF degree of f is the smallest d s.t. \exists degree-d PTF
+    for f.
+
+    Any K-DNF has a degree-K PTF
+
+    x_1 x_2 V !x_3 x_4
+
+    p(x) = x_1 * x_2 + (1 - x_3) *  x_4 - 1/2
+
+    K-DL has K-PTF
+
+    p(x) = 2^n * Q_1 * b_1 + 2^(n-1) * Q_2 * b_2 + ... + 2 Q_n b_n
+    	   + b_{n+1}
+
+    K-DNF \subset K-DL
+
+    x_1 x_2 V !x_3 x_4
+
+    x_1 x_2 -> !x_3 x_4 -> -1
+    1	       1
+
+    p(x) = 2^2 x_1 x_2 + 2 (1-x_3) x_4 + -1 - 1/2
+
+************************
+  Lecture 2	1/26
+************************
+
+1. Today's Topic
+
+   PAC learning algorithm for degree-d PTF in n^d time
+   PTFs for decision trees
+   	for DNFs
+   next time: PTFs for intersections of half-spaces
+
+2. Readings
+
+   Hellerstein/ Servedio: PTFs, first 3,4 sections
+   Blum 1994
+   Klivans / Servedio: DNF stuff
+
+3. PTFs: f:{0,1}^n -> {-1,1}
+   	 sign(p(x)) = f(x) /forall x \in {0,1}^n
+	  |
+	 P gives PTF for f
+	 "PTF degreee of f" = min. degreee of any such p
+
+	 Any K-DNF has a degree-K PTF
+
+4. Can view f's inputs as {0,1}^n or {-1,1}^n: doesn't change
+   PTF degree.
+
+   If p is a de-d PTF for f over {0,1}^n,
+
+   q(x_1, ..., x_n)   	    <- {-1,1}^n
+   	  |
+   p((x_1+1)/2, (x_2+1)/2)  <- {0,1}^n
+
+5. Can always only consider multilinear polynomial's
+
+   x_1^3 x_2 x_3 = x_1 x_2 x_3 for 0/1 inputs
+
+   So max # of poss. monom. in a degree-d PTF is
+   \sum_{i=0 -> d} (n i) = (en/d)^d <= n^d
+
+   So a PTF is a n^d-"var" ....
+
+6. So theorem: The LP-based algorithm can PAC learn C = {all deg-d PTF
+over {0,1}^n} in time poly(n^d, 1 / \epsilon, log(1 / \delta))
+
+Cof: Let C = some concept class over {0,1}^n s.t. every concept in
+this class has PTF degree <= d. Then we can PAC learn C in time
+poly(n^d, 1 / \epsilon, log( 1 / \delta))
+
+7. Warmup: Can PAC learn C={K-DLs} in n^k-time
+
+   Reason: every K-DL has a degree-K PTF
+
+8. DTs
+
+   Theorem: (Blum) any size-s DT has a log(s)-DL. 
+
+   N^{logs} time PAC learning for size-s DT
+   -> fastest known alg.
+   small improvement of very special case -> $1000
+
+   proof: Let T be size-s DT
+   	  T must have at least 1 leaf of depth <= lgs
+	  call this leaf l, s = sibilings of b_l
+	  l = leaf; b_l \in {-1,1} at l
+
+	  x2
+	       x_3
+	       b_l	S
+
+	  call the conj ".... ^ x_3" correspond to root-to-l path C.
+
+	  Surgery: Let T' be tree obtained by replacing L's parent
+	  with L's sibling S, Leaf L, bl remainded as is L's parent.
+
+	  x2
+
+		S
+
+	  only error is when it reach C.
+
+	  C -> T'
+	  |
+	  b_l
+
+	  -1
+	  =>
+
+	  C -> C' -> T''
+	  |    |
+	  b_l  b_l''
+
+9. Open Question: Is there an N^{o(logs)}-time algorithm to PAC learn
+   size-s DTs?
+
+10. Non-Open Question: What's the smallest PTF degree upper bound for
+size-s DTs?
+
+   There are size-s DT for which any PTF must have degree >= logs
+
+   * Official HW Q *
+
+11. Small improvement: rank
+
+    Define: Rank of a rooted binary tree T = root T_1 T_2 is 
+    	    a)if T is single node, rank = 0. 
+	    b) If rank(T_1) != rank(T_2), then rank(T) =
+    	    max{rank(T_1), rank(T_2)}. 
+    	    c) If rank(T_1) = rank(T_2), then rank(T) = rank(T_1) + 1
+
+    So DL = DT of rank 1
+
+    Lemma: Any rank-r DT must have at least one leaf at distance r
+    from root.
+
+    PF: how can rank(T) = r?
+    	case 1: rank(T_1) = rank(T_2) = r - 1
+	case 2: one of the children rank(T_1) = r
+
+	=> after r steps, reach rank-0 node: leaf
+
+12. Theorem: Any rank-r DT of length s has an r-DL of length <=s
+
+    * has a title of paper with your main theorem
+
+    Cor: PAC learn C = {rank-r DTs} in n^r time
+
+13. Claim: Any rank-r DT has >= 2^r leaves (So this strengths earlier
+result for size-s DTs).
+
+    PF:...
+
+14. DNFs: Every s-term DNF has a PTF of degree O(n^{1 / 3} logs)
+
+* s-term DNF => n-DNF => n-DL (each node at most n literals)
+  => PTF of degree of O(n)
+* If the s-term DNF with s = 2^n => n-DL with size 2^n
+  => PTF of degree of O(n^{1/3} * log(2^n)) = O(n^{4/3})
+
+    [MP'68]: There is an n^{1/3}-term DNF f s.t. any PTF for f must
+    have a degree \Omega(n^{1/3})
+
+\sqrt {nlogs} - deg PTF diff. constr. 1
+			      	      combine to get 14.
+\sqrt {nlogs} - deg PTF diff. constr. 2
+
+    1) Theorem: Any n-decision list of length s over {0,1}^n can be
+    expressed as an O(\sqrt {n logs logn})-DL (hence as an 
+    O(\seqrt {n logs logn})-deg PTF) (Bshouty)
+
+    2) Lemma 1: Let h = O(\sqrt {n logs logn}). Any n-DL of length s
+    is equivelent to a DT
+    where (i) internal nodes are single vars x_1,...,x_n,
+    	  (ii) trees has <= 2^h leaves;
+	  (iii) each leaf is an h-DL
+
+    3) Lemma 2: Any decision tree as described (i), (ii), (iii) of L1
+    is a 2h-DL.
+
+    pf: Since tree has <= 2^h leaves \exists depth -h leaf. 
+    * if doesn't have a depth h or depth < h leaf. Then there will be
+    a full tree with  2^h - 1 internal nodes at height 0 - h. Then
+    there will be 2^{h+1} nodes > 2^h
+
+    C = conj. to that leaf.
+    L = h-DL at that leaf.
+
+    4) Pf of L1: Let T_1,...,T_s be the conj. at nodes of over n-DL
+
+       T_1 -> T_2 -> ... -> T_s -> b_{s+1}
+       |      |	     	    
+       b_1    b_2
+
+       T_i is long if has > h literals.
+
+       idea: build DT by picking vars that occurs most often is long
+       terms.
+
+       Let t = # of long terms in T_1,...,T_s,...
+       Each long term: length > h
+       So > th total occurrences of list in all long-terms
+       So some lit. x_i or !x_i occurs in >= th / 2n long terms
+       Popular? put x_i at root of tree.
+       
+       Do obvious simplif. of n-DL when x_i <- 0
+       	  	  	      	   	x_i <- 1
+ 
+	x_1 = 0				x_1 = 1
+	-> x_1 x_3 x_4 ->		-> x_1 x_3 x_4 ->
+	   remove      			       x_3 x_4
+
+       The subfunctions f | x_i <- 0, f | x_i <- 1
+
+       stop at a node when its DL has no long terms
+
+       Let \fi(n,t) be max possible # of leaves in any DT that can
+       result from doing this process starting on an n-DL with <= t
+       long terms.
+
+       (i) and (iii) are easy to proof.
+
+       	       	     	 x = 1		x = 0
+       Have \fi(n,t) <= \fi(n-1,t) + \fi(n-1, t(1 - h/2n))
+       	    	     	"tackle this"
+			<= \fi(n-2, t) + \fi(n-2, t(1 - h/2(n-1)))
+
+       =>
+       \fi(n,t) <= n * \fi(n, t(1 - h /2n))
+       		<= n^2* \fi(n, t(1- h/2n)^2)
+		<=...
+		<= n^k * \fi(n, t(1-h/2n)^k)
+       
+       fact: \fi(1,*) <= 2; \fi(*,0) = 1
+       
+       So k = 2n/h * lnt => \fi(n,t) <= n^k *1
+       For us, t is <=s, so our tree has <= n^k = n^{2n/h logs} ....
+       =>
+       So our tree has 
+       	  n^{2n/h lns} = 2^{logn 2n lns / (\sqrt {n logn logs})}
+ 
+************************
+  Lecture 3	2/02
+************************
+
+1. Today:
+
+   1) Finshi O(n^{1/3} logs)
+   Klivans / Servedio
+   2) intersections of (low weight) halfspaces.
+   Beigel / Reingol 1991 Klivansl / O'donald /Servedio
+   3) Show if h_1, h_2 both weight-w, then h_1 ^ h_2 has PTF deg M-
+   O(logW)
+
+2. First Result
+   Theorem: Any s-term t-DNF has a PTF of degree(\sqrt {t} * logs)
+   * trivial degree t.
+
+   Consider x_1, x_2, x_3, ..., x_t.
+   Great to have deg-(\sqrt t) for this, gives exact 0/1 value.
+   	    	 	       	   	       (close)
+
+   Sum of this quantities, not every single one of them.
+
+   Let X=(x_1, + ... + x_t) / t
+   Want to poly p(x) s.t.
+   	X = 1 => p(x) = 1      
+				   0 <=	    <= 1
+	X = 0, 1/ t, ... (t-1)/t => p(x) = 0
+	p(x) = x^t ?
+	p((t-1)/t) = 1 / e ~= 0.37
+
+   the useful poly: Chebychev polynomials.
+       C_d(t) = deg-d poly
+       C_d(t) = cos(d cos^{-1}(t))	|t| <= 1
+       	      	cosh(d* cos^{-1} (t)) 	|t| >  1
+   Official HW prob: prove following fact.
+   Fact: C_d(x) has some nice properties, it satisfies
+   	 a) |C_d(x)| <= 1 for -1 <= x <= 1
+	 b) C_d(1) = 1, and 
+	 c) C'_d(1) = d^2
+	 d) C'_d(x) >= d^2 if x >= 1, only increasing
+
+3. Pf of O(\sqrt {t} logs) thm:
+   Let f = T_1 \lor .. \lor T_s
+   T_i = term of width <= t
+
+   Consider term T_i:
+     Literal l's arithmethization:
+     l = x_j -> x_j
+     l = !x_j -> 1 - x_j
+   T_i = x_i \land !x_3 \land x_4
+   =>
+   S_i = t_i = x_1 + (1 - x_3) + x_4
+   -> sum of all t_i
+
+   Define Q_i = p(s_i / t_i)
+   	  p(y) = C_d(y (1 + 1 /t_i))
+	  d = ceiling(\sqrt t)
+
+   Nice properties:
+   If T_i sat: Q_i(1) = p(1) = C_d(1 + 1 / t)
+   If not sat: s_i <= 1 - 1 / t_i
+      	  =>   (1 - 1/t_i) * (1 + 1/t_i) so |Q_i| <= 1
+
+   The poly we want:
+   P(x) = \sum_{i=1}^s {Q_i^{log(10s)}}
+
+   If f(x) = 1: some T_i is sat. that Q_i >= 2;
+      	     	that i gives >== 10s to P
+	Any unsat. T_j cause sum to decr. by <= 1
+	So P(x) >= 9s
+   If f(x) = -1: no T_i is sat. so P(x) <= s
+
+4. Pf of O(n^{1/3} logs) bound:
+
+   Let f = T_1 \lor ... \lor T_s any s-term DNF
+   Simple modification of 1st lemma for \sqrt {n logn logs}
+   result gives:
+   Lemma: Let f be a s-term DNF. For any  1 <= t <= n, we can express
+   f as a decision tree T where
+     a) each leaf of the tree T an s-term t-DNF
+     b) T has rank (2n/t)lns + 1
+
+   Key ingredient in this pf:
+   Definition r(n,p) = max rank of my DT generated by this procedure,
+   lower all n-var DNF with <=p term contain >t vars
+   r(n,0) = 1
+
+   Recur: r(n,p) <= max | r(n-1, p)
+   	  	    	| r(n-1, p(1 - t/2n)) + 1
+	  r(n,p) <= .....
+
+   ......
+
+   Applying \sqrt {t} logs result:
+   orig. DNF f is a DT of rank (2n/t lns + 1) with degree-O(\sqrt {t} logs)
+   PTFs at leaves
+
+   Use "Blumtrick" to convert DT to DL:
+   Lemma: Our DNF  f is equivalent to an r-DL whose leaves are 
+   O(\sqrt {t} logs)-degree PTFs, where r = (2n/t)lns + 1
+
+   C_1 	   ->   C_2 	    -> ...
+   |   	   	|
+   P_1>=0	p_2 >= 0
+
+   Open Question: What is the best PTF-degree for poly(n)-term DNF?
+   		  \Omega(n^{1/3}) <= ??? <= O(n^{1/3}(logn)^{2/3})
+		  <= O(n^{1/3} logn)
+  Suppose f is poly(n)-size depth-3 ckt  PTF deg?
+  ....
+
+5. Intersections of halfspaces
+
+   Def: Halfspcae f(x) = sign(w_1 x_1 + ... + w_n x_n)
+   has weight W if each w_i \in Z s.t.
+   |w_1| + ... + |w_n| <= W
+
+   Goal: If h_1, h_2 weight-W halfspaces h_1 \land h_2 has PTF deg O(logW)
+   Let a(x) = sign(u_1 x_1 + ... + u_n x_n - \theta) wt-W
+       b(x) = sign(u_1 x_1 + ... + u_n x_n - \tau)   halfspaces
+
+   XOR of a+b PTF deg 2
+
+   p(x) = (u*x - \theta)(v*x - \tau)
+   	  positive or negative
+
+   AND?
+   
+   u*x-\theta: always an integer in {-W, -W+1, ..., W}
+   
+   u*x \in Z \forall x \theta = (integer + 1/2)
+
+   ...
+
+   Suffice for us to build a well-behaved 
+
+   p(x,y) s.t. \for int. x,y 1 <= |x| <= W
+   	       	    	     1 <= |y| <= W
+
+   if x>0, y>0 p(x,y) >0
+   if x<0 or y <0, p(x,y) <0
+
+   - | +
+   -----
+   - | -
+
+   How to construct such a p(x,y), using low deg?
+   Rational functions? Rational function of deg-d is function
+   Q = r/s, where r,s are deg-d polynomials
+
+   Obs1:  Q(x,y) s(x,y)^2 = r(x,y)* s(x,y) has the same sign as
+   	  Q(x,y). it's a poly.
+
+   Obs2:  Suppose we have S(x) 1-var rational function, for sign(x),
+   on 1 <=x <= |W|:
+      S(x) = | +1,	1 <=  x <= W
+      	     | -1, 	-W <= x <= -1
+
+   Then Q(x,y) = S(x) + S(y) - 1/2
+
+   Obs3: We just need our rational S(x) to approximate sign(x) for
+   1 <= |x| <= W.
+
+   Need: low-deg. rational approximate for sign(x) on 1 <= |x| <= W
+
+   Discovered repeatedly; (BRS 91)
+
+   Want rational function S(x), s.t. for 1 <= |x| <= W,
+   	S(x) ~= 1;	  if 1  <= x <= W
+	S(x) ~= -1;	  if -W <= x <= -1
+   deg ~= logW
+
+   Let P_t(x) = (x-1) (x-2)^2 (x-4)^2 ... (x-2^t)^2
+   degree? 2t+1
+   Lemma: For 1 <= x <= 2^t, we have 0 <= 4 P_t(x) <= - P_t(-x)
+   (prove later, 3 line thing)
+
+   Now, the rational function:
+   Let S_t(x) = (P_t(-x) - P_t(x)) / (P_t(-x) + P_t(x))
+   Deg 2t+1
+   Lemma: For 1 <= x <= 2^t, have 1<= S_t(x) <= 5/3.
+   	  For -2^t <= x <= -1, have - 5/3 <= S_t(x) >= -1
+   
+   Lemma: Q_t(x_2, y) = S_t(x) + S_t(y) - 3/2
+   Claim: 
+   	  (i) Q_t(x,y) is rational function of deg <= 6t + 3.
+   	  S_t(x) + S_t(y) - 3/2 = r(x)/s(x) + r(y)/s(x) - 3/2
+	 = (2(r(x)s(y) + r(y)s(y)) - 3) / (2s(s)y(x))
+      (ii) For 1 <= x, y <= 2^t have Q_t(x,y) > 0
+      	   S_t(x) + S_t(y) - 3/2 >= 1/2  
+	   * from lemma before
+      For -2^t <= x,y <= -1, have Q_t(x,y) < 0
+      	  S_t(x) + S_t(y) - 3/2 at most -1 + 5/3 - 3/2 < 0
+      	  	   	    	   	x<0  y>0
+					y<0  x>0
+
+************************
+  Lecture 4	2/09
+************************
+
+1. Today
+
+   1) Prove two lemmas from last time
+   2) Finish first unit on PAC learning via PTF degree upper bounds
+   3) Start second unit on uniform distribution PAC learning
+   4) Fourier analysis of Boolean functions
+
+2. P_t(x) = (x-1) (x-2)^2 (x-4)^2 .. (x-2^t)^2
+
+   lemma: 1 <= x <= 2^t, 4P_t(x) <= -P_t(-x)
+
+   Proof: -P_t(-x) = (x+1) (-x-2)^2 (-x-4)^2... (-x-2^t)^2
+   	  P_t(x) <= -P_t(-x) term wise
+	  Suffice to show one k such that 4(x-2^k)^2 <= (-x-2^k)^2
+	  Pick k s.t. 2^{k-1} <= x <= 2^k
+	  4(x-2^k)^2 = 4(2^k -x)^2 <= 4(2^{k-1})^2
+	  ...
+
+3. S_t(x) = [P_t(-x) - P_t(x)] / [P_t(-x) + P_t(x)]
+
+   Lemma: (i) For 1 <= x <+ 2^t, S_t(x) \in [1, 5/3]
+   	  (ii) For -2^t <= x <= -1, S_t(x) \in [-5/3, -1]
+
+   Proof: Suffices to proof(i) Can check that -S_t(-x) = S_t(x)
+   	  So (i) => (ii), Let 1 <= x <= 2^t
+
+	  1. Pt(x) = 0, S(t) = 1, good.
+	  2. Pt(x) !=0, Provide Pt(x)
+	  S_t(x) = ((Pt(-x)/(-P_t(x))) + 1) / ((Pt(-x)/(-P_t(x))) - 1)
+	  	 <= 1 + 2/3 = 5/3
+
+4. Consequences for learning
+
+   Intersection of two weight W halfspaces has PTF degree O(logW). Can
+   PAC learning time n^(O(logW))
+
+   Intersection of k weight W halfspaces? PTF-degree O(klogk logw)
+
+   f(x) = sign(wx - \theta) w_i \in z, \Sum |w_i| <= W
+
+   Let g(y_1, .., y_k) be any boolean function h_1, ..., h_k be weight
+   W halfspaces Then g(h_1, ..., h_k) has PTF degree O(k^2 logW)
+
+   Detail Paper: Klivans- O'Donald-Servedio
+
+   Intersection of 2 poly(n) weight halfspaces has PTF degree O(logn).
+   Can we do better?
+
+   ..... check note
+
+   Intersection of 2 arb. halfspace?(no restriction on weight)
+
+   PTF degree \Omega(n)
+
+   No way to get n non-trivial running tie via PTF degree method for
+   this class.
+
+   OpenQ: learn intersection of 2 arb. halfspaces in time 2^{o(n)}
+
+5. Uniform Distribution learning
+
+   Recall": A is a PAC learning algorithm for concept class C if
+     \forall distribution D over {0,1}^n
+     \forall \epsilon, \delta >0 \forall target c \in C
+   If  A is given access to EX(c, D) (it labeled ex. <x, c(x)>, x~D)
+   w p>= 1-\delta A ouput h s.t. pr_err [h(x) != c(x)] <= \epsilon
+
+   Uniform Distribution: Uniform over {0,1}^n, each x \in {0,1}^n
+   receives with 1/2^.
+   Let we write error(h,c) = Pr[h(x) != c(x)]
+       	  		     x-u
+			     = 1/2^n #{h(x) != c(x)}
+   
+6. Main approach in dist-free setting
+   * Prove every c\in C has a low deg PTF
+     p: {0,1}^h -> R s.t. sgn(p(x)) = c(x) \forall x \in {0,1}^n
+   * Use LP to find approach p
+   * True ...
+
+   What if \forall -> for most of x
+
+   Will not succeed for the dist D that put all its wt. on those x
+   s.t. sgn(p(x) != c(x)) Pr[h(x) != c(x)] -> huge!
+   * not a worry for uniform distribution
+
+   Find p:{0,1}^n -> R s.t. E[(p(x)- c(x))^2] x-u small
+
+   Easy to show error  error(sgn(p), c) is "small"
+   Algorithm is fast if p is low-degree. p is sparse.
+
+   Useful tool: fourie analysis over {0,1}
+   
+   Learning poly(n)-term DNFs:
+   PTF degree lower bound of \Omega(n^{1/3})
+   Klivans-Servedio algorithm that runs in time 2^{O(n^{1/3}logn)}
+
+   essentially optimal for PTF degree method
+   
+   High-level sketch of n^{o(logn)} - time algorithm if distribution
+   is promised to be uniform.
+
+7. Lemma: let f be s-term DNF. Let g be f with all "long" terms
+of width >= log(s/\tau) removed. Then error(f,g) <= \tau
+   * very uniform distribution specific.
+
+   Proof: A term T in f of width k if sta. with probability
+   1/2^k. (using uniform distribution assumption crucially here).
+
+   So a long term is satisfy with probability <= 2^{1/log(s/tau)} =
+   tau/S, so throwing it out incurs <= tau/S error.
+   
+   In order to approximate learn f with uniform distribution , suffice
+   to g with respect to U, and g is "nice" all terms in g have width
+   <= log(S/tau).(i.e. g is a log(S/tau)-DNF).
+
+   * View each term of width <= log(s/tau) as a meta-variables. There
+     are N= n^{o(log(s/tau))} having met-var. View g as OR of S of
+     these N meta-vars.
+   * Run standard algorithm (Winnow from 4252)
+   => Show that can learn poly(n)-term DNF in time n^{O(log(n/epsilon))}
+
+8. Fourier analysis of Boolean Functions
+
+   f: {-1,1}^n -> {-1,1} (instead of {0,1}^n)
+   View f discrete/...
+   asa polynomial p_f: IR^n -> IR (continue)
+
+   Use analytic tools to reason about P_f instead of f.
+
+   View f:{-1,1}^n -> IR as a 2^n dimensional vector in IR^{2^n}. One
+   entry for each x \in {-1,1}^n stacked on top of each others (in
+   some filed order)
+
+   * function is a vector.
+
+   Write V to denote vector space (2^n-dimensional) of all functions
+   f: {-1,1}^k -> IR
+   (f+g)(x) = f(x) + g(x) = add vectors point-wise
+   alpha \in R (alpha f) (x) = alpha f(x) = scalar mult of vec
+
+   * basis? Inner Product?
+   
+   One probability basis("standard basis"). For each z \in {-1,1}^h,
+   \delta_z {-1,1}^h = {0,1} as
+
+   \delta_z = | 1 if x = z
+   	      | 0 if o.w
+   Claim that the set of 2^n function{S_z}_{z\in{-1,1}^n} from a basis
+   .....
+
+
+   Fourier Analysis: Different basis express f as linear combination of
+   "parity functions" WHY?
+
+   many interesting combination prop of f can be "seed of f" f's
+   fourier expansion.
+
+   A particularly well-suited to reason about approx such as E[]...
+
+   Def: Let S\in [n] = {1,2,.n diff of sets S,T \in [n].
+
+   \Pi_{i \in S} x_i \Pi_{j \in T} x_j = \Pi_{j \in S\triangeleT} x_i
+
+   * E[X_\phi] = 1 (X_\phi == 1 by convention)
+   * E[X_S] = 0 if (X_\phi == 1 by convention)
+
+   Orthonoinnality: For any 2 basis functions X_s X_t
+   <X_s, X_t> = | 1 if S = T
+   	      	| 0 o.w
+
+   pf. <x_s, x_t> = E{X_s X_t} = E{X_{s\triangelT}]
+
+   ...
+
+   Theorem: let f \in V, f:{-1,1}^n -> IR Then f has a unique
+   representation as a linear combination of {X_s: S \in [n]}
+   f(x) = \Sum \hat{f} (S) X_s(x)
+
+   We call this the Fourier expansion of f, and f(S) is ....
+
+   What is f(S)?
+   Claim \hat{S} = E[f * X_s] = <f, X_s>
+   Pf. <f,X_s> = <\Sum \hat{f}>
+
+   ...
+
+   What about \hat {f}(S)  for f: {-1,1}^n -> {-1,1}^n
+   \hat {f}(S) = E[f X_s]
+   	       = (1) * Pr[f(x) = X_s(x)]
+	       + (-1)* Pr[f(x) != X_s(x)]
+	       = 2Pr[F(x)= X_s(x) - 1]
+
+   \hat {f}(S) is a measure of the correlation between function X-S
+   "How much of ..."
+
+   Examples: And(x_1, x_2, ..., x_n) = | 1 if all x_i = -1
+   	     	      	   	       | 0 if any x_i = 1
+
+   First consideration AND' (x_1, ..., x_n) = | 1 if all x_i = -1
+   	 	       	    	       	      | 0 if any x_i =1	  
+
+   AND = 2 AND' - 1
+
+   Claim AND'(x_1, ..., x_n) = ((1-x_1)/2)((1-x_2)/2)...((1-x_n)/2)
+   	 	   	     = \Sum_{s \in [n]} (-1)^|s|/2^n X_s
+
+   Decision Tree 
+
+************************
+  Lecture 5	2/16
+************************
+
+1. Today
+
+1) Fourier analysis on {-1,1}^n as a tool for uniform-dist learning
+2) Low-degree algorithm
+3) Application of low-degree algorithm
+
+2. Fourier analysis
+
+f(x) = \Sum_{s <= [n]} hat{f}(s)x_s(x)
+
+AND'_T(x) = | 1 : f x:=1 \forall i <= T
+	    | 0 o.w.
+
+	    \Pi_{i \in T} (1 + x_i) / 2
+
+Sum of all these |hat{f}(S)| = 1
+
+3. DT
+
+Write as +-1 sum of AND'-type functions
+
+f is size-s DT, then
+Notice: 1) some of |hat{f}(S)| is <= s;
+	2) fourier degree of such a function f is <= d;
+
+Say f's Fourier deg is d if for all |S|>d have
+    		       	    	    hat{f}(s) = 0
+PTF for f: not unique
+Fourier representation for f is unique
+
+Recall \hat{f}(S) = E[f(x)x_s(s)]
+
+Much stronger: Plancherel's Identity
+
+for any f,g: {-1,1} -> R, have
+
+    \Sum hat{f}(x) hat{g}(x) = E[f(x)g(x)]
+
+pf: E[fg] = E[(\Sum \hat f(s)x_s) (\Sum \hat g(T)x_t)]
+    	  = \Sum_s \Sum_t \hat{f}(s) \hat{g}(s) E[x_s x_t]
+	    	   	  	     		s \triange t
+						= 1 if s = t
+						= 0 if s != t
+          = \Sum_s \hat{f}(s) \hat{g}(s)
+
+4. What does this has anything to do with learning?
+
+Boolean f has 1 unit of power, x_s has \hat
+
+...
+
+
+5. Lemma: fix any s <= [n]. Given S, \gamma >0,\delta >0, given EX(f),
+there's an algorithm which makes O(log(1/delta)/gamma^2) calls to
+EX(f), to probability >= 1 - delta, algorithm outputs c_s, s.t.  
+
+What if we don't know in advance which S is "good" (|\hat{f}(S)|)
+
+Suppose given EX(f) where f is promised to have \hat{f}(S) > 0.9 for
+some (unknown) S<=[n]
+
+Can we find S efficiently?
+Don't know; believe "no"
+best known algorithm: 2^{O(n/logn)}
+
+Bad news
+
+6. Good news: for many interesting f's  1 -epsilon of Fourier with
+lines on "low-degree coefficient"
+
+Est. \hat{f}((S) for |S| = 0, 1, 2
+
+7. Def: "Fourier concentration"
+
+Let f: {-1,1}^n -> R We say f has delta(epsilon,n)-Fourier
+concentration if \Sum \hat{f}(S)^2 <= epsilon
+
+...
+
+8. Low-Degree Algorithm to approximate an f with an f with
+delta(epsilon, n) - F.C.
+
+LDA(w | accept parameter tau, conf. parameter delta)
+
+   * Write d for for delta(epsilon, n)
+   * Draw m = O(n^d/tau * log((n/tau)^d_)) ex, use them to estimate
+   * c_s, est. for \hat{f}(S) as in previpous lemma for all S with
+    |S|<=d
+   * Output hypothesis h(x) = \Sum_{|S|<=d} C_s x_s(x)
+
+   Runtime poly (n^d/tau log(n^d/epsilon))
+
+Theorem: If f has delta(epsilon, n) - F.C., then with probility >=
+1-epsilon, output h of LDA sat.
+
+	   E[(h(x) - f(x))^2] <= epsilon + tau
+
+pf: Fix an S with |S| <= d
+Earlier Lemma:  w/fail probility <= tau/n^d, our c_s sat. |c_s
+-\hat{f}(s) <= tau?
+
+Union bound" with probility  >= 1 -  delta, every |S| <= d has
+|c_s - \hat{f}(s)| <= delta = sqrt(tau/n^d)
+
+Let g(x) = f(x) - h(x)
+For every S, have \hat{g}(S) = \hat{f}(S) - \hat{h}(S) 
+
+\hat{h}(S) =  0 if |S|<d, if |S| <= d
+
+E[g(x)^2] = E[(f-h)^2]
+	  = \Sum(\hat{f}(S) - \hat{h}(S))^2
+	  = 
+
+Such an h(x) is easily made into a good boolean approximate for f:
+Obs: Let f: {-1,1}^n -> {-1,1}
+     	 h: {-1,1}^n -> R
+	 Then Pr[f(x)!= sign(h(x))]
+	      = 1 / 2^n \Sum 1_{f!=sign(h)}
+	    <= E[(f(x) - h(x))^2]
+	     = 1/2^n \Sum(f(x) - h(x))^2
+
+	1) if f(x) = sing(h(x)) left = 0, right >= 0
+	2) If f(x) != sign(h(x)) left = 1, right >= 1
+
+9.  We've shown:
+
+Thm: Let C be a class of n-valuable Boolean functions s.t. every f \in
+C has delta(epsilon,n)-F.C
+	   =d
+
+There is a poly(n^d, log(1/delta))-time  unif. distribution PAC
+algorithm to learn any f\in C to acc. 2epsilon
+
+pf: LDA with tau <- epsilon. Output sign(h(x)) as
+
+10. Preview: Fourier concentration for
+    * DTs, DNFs, const depth ckts
+    * monotone functions
+    * halfspaces, intersections of halfspaces
+
+11. DNF, constant-depth ckts
+
+Say f is a depth-d DT, then \Sum_{|S| > d} \hat{f}(S)^2 = 0.
+
+Main result for DNFs is as following:
+
+Any s-term DNF has \Sum \hat{f}(S) <= epsilon
+    	       	   |S| > C log(s/epsilon)* log(1/epsilon)
+
+Cor: LDA learns s-term DNF in n^(log(s/epsilon)log(1/epsilon)) time
+
+First step: Suffice to consider width-w DNF, w = log(s/epsilon).
+
+Let f' be f but with all terms  longer than  log(s/epsilon)
+discarded. Have 4epsilon >= 4Pr[f != f'] = E[(f-f')^2]
+
+...
+
+Then for h(x) = \Sum_{|S| <= Cw log(1/epsilon)} \hat{f'}(S) x_s(x)
+     	      	have E[(f'-h)^2] = longer term < epsilon
+
+recall 2*a^2 + 2*b^2 >= (a+b)^2
+
+10 epsilon >= E[2(f-f')^2 + 2(f' - h)^2]
+   	   >= E[(f-h)^2] >= \Sum (longer term) \hat{f}(S)^2
+
+So we'll assume hence for ....
+
+\Sum (longer term) \hat{f}(S)^2 <= epsilon
+
+Keying restriction?: random restriction.
+Def: A restriction is a pair (I,z) I \subset [n], z\ \in {-1,1}^{\bar{I}}
+
+\bar{I} = [n] / I
+
+A "random restriction with probability rho" use a random pair (I,z) chosen
+by:                     rho-random restriction
+   a) for each i\in [n], put i \in I with probility rho
+   b) pick z \in {-1, 1}^I uniformly.
+   "*" <->variable in I
+   if n = 5, I = {2,3}, z= (-1,-1,1)
+   res function = ...
+
+Def: For f:{-1,1}^n  -> R, write
+     f_{\bar{I} <- z} for (I,z)-restricted
+
+Functions simplify under restriction
+How much? For width-w DNFs, "a lot" HSL
+
+12. Thm: (Hastad Switching Lemma): Let f:{-1,1}^n-> {-1,1} be a
+width-w DNF, Then for (I,z) a rho-random restriction,
+
+Pr[DT-depth(f_{\bar{I}<-z}>d)] <= (5 rho w)^d
+
+rho = 1/(10w), RHS = 1/2^d
+
+13. We understand FC of DTs. Argue that if after r.r, f has wvhp good
+FC, then f's FC before r.r must have been pretty good.
+
+Def: Given restriction (I,z), write \hat{f_{bar{I} <- z}}(S) is s^{th}
+FC of f_{bar(I) <- z}.
+
+Note: If S not a subset of I, then it's obvious that  \hat{f_{bar{I}
+<- z}}(S) = 0.
+
+Def: Useful notation: Let f: {-1,1}^n -> {-1,1}, S,I \subset
+[n]. Define F_{S \subset I}(z) =hat(f_{bar(I) <-z})(S)
+
+************************
+  Lecture 6	2/23
+************************
+
+1. Admin: email Rocco project topic by 3/1
+
+detail on web page
+
+2. Middle of FC for DNFs size-s, to show: f a width-w DNF
+
+(I, z) \rho-Rnadom restrcition
+
+3. F_{s \subset I} (z) =def= hat(f_{\underline {I} <- z} (s))
+   = 0 if S \nsubset I
+
+
+4.  Prop: \hat{F_{S \subset I}} (T) = \hat {f} (S \U T) 
+    for S \subset I, T \subset \bar {I}
+
+Proof: \hat {F_{S \subset T}} (T
+       = E [F_{S \subset T} (z) X_T(z)]
+       = E [\hat {f_{\bar{I} \in  z}} (s) \cdot X_T(z)]
+       = E [f(w, z) X_s(w) X_T(w)]
+       = E [f(w,z) X_{SUT}(w,z)]
+
+5. Key Lemma: (Mansour)
+     Let f:{-1,1}^n -> {-1,1} be a width-w DNF. Then for d >= 5,
+     \sum_{|S| > 20dw} \hat{f} (s)^2<= 1 / 2^{d-1}
+
+* Cor: d=log(2/epsilon) <= epsilon
+
+Pf: Let (I,z) be rho-random restriction, with rho = 1 / (10w)
+
+HSL => with fail prob <= 1 / 2^d
+
+f_{\bar{I} <- z} has DT-depth <= d
+
+2^{-d} >= Pr_{I,z} (F_{\bar{I} <- } has DT-depth > d)
+       >= Pr_{I,z} (\sum_{|S|>d} \hat{f}_{\bar{I} <-z} (S)^2 != 0)
+       >= E_{I,z} (\sum_{|S|>d} \hat{f}_{\bar{I} <-z} (S)^2)
+       = E_I [E_z [\sum_{|S|>=d} \hat{f_{\bar{I} <- z} (S)^2}]]
+       ....
+       = \sum_u \hat {f} (u)^2 E_I [1_{|U ^ I| > d}]
+       =  
+
+So 1/2 \sum_{|u| > 20dw} \hat{f} (u)^2
+   <=  
+
+6. Const-Depth CKTs
+
+a circuit,  V
+  ^	    ^
+V ...
+^
+
+depth d = length of  longest input-to-root path (2 for DNF)
+size M = # inernal gates
+        
+WLOG gates alternate: could convert it to the norml form described
+abvoe.
+
+7. THm: Let f be any size-M, depth-d ckt. Then for t sufficiently
+large, have fourier concentration
+       \sum_{|s| > t} \hat {f}(S)^2 <= M 2^{-t^{1/d}/20}
+
+t = 20 log(2M/epsion)^d, then 
+
+LDA can learn poly(n)-size, O(1)-depth ckts in n^{poylog(n)} time
+Crypto: likely/possible in best possible time bound.
+
+2 steps
+1) HSL=> Let f be size-M, depth-d ckt. Let (I,z) be a rho-random
+restriction, \rho = 1 / (10d s^{d-1}). 
+Then  Pr_{I,z} (DT-depth(f_{I<-z}) > s)
+      	       <= M 2^{-s}
+
+2) Lemma: Let f be any Bool fn, (I,z) be a rho-random
+restriction. Then for t s.t. rho t >= 8, have
+\sum_{|s|>t} \hat(f) (S)^2 <= 2 Pr[DT-depth(f_{bar(I)<-z})]
+	     	     	     	  >= rho t/2
+
+Pf of LMN:
+   take rho = 1 / (10 t^{(d-1)/d})
+   t rho =  t^{1/d} / 10 For t sufficient large >= 8
+
+Take s= pt/2 = t^{1/d}/20, get rho <= 1 / (10^d s^{d-1}), so cab yse
+1) get  CMN thm.
+
+Lemma
+
+Pf: aruge any bottom level gate will
+
+    argue if fanin > 2s
+    Pr[gaedoesn't collapse to const funct] <= (.55)^{2s} 
+    		  	      	    	   < 2^{-s}
+
+ 2) d-1 stages of restiction with rho = 1/ (10s) each time.
+
+ Collapse depth by 1?
+
+8. 2nd application of LDA: learning monotone functions 
+
+what is monotone function? boolean f is monotone increasing if
+whenever x <= y, f(x) <= f(y)
+	 x_i <= y_i, i =1,2,3
+
+Note: 1) any monotone ckt (v ^) computes a monotone function
+      2) there are monotone functions that require bool ckts of
+      2^{Omega(n)} size.
+      3) There are >= ... monotone functions
+
+Main FC result
+Thm: For f any n-var boolean monotone function, we have
+\sum_{|S| > sqrt(n)/epsilon} <= epsilon
+
+* any monontone function has epsilon-approx ckt of size
+  n^{O(sqrt(n)/epsilon)} -> simple
+
+9. New notion: influence
+
+For x \in {-1,1}^n, b \in {-1,1},
+
+fix the ith bit to b.
+
+Def: For Boolean  function f, the influence of var i on f is
+
+Inf_i(f) =def= Pr_{x \in {-1,1}^n} [f(x^{i <- 1}) != f(x^{i <- -1})]
+
+The total influence of f
+
+10. f(x) = "tribes" n = k*2^k variables
+    f = (x_1 ^ x_2^ x_k) V (x_{k+1} ^ ... ^ x_{2k}) v ...
+    2^k-term DNF, each var in 1 term
+
+for x_1 to be influential,  need T_2... T_2k to be unsatisfied
+(1-1/2^k)^{2^k-1} ~= 1/e
+need x_2, ..., x_k all sat 1/2^{k-1}
+
+= \theta(1/2^k)
+
+So influence Inf_1 (f) = logn / n
+   total influence Inf (f) = logn
+
+Every poly(n)-term DNF has Inf(f) = O(logn)
+
+[KKL:] every balanced boolean function
+       	     0.1 <= Pr[f(x)=1] <= 0.9
+has some var x_i with inf_i (f) = \Omega (logn / n)
+
+11. Prop: Let bool f, then 
+
+************************
+  Lecture 7	3/01
+************************
+
+1. Today / next time
+
+   FC of halfspaces, intersection of halspaces
+   "noise sensitivity"
+
+2. Influence
+
+   Boolean function f {-1, 1}^n -> {-1,1}
+
+3. For Boolean f,  have a fourier coefficient
+
+   Inf_i (f) = \Sigma_ {S \revin i} hat(f) (S)^2
+
+Recall "x^{i <- b}" means x_i =b
+
+Pf of f: Define ith "differece operator" D_i as
+
+   D_i f(x) = (f(x^{i <- 1}) - f(x^{i <- -1})) / 2
+
+Note: D_i f(x) is |0 if f is "insentivie" to variable i on input x
+      	       	  |+- 1 o.w.
+
+D_i f(x) = (\Sigma_s \hat(f) (S) X_s(x^{i <- 1})
+    	   - \Sigma_s \hat(f) (S) X_s(x^{i <- -1})) / 2
+
+...
+
+4. Note if f is balanced E[f] = 0
+   then Inf(f) >= 1
+
+
+
+5. Monotone f?
+   Claim: Let f be a monotone function. Then Inf_i (f) = hat(f)(i)
+   	      	     	      		     hat(f)(i) = hat(f)([i])
+					     s containing variable i
+
+Pf: hat(f)(i) is like a weighted queue...
+
+
+hat(f) (i) = |+		|-
+       	     |     + 	|
+	     |-	   	|+
+
+Inf_i (f) =  |+		|-
+      	     |	   -	|
+	     |-	   	|+
+
+for monotone function, there's no "bot = +, top = -"
+
+So inf_i (f) = hat(f) (i)
+6. Just saw, f monotone have inf_i (f) = hat(f) (i). Use this to show
+Claim: For f {-1,1}^n -> {-1,1} monotone, have Inf(f) <= Inf(MAJ) <=
+sqrt(n)
+
+Pf: We'll show every f sat.
+
+\Sum_{i=1}^n \hat(f)(i) <= \Sum_{i=1}^n hat(MAJ)(i)
+
+7. Thm: Let f be any boolean function. Then
+
+\Sum_{|S| > inf(f) / epsilon} hat(f)(S)^2 <= epsilon
+
+Pf: Markov on r.v |S| using V???
+
+Suppose \Sum_{|S| > inf(f) / epsilon} hat(f)(S)^2 > epsilon 
+	(contradiction)
+
+Then have
+
+     Inf(f) = \Sum_{all s} |S| hat(f)(S)^2
+  >= \Sum_{|S| > inf(f) / epsilon} |S| hat(f)(S)^2
+  > Inf(f) / epsilon * \Sum_{|S| > inf(f)/epsilon} |S| hat(f)(S)^2
+  > Inf(f)   (from suppose, the contradiction)
+
+8. Digression
+
+1) Inf & LTFs? Say f an LTF
+
+Inf(f) can be as big as \theta(sqrt(n))
+       	      	     	(MAJ)
+
+f(x) = x_1 = sign(x_1)
+
+Say f(x) = sign(a_1 x_1 + ... + a_n x_n - \theta)
+
+    a_i > 0
+    a_i < 0
+
+"f is unate" in each coordinate, f either monotone inc, or monotone
+dec.
+
+Claim: if f unate, \exists f' monotone s.t.
+
+Inf_i (f) = Inf_i (f') reverse all sign
+
+So if f an LTF, Inf(f) <= sqrt(n)
+
+2) Is any degree-d PTF unate?
+   No.
+
+   (x_1 + x_2 + ... + x_d)^d
+
+   +
+   -
+   -
+   +
+
+3) What is the largest possible value of Inf(f) for f a degree-d PTF?
+
+   No Answer yet.
+
+   Conjecture (guessing): At most d sqrt(n)
+
+   ...
+
+9. Note: (before HS-switch lemma?) Can get (weaker) FC for width-w DNFs
+via influence...
+
+Claim: Let f be a width-w DNF. Then Inf(f) <= 2w (Actually <= w)
+
+Sensitivity: The sensitivity of f at input x is
+
+S_f (x) = # of i \in [1,...,n] s.t f(x) != f(x^{flip the ith bit})
+
+the number of sensitive bits
+
+as(f) = average sensitivity of f = E_u[s_f(x)]
+
+* FACT Inf(f) = as(f)
+
+10. To show: as(f) <= 2w for f a width-w DNF (every term has at most w
+literals in it)
+
+upper bound # sensitive edges (x,y) is {-1,1}^n
+
+Say f(x) = true
+    f(y) = false & x
+
+    x satisfies some term T_ of <= w literals.
+
+    s_f(x) <= w : flipping any variable not in T_j won't change f
+    still will be true
+
+F(x') = T so total numbers of sensitive edges...
+
+So for f a width-w DNF
+
+\Sum_{|S| > 2w/epsilon} hat(f)(S)^2 <= epsilon
+  use to be inf(f)
+
+11. max sensitivity vs. Fourier degree
+
+Def sensitivity of f is max_{x \in {-1,1}^n} s_f(x)
+
+Fourier degree of f: degree of f viewed as multilinear poly
+
+max_{} |S|
+
+Q: Is it always the case that deg(f) & s(f) are polynomial realaed?
+
+Known: s(f) <= 2 * deg(f)^2
+       Can have s(f) >= deg(f)^{log3} for some f????
+
+NAE(x_1, x_2, x_3) = | +1  if x_1 = x_2 = x_3
+	      	     | -1  o/w.
+
+for x in {-1,1}, a cube
+
+deg(NAE) = 2
+s(NAE) = 3
+
+h(x_1, x_2, x_3) = NAE
+
+h(h(x), h(y), h(z)): 9 variables
+deg = 4
+s = 9
+
+k-fold composition 3^k variables, deg = 2^k, s = 3^k
+
+Q: is deg(f) <= poly(s(f))for all Bool f?
+
+dono, Know deg(f) <= 2^{O(s f(x))} \for all f
+
+\exists simple f s.t. deg= n, s(f) = sqrt(n)
+
+maybe the degree(f) <= O(s(f)^2) ?
+
+"block sensitivity vs. sensitivity"
+
+************************
+  Lecture 8	3/08
+************************
+
+1. Last time
+
+Inf(f) bound for monotone functions
+Digression: 1) Inf(PTFs)...
+	    2) Fourier deg. vs. max sens
+2. Today
+
+Lower bound:  best possible
+Sketch ext. of Low Degree Algorithms for monotone functions:
+Application to learning monotone DNF
+	       		monotone DTs
+
+Last Application of LDA:
+     halfspaces + intersections of halfspaces
+...
+ 
+3. Lower bound for learning monotone functions [Bshouty / Tamon 96']
+
+Thm: Suppose A is algorithm which PAC learns C = {all monotone Boolean
+functions on n variables} to accuracy parameter
+
+\epsilon = O(1) / (\sqrt(n) log(n))
+* to get this accuracy overall must be wrong on c  1/ logn fraction of
+the middle layer
+
+Then A must take time = 2^{9n/10}
+
+Need to "see" >= ???
+
+Suppose target monotone 
+
+CB => is algorithm draws < \Omega(2^n) pts, probability that it hits
+9/10 of middle layer pts is 
+
+4. Good news
+
+Nice thing about monotone vs. general Boolean functions from
+uniform-dist. learning p.o.v.:
+
+estimate influences
+
+Nonmon f: f = PAR_s	s = {2,3,7,8,11...}
+
+For monotone functions, \hat {f} (i) = Inf_i(f) = E[f(x) * x_i]
+
+5. Idea: first estimate the influences of all variables, 
+
+(fewer than all n, so hopefully algorithm is now faster if this <-)
+Always work? No
+poly(n)-term monotone DNF:
+"Tribes": (x_1 x_2 .. x_t) V (x_{t+1}, ..., x+{2t}) ...
+	  n = t 2^t
+
+No one is more influential than others
+
+THE TRICK:
+
+Modified LDA for monotone function: params: M d'
+a) Estimate \hat {f}(1) ... \hat {f}(n)
+   	    Inf_1(f), ..., Inf_n(f)
+b) Let K = set of the M variables whose \hat {f}(i)'s are highest (as
+ind. by estimate)
+c) Run LDA up to ... n + M^d (usually n^d)
+
+
+usual LDA	   |	MLDA: [n]
+
+...
+
+6. 2 applications
+   1) Monotone DNF
+   Thm: MLDA with M= O(s log(s/epsilon)), d= O(log(s/epsilon) log
+   (1/epsilon)) learns s-term monotone  DNF in time poly(n, M^d)
+   Cor: For \epsilon = \theta (1), can learn s = 2^{sqrt(logn)} - term
+   monotone DNF in polynomial time
+   ... <= epsilon / 2 
+   ... <= epsilon / 2
+   2) Monotone DTs (i.e. f is monotone,  r f is computed by a size
+   s-DT) ...
+
+   ...
+
+7. 2 ingredients: 
+
+1) Bound on total influence of monotone DTs. Suppose f: {-1,1}^n ->
+{-1,1} has size-s DT
+
+Q: How big can Inf(f) be?
+
+Inf(f) can be as big as log(S): parity functions
+
+FACT: Inf(f) <= log(S)
+
+2) Claim: DT-size(f) = s => Inf(f) <= logs
+
+Pf: consider tree T
+
+    	     x_3
+     x_2		x_1
+x_6  	  1          x_2    1
+1  -1 	  	    1  -1
+
+write \delta_i = Pr[uniform random x "reads' variable i]
+
+Inf_i (f) <= \delta_i \forall i
+So Inf(f) <= \Sigma_{i=1}^n \delta_i
+   	   = E_x [length of path that x goes down]
+	   = length(P) * Pr(P)
+	   = length(P) * 2^{-length(P)}
+	   = 
+
+* FACT: 1) if f is a monotone size-s DT, Inf(f) <= \sqrt(log s)
+  	2) Friedgut's "Junta Theorem"
+	Thm: Let f be any Bool fn. Let K = set of
+  	2^{O(Inf(f))/epsilon}
+
+\Sigma_{S <= K} \hat {f}(S)^2 >= 1 - \epsilon
+	|S| <= Inf(f) / epsilon 
+
+8. Final application of LDA: halfspaces intersection / more of
+halfspaces.
+
+Goal: For f any LTF, have 
+      \Sum_{|S| > 2S/epsilon^2} \hat {f}(S)^2 <= epsilon
+
+Def: The noise operator at noise rate O < epsilon < 1/2 is N_epsilon
+Giving string x \in {-1,1}^n, N_epsilon (x) is obtained by independent
+flipping each x_i with probability \epsilon
+
+The noise sensitivity of f at noise rate epsilon is
+Pr[f(x) != f(N_epsilon(X))] = NS_epsilon(f)
+
+Example: f(x) = x_1, NS_{epsilon} (f) = epsilon
+	 f(x) = x_1 ^ x_2 ^ ... ^ x_k
+	 MS_{epsilon} (f) = Pr[f(x) != f(y)]
+	 = 2 Pr[f(x) = T, f(x) = F]
+	 = 2 * 1/2^k [1 - (1 - epsilon)^k]
+
+EX #3 f(x) = PAR(x_1, ..., x_k)
+Claim: NS_{epsilon} (f) = 1/2 (1 - (1 - 2 epsilon)^k)
+Pf: 
+NS_epsilon (f) = Pr[odd number of bits in x_1, ..., x_k flipped by
+the noise process]
+
+binomial (k,1) epsilon (1 - epsilon)^{k-1} + 3 + ... 
+	 choose
+Now 
+1^k = ( (1 - epsilon) + epsilon )^k
+    = 1 + (k,1) + (k,2) + ... +
+
+(1 - 2 epsilon)^k
+= ( (1 - epsilon) - epsilon )^k
+= 1 - (k,1) + (k,2) + ... +
+
+=>
+
+[1^k - (1 - 2 epsilon)^k] / 2 = the odd guys
+
+highly sensitive
+
+9. Let's express NS_{epsilon} (f) for any f!
+(using Fourier representation of f...)
+
+Thm: For any f: {-1, 1}^n -> {-1, 1} have 
+
+NS_{epsilon} (f) = 1/2 (1 - \Sigma_{s \subset [n] ...}) ...
+
+Pf: Let x \in {-1,1}^n uniform, y = N_{epsilon} (x). Have 
+NS_{epsilon} (f) = Pr[f(x) != f(y)]
+= E [1_{f(x) != f(y)}]
+= E [(f(x) - f(y))^2 / 4]
+= 1/4 [E[f(x)^2] + E[f(y)^2] - 2 E[f(x)*f(y)]]
+= 1/2 - 1/2 E[f(x)*f(y)]
+
+Suppose S!=T;wlog i \in T, i \notin S. Especially likely for y_i to be
++1 or -1 so for each outcome of x_j, y_j,  j != i,
+E[X_s(x)X_t(y)] gets ....
+
+So NS_{epsilon} (f) = 1/2 - 1/2 \Sigma_s \hat {f}(S)^2 E[X_s(x)
+X_s(y)]
+
+Have E[X_s(x)X_s(y)] = \Pi_{i \in S} E[x_i y_i]
+^     		     = (1 - 2 epsilon)^{|S|}
+
+NS_{epsilon} (f) = 1/2 (1 - \Sigma \hat {f}(S)^2 (1-2\epsilon)^{|S|})
+Suppose NS_{epsilon} (f) is small. Means this part ^ is close to 1.
+
+Only way 
+
+************************
+  Lecture 9	3/22
+************************
+
+1. Admin
+
+work on project
+
+2. Last time finished learning mon. functions
+(MLDA, lower bounds)
+
+NS_{epsilon} (f), noise, sensitive -> FC for half
+
+3. Today
+
+finish NS_{epsilon} (f)
+
+Pres: any halfspace f has NS_{epsilon} (f) <= 2 \sqrt {\epsilon}
+FC for half
+
+Beyond FC: look at other structure aspects of Bool fns
+- LTFs ("Chow parameters") f
+- Learning Juntas
+
+4. Finishing noise sensitivity
+
+NS_{epsilon} (f) = Pr[f(x) != f(y)]
+	     	 x
+		 y ~ N_{epsilon} (x)
+
+Lemma: Fix any f: {-1, 1}^n -> {-1, 1}, any noise rate
+0 < \gamma < 1/2 Then
+
+\Sum_{|S| > 1 / \gamma} hat(f)(S)^2 <= 2.32 NS_{gamma}(f)
+
+Pf:
+
+Know 2 NS_{gamma}(f)
+= 1 - \Sum_{S <= [n]} (1 - 2 gamma)^{|S|} \hat(f)^2
+= \Sum_{S <=[n]} (1 - (1 - 2 gamma)^{|S|}) hat(f)(S)^2
+
+Corollary: Let ...
+
+5. Sometimes, do have nice NS_{epsilon} bd!
+
+Thm(Peres): Let f(x) = sign(w*x - \theta),
+	    f {-1, 1}^n -> {-1,1 }
+	    ...
+
+Every n-var LTF sat.
+
+Idea: clever new reinterpretation of probabilistic generation of x,y
+= N_epsilon(x) => re-express NS_epsilon(f) in terms of Inf of a
+1/epsilon-var LTF.
+|
+Inf <= 1 / sqrt(epsilon)
+
+Pf: We'll assume that epsilon 1/integer = 1/t, t >= 1
+
+We'll prove NS_epsilon(f) <= sqrt(epsilon)
+
+2) set x: draw alpha \in {-1,1}^n uniformly
+       	       z \in {-1, 1}^t uniformly
+
+For each i, set x_i = alpha_i * z_i
+(flip values of all variables in buckets; s.t. z = -1)
+
+3) setting y: picking a uniform random j \in {1,...,t}
+Define z* \in {-1,1} at jth bit flipped
+
+for each i \in {1,...,n} set y_i = alpha_i
+
+So y is distributed precisely as N_epsilon(x)
+
+So NS_epsilon (f) = Pr[f(x) != f(y)]
+
+   	      	  = Pr[f(x) != f(y)]
+		  b, alpha, z, j
+
+Observation: For any fixed outcome of b, alpha, the value h(x) is
+totally determined as a function of z \in {-1, 1}^t
+
+NS_{epsilon} (f) = Pr[f(x) != f(y)]
+	     	   alpha, b, z, j
+		 = ...
+
+For each alpha, b outcomes
+
+Inf(t-var LTF) <= sqrt(t)
+
+So NS_epsilon(f) <= avg[ 1/t * sqrt(t)]
+   		 <= 1/sqrt(t) = sqrt(epsilon)
+
+6. Extension:
+
+Let h_1, ..., h_k be any k halfspaces over {-1,1}^n
+Let g: {-1,1}^k -> {-1, 1}, any function
+Let f(x) = g(h_1(x), h_2(x), ..., h_k(x))
+NS_{epsilon} <= 2K \sqrt {epsion}
+
+Now \beta(\epsilon) = 2k \sqrt(\epsilon)
+    \beta^{-1} (\epsilon/2.32) = (5K / epsilon)^2
+
+K^2 can be improved to K^{0.9}
+7. possible that for f = h_1 ^ ... ^ h_k, then
+
+|S| > O(log)
+
+END OF FC (concentration)
+
+8. Beyond FC
+
+Other approaches to get unif-dist algorithms?
+
+Yes
+
+Sketch 2 examples
+
+LTFs
+random DNFs
+
+One approach: do look at low-deg Fourier coefficients, but do more
+than just "weigh them".
+
+Can do this successfully - LTFs
+       	    		 \ random DNFs
+
+1) LTFs
+
+The "Chow parameters" of an n-var LTF are the deg-0 or deg-1 FC's:
+
+turns out the Chow parameters encode all the information about any LTF
+f.
+
+Thm(Chow) Le f {-1,1}^n -> {-1,1} be an LTF, f = sign(w*x - \theta)
+Let g = {-1, 1}^n -> {-1, 1}.
+
+
+************************
+  Lecture 10	3/29
+************************
+
+1. Last Time
+
+use NS_epsilon to get Fourier Concentration
+proved Peres theorem on NS_epsilon(halfspaces)
+uniform distribution learning beyond LDA:
+	Chow parameters stuff.
+	random DNFs
+
+2. Today
+
+learning r-juntas. (same flavor with last time)
+
+	      f: {-1,1}^n -> {-1,1}
+Def. Var i in f(x_i, ..., x_n) is relevant if \exists x \in {-1,1}^n
+s.t. f(x^{i <- 1}) != f(x^{i<- -1})
+
+junta < r variables
+
+x_17 o+ (x_412 V (x_916 o^ x_17))
+->
+3-junta
+
+3. Observation: Le F be an r-junta. Then f has a DT of size 2^r ... a
+DNF of <= 2^r terms
+
+So to learn w(1)-size DNFs, DTs in poly(n) time, need to be able to
+learn juntas
+
+4. C_r = {all r-juntas over n variables}
+
+2^r = poly
+=>
+r = logn
+learning r-junta in poly-time
+
+5. What can we hope for wrt learning C_r "description length" of an
+r-junta: 
+
+r * logn bits (which var Reeva.)
++ 2^r bits (truth table of r-bit fn)
+-> best we could hope for (#ex
+
+6. Can we learn this class C_r in time poly(n, 2^r)?
+
+Don't know, seems hard -> $1000
+
+What can we do?
+
+|C_r| <= n^r * 2^{2^r} -> terrible
+
+less pathetic
+
+Obs: To learn r-juntas, sufficient to be able to find relevant
+variables. Given the r rel. vars, 
+
+O(r * 2^r) ex. suffice to fill in t.t.
+(coupon coll.)
+
+hard part: find r var.
+
+7. Obs: If var i irrelevant in f, then Inf_i (f) = 0
+   hat(f) (S) = 0 \forall S \revin i
+
+If var. i relevant in r-junta f, then Inf_i (f) >= 1/2^r > 0
+
+Stronger: some S \revin i must have |hat(f) (S)| >= 1/2^r
+
+So can learn C_r in n^r poly(2^r) by:
+
+for all 1 <= |S| <= r,
+estimate hat(f)(S) to +- 0.1 1/2^r
+& whenever we find an S with hat(f)(S) != 0,
+add all vars in cool. of  rel. vars.
+Get all rel. vars this way: now can be done with O(r*2^r) more ex.
+
+8. Main result:
+
+Can learn C_r in n^{.704 * r} poly(2^r) time. MOS [0.3]
+G. Valiant: n^{0.61 * r} poly(2^r0
+
+9. High level idea
+
+Look at 2 different poly rep's of f:
+  - Fourier
+  - GF(2) -> (mod 2) "disgusting but nutricious"
+
+Idea: If f "bad" for Fourier-based learning (all its nonconstant FC
+are on hig-deg. mono.) then f must be "good" for GF(2)-based learning
+approach.
+
+Enough to be able to find 1 rel. var.
+
+10. Claim: Suppose A a T(n,r)-time algorithm which finds a
+rel. var. in an r-junta, given uniform. (x, f(x)) random ex's. Then
+there's an algorithm to learn r-juntas running in T(n,r) * poly(n,
+2^r) time.
+
+Pf: Run A, get "i"
+    (Or find no var. is rel: done)
+
+Recurse: run A on (x, f(x))|_{x_i =1} or on (x, f(x))|_{x_i = -1}
+	       	  T(n, r-1) * 2
+
+Tree of exec. of algorithm: 
+
+i = 7
+
+i = 4	i = 9
+
+depth <= r
+slow down to run A at depth d is 2^d <= 2^r
+Total time <= 2^r * 2^r * T(n,r) poly(n)
+
+leaves in tree are constant functions.
+All vars in tree are all rel. vars. for f
+* tree computes f. (This is the learning algorithm given A)
+--------
+
+All we need to do: find 1 rel. variable var.
+
+If f has hat(f)(S) != 0 for some S with 1 <= |S| <= c * r:
+can find a rel. var. in <= 2^r n^{cr} time
+
+---------------
+
+We'll see: if f has no hat(f) != 0 S, then a GF(2)-based learning
+algorithm will work.
+
+GF(2) = {0,1}: all math mod 2.
+
+addition <-> PAR   	0 = F
+multiplication <-> AND  1 = T
+
+---------------
+
+HW fact: Let f:{0,1}^n -> {0,1}.
+
+Then f has 
+(i) a unique representation as a multilinear polynomial over the R
+(reals). All coeffs are integers.
+(ii) a unique rep. as a GF(2) poly
+     (View this as PAR of ANDs)
+(iii) If p_1, p_2 are 2 GF(2) polys for ..., * p1 + p2 both deg-d
+f!=g, then Pr[f(x) != g(x)] >= 1/ 2^d 
+      	 f   + g
+
+Easy relationship between P_r + P_{GF(2)}:
+
+get P_{GF(2)} from P_R by reducing all coeff mod 2
+
+    	      	       	  int
+Pr = \Sum_{S \subset [n]} C_S X_s = > P_{GF(2)}
+
+So deg(P_{GF(2)}) <= deg(P_R) for all f
+
+------------------------
+
+Ex: any Par has deg-1 GF(2) poly x_3 + x_6 + x_7 + x_10
+but deg = n as R-poly.
+
+AND(x_1, ..., x_n) GF(2) deg n:
+
+x_1 x_ ... x_n
+
+------------------------
+
+Can learn PAR over some unknown subset of vars easily by "thinking
+GF(2)" --> (* solving system of equations):
+
+Claim: Let C = {all 2^n PARs over x_1... x_n} There's an algorithm to
+PAC learn C under any distribution D (over {0,1}^n) in time (n /epsion
+log(1/epsilon)^{omega} ), where omega = ....
+
+matrix multiplication: [n*n] * [n*n] = [n*n]
+
+w = min s.t.  can do n multiplication in n^{omega + epsilon}
+trivial omega = 3
+
+--------------------
+
+Pf sketch: Draw m = O(n / epsilon  log (1/epsilon)) (x,f(x)) ex
+
+Write as 
+
+[m,n] [n,1] = [m,1]
+M
+
+a_i = 1 <-> var is in PAR
+
+all math mod 2
+
+Can solve system in ... time to get a par. "a" which is consistent
+with examples .
+
+Std CLT results (Occam 4252) => with prob >= 1- delta, any consistent
+PAR is epsilon-accurate
+
+-----------------------
+
+Same approach:
+
+Claim: Let C = {all deg-d GF(2) polys over {x_1, ..., x_n} Can PAC
+learn to acc epsilon under any D in time ... ~= n^{dw} /
+epsilon^{omega}}
+
+Algorithm gives a GF(2) poly of deg d as hypothesis
+
+-----------------------
+
+We'll learn under unif. distribution on {0,1}^n
+
+For unif. distribution, taking epsilon = 1/ 2^{d+1} we get  that
+epsilon-acc hyp. deg-d CF(2) poly. is exactly right.
+
+-----------
+
+Bottom line: can exactly learn any deg-d GF(2) poly. with this
+algorithm (under unif.) in time n^{w*d} * poly(2^d) (get rel. var.)
+
+The alg. to find a rel. var.:
+1. For d = 1, .., c*r (c < 1, coming up) estimate all hat(f)(S) with
+|S| = d to +- 0.1 / 2^r 
+
+...
+
+If find are which is nonzero, stop output any var. in S. (If f is
+const. func. stop)
+
+2. Otherwise, have hat(f)(S) = 0 \forall 1 <= |S| <= cr. Then run
+algorithm to learn (\alpha r)-deg GF(2) polys, using 
+epsilon = 1 / 2^{r+1}??
+
+-----------
+
+Claim: For c = w / (w+1), alpha = 1 / (w+1) this works.
+
+Run time: 1) time n^{w/(w+1)*r}
+    	  2) time n^{1/(w+1) * r}^d = n^{.704r}
+
+----------
+
+To prove it works: must show that if hat(f)(S) = 0 
+\forall 1 <= |S| <= cr, then f is a deg-d GF(2) poly.
+
+Rest of lecture: view f as f:{-1, 1}^r -> {-1,1}
+
+----------
+
+Useful Def.
+
+Def: Let f: {-1, 1}^r -> {-1, 1}. We say f is d^{th} order correlation
+immune (d-c.i.) if hat(f)(S) = 0 \forall 1 <= |S| <= d
+
+Done if can show:
+
+Thm(Sirgenthaler) Let f: {-1,1}^r -> {-1,1}
+f != PAR(x_1, ..., x_r), f != -PAR(x_1,..., x_r). Suppose f is d-th
+Then f has GF(2) poly of deg <= r - d
+
+Pf:
+
+First, suppose d = r. Then f is constant, if has deg-o GF(2)
+poly. So assume d < r. What's f?
+
+f(x) = hat(f)(\notconst) + \Sum_{d<|S|<=r} hat(f)(S)X_s
+
+Key: Let h(x) := f(x) o+ PAR(x_1, ..., x_r), i.e. 
+h(x) = f(x) * x_1,x_2,...x_r
+
+Fourier rep. of h:
+
+h(x) = hat(f)(\nonconst) x_[r] + \Sum_{0<=|T|<=r-d} ([r]\T)X_T
+
+--------------------------------
+
+Case 1: hat(f)(\nonconst) = 0	  ^
+     	Then h(x) = \Sum	--| Degree is < r - d
+
+h: {-1, 1}^r -> {-1, 1}, Fix to have 0/1 inputs
+it outputs:
+
+Let h' be h'(y_1,..., y_r) = 1/2 - h(1 - 2 y_1, .., 1 - 2y_r ) / 2
+
+Case 2: hat(f)(\nonconst) != 0 So deg(h) = r even coeff
+     			       	  deg_R(h') = r
+
+In poly h', only possible part of deg. >= r-d must come from the first
+part: hat(f)(\nonconst) x_1,...,x_r.
+
+The whole contribution to the first part to h' is 
+
+-hat(f)(\nonconst)/2 * \Pi_{i=1}^r (1-2y_i)
+= -hat(\nonconst)/2 \Sum_{s<=[r]}(-2)|S| y_s
+
+Now consider any set S of size > r-d...
+
+G. Valiant: extends alg. (do something smarter in GF(2) learning part)
+to get n^{0.61r} poly(n, 2^r) time
+
+************************
+  Lecture 11	4/05
+************************
+
+1. Today
+
+Finish Siegenthaler' theorem
+Learning Parody with noise	- harder model
+	 2^{n / logn}  [BKW]
+Membership Query Learning	- easy model
+
+2. Learning in Presence of Random classification Noise (RCN)
+
+Still uniform distribution, but new twist:
+
+RCN model: EX^m(f), x is uniform., m noise rate 0 < m < 1/2:
+
+1-m: (x, f(x))
+m: (x, !f(x))
+
+3. How do our unif.-distribution results face here.
+
+Good: LDA basically unaffected.
+
+Bad: Now the {PARS_S}_{S \subseteq [n]} seem hard to learn.
+
+With m misclass noise, m fractions of equations are wrong (RHS).
+
+How to learn PAC with m RCN?
+
+Why do we want to care about learn PAR with RCN?
+    * Crypto: based on this assumption.
+    * Coding Theory: decoding a random lin cake
+    * Learning theory: [FGKP] good algs for LPN
+      	       => algs to learn juntas, DTs, DNFs, ...
+
+4. How to learn PAR with RCN m?
+
+How many ex do we need? O(n).
+
+Target is  PAR_s: Four coeff's of f_m are 
+
+2^n possible PAR, so 
+
+5. Let's do better [BKW] '03
+
+Thm: Fix m = any const. in (0, 1/2).
+
+BKW alg. learns PAR using 2^{O(n/logn)} time examples.
+
+Note: V.Lyvbachevsky modified version to use n^{1.01} ex,
+time 2^{O(n/loglogn)}
+
+Real BKW Thm:
+
+Let n = a*b. Ng. that learns PAR using EX^m(f) using
+poly(1/(1-2m)^{2^a}, 2^b) time examples
+
+b = 2n/logn, a = 1/2 logn => 2^n = sqrt(n)
+
+1-sentence: Gaussian elim. over larger alphabet.
+
+2-sentence: If we can express any given vector z \in {0,1}^n we're
+interested in as a *sum of few examples*, can learn 1 bit of unknown PAR
+fairly efficiently, get all n bits this way.
+
+Notation: Let c = (c_1, ..., c_n) \in {0,1}^n denote target PAR; c_1 =
+1 var. i is in target.
+so f(x) = c * x (mod2)
+
+Let S = (x^1, y^1), ..., (x^m, y^m)
+
+Suppose got e_1 = (1, 0, 0, ..., 0) as some x^i,. Then y^i indicator
+of c_i: correct with probability 1-m.
+
+Repeat K = O(logn/ (1-2m)^2) times: maj vote over labels would = true
+c_i with fail prob. 1/n^2.
+
+Of course, would need m ~= 2^n to have decent chance of getting e_1 in
+sample 
+-----------------------------
+
+Suppose S is t.t. there are two ex x^i, x^j s.t. x^i + x^j = c_1
+
+(1-m)^2 + m^2 = 1- 2m + 2m^2 > 1 / 2
+
+m ~= 2^{n/2}
+
+BKW: given data set S, algorithm "efficiently" ex preses e, as sum of
+2^a ex correspond. sum of labels gives adv (1 / (1-2m))^{2^a} on
+correctly determining c_1 ...
+
+6. Lemma: Let (x^1, y^1), ..., (x^l, y^l) be indep. drawn from
+EX^m(f). f(x) = c*x mod 2. Then y^1 + ... + y^l equals c(x^1 + ... +
+x^l) with probability 1/2 + 1/2 * (1 - 2m)^l
+
+Of: Induction on l.
+
+Suppose it is true l - 1.
+
+....
+
+??? Want to get e_1 as sum of o(n) ex.
+
+7. How? n = a * b, View n bits as a blocks of lengths b.
+
+ b bits, b bits, ...
+ 1 	 2     , ..., a
+
+Def: Let V_i = {all x \in {0,1}^n that have all 0's in all positions
+in last i blocks}.
+
+An i-sample of size s is a set if s vector each of which is independent
+& uniform. distributions over V_i.
+
+Note: if S = {x^1, ..., x^m} are m ex. that came from EX^m(f), S is an
+i-sample for i=0
+
+Alg. successively uses (i-1)-sample to build an i-sample sum of
+2^{i-1} ex to build an 2^x ex i-sample.
+
+-----
+
+Key Lemma: Let A_i be an i-sample of size s. There's an O(sn)-time
+alg. which gives A_i, outputs A_{i+1}, an (i+1)-sample, which has sie
+s- 2^b, & is s.t. each ex. in A_{i+1} is a sum of 2ex from A_i.
+
+Pf: Let A_i = x^1, ..., x^s. Recall each x^i is all-0 in blocks
+a-i+1,..., a
+
+Partition A_i into 2^b subsets one for each ...
+
+************************
+  Lecture 12	4/12
+************************
+
+1. Admin: project presenting next week.
+   	  check email for smart time
+	  If present next week, send me + LY
+	  * scribe
+	  * elect
+	  by Wed noon
+
+2. Last time
+
+Learning with RCN
+BKW algorithm for learning PAR from EX^n(f)
+Thm: n bit parody, n = ab: can learn OAR in time with sample ...
+
+3. Today
+
+finish the proof
+New learning model: learning from MQ's (unif. dist.)
+(no noise)
+Results: * learn juntas eff. poly(2^r, n)
+	 * find large FC eff.
+	 * learning BFs with small Fourier L_1 norm (less bits?)
+	 * learn size-s DT in time poly(n,s, 1/epsilon)
+	 [KM '93]
+
+4. 1st lemma
+
+...
+
+5. 2nd lemma
+
+Let A_i be i-sample of size s, Then in O(sn) time, can construct
+A_{i+1}, an (i+1)-sample s.t.
+	 * |A_{i+1}| >= s - 2^b
+	 * each element of A_{i+1} is sum of ...
+
+6. Pf of thm star
+
+Draw a*2^b ex. from EX^m(f) as 0-sample A_0
+
+Pr[NO string in A_{n-1} is e_1] <= (1 - 1/(2^b))^{2^b} ~ 1/e
+
+So we have e_1 as sum of 2^{a-1} strings
+
+L_1 => Pr[correspond label correct]
+       >= 1/2 + 1/2(1-2m)^{2^{a-1}}
+
+Repeat poly(1/(1-2m))
+
+....
+
+Runtime poly(a*2^b, 1/(1-2m)^{2a})
+	      |
+	      do it once
+
+7. Extensions
+
+BKW: RCN_m, arbitrary distribution D (easy)
+FGKP: adversarial noise m, uniform distribution (Four.)
+KMV: adversarial noise, arbitrary distribution ("agnostic boosting")
+
+8. Last Learning Model
+
+Uniform distribution, Membership Query
+
+input: x \in {-1, 1}^n
+output: f(x)
+
+Power for learner!
+No worse than EX(f)! -> Better! for natural problems
+
+In this model, can learn:
+   * r-juntas poly2(2^r, n) time
+   * size-s DT poly(n, s, 1/epsilon) time
+   * s-term DNF poly(n, s, 1/epsilon) time
+
+9. If you are given x, y s.t f(x) != f(y) in log(n) MQ can find u \in
+{-1, 1}^n, i \in [n] s.t.
+f(n) != f(u) 
+...
+
+If f is r-junta 
+f not constant function, then
+Pr[f(x) = +1] \in 
+
+"Use MQ, bin. search to find rel. variables"
+
+10. MQ's very useful for Fourier-let us find large FC's anywhere (any
+S \subset [n]) 
+
+Goal: have f; assume f has |hat(f)(S)| large some S \subset [n]. Want
+to find S. 
+
+Way to "break up" the FC's of f:
+
+Fix 0 <= k <= n
+
+Let S_1 \subset [k]
+
+Define f_{K,S} (x) =
+\sum_{T_2 \subset [k+1, n]} hat(f)(S_1 U T_2)x_{T_2}(x) 
+
+Note: f_{0, \empty} (x) = f(x)
+      f_{n,s}(x) = hat(f)(S_1)
+
+Can estimate f_{K,S}(x), given x, k, s_1,
+using MQ's, because:
+
+Lemma: Fix 0 <= k <= n, S_1 \subset [k]
+For x \in {-1,1}^{n-k}, have
+
+f_{K,S}(x) = E_{y \in {-1, 1}^k} [f(y,x) x_s(y)]
+
+y: first k
+x: last n-k -> fix this??
+
+Pf: f(yx) = \sum_{t \subset [n]} hat(f)(T)x_t(yx)
+
+Sat T = T_1 U T_2
+T_1 = (T \cap [k])
+T_2 = (T \cap [k+1, n]),
+
+then x_t(yx) ...
+
+----
+
+So have:
+
+fact: Given 0 <= K <= n, s_1 \subset [k]
+
+11. Parseval: any f: {-1, 1}^n -> R
+has E_{x \in {-1,1}^n} [f^2] = \sum_{s \subset [n]} hat(f)(S)^2
+
+So, E[f^2] = \sum
+
+12. 3 obs:
+
+Let f: {-1,1}^n -> {-1,1}, let \theta > 0
+
+Goals: find all s \subset [n] s.t. |hat(f)(S)| >= \theta
+
+Ob1: 

@@ -1,0 +1,1720 @@
+Notes - Introduction to Computational Complexity
+
+***********************
+  Lecture 1	1/18
+***********************
+
+1. Homework 0, due Monday
+
+2. 5/6 homeworks, every 2 weeks
+
+3. Office hours Monday 3-5
+   TA Tue 3-5
+
+4. Homeworks 60%	allowed to collaborate, drop the lowest grade hmwk
+   No mid-term
+   Probably take home final 40%
+
+5. 
+   Problems
+
+   Algorithms	Models
+
+   problem = {Instances -> answers}, a collection of instances
+
+   Graph Reachability
+   input Graph G
+   output 'Yes' if success
+   	  'No' otherwise
+   => Decision Problem
+
+6. Computer Model: sequential computational Turing machine
+
+7. Computational Resources: Time, Space	    	(sequential)
+   		 	    # processors	(parallel)
+			    # communication	(distributed)
+
+8. R-complexity of algorithm -> time, space
+   R-complexity of problems -> lowest complexity of an algorithm that
+   solves the problem with respect to resource R of interest.
+   	      	 	     upper bound, lower bound
+
+9. Goals of Complexity Theory
+
+   a) Understand complexity of problems
+
+   Complexity Classes -> define, classify
+
+   Reductions between problems
+
+   Completeness - family of problems
+
+   b) Relation between...
+      resources
+      classes
+      models - deterministic, nondeterministic, randomization
+
+10. Graph
+
+    How to give a graph?
+      adjacency models O(n^2)
+
+    Graph Search - Graph Reachability
+
+    A general graph search
+      Q as a queue -> Breadth-First-Search
+      Q as a stack -> Depth-First-Search	*DFS is not recursion
+
+   Can this search terminate? Yes, because we mark the node we
+   visited.
+
+   Time Complexity: O(|V|^2) = O(n^2)
+
+     a) n^2 is worst-case time
+     b) it is in the order of n^2, and c may depends on the
+     implementation of your computer or something else.
+     c) asymptotic
+     	O(g(n)) = {f(n)| \exists constant c > 0, n_0
+		   s.t. f(n) <= c g(n), \forall x >= n_0}
+		   upper bound
+
+        \Omega(g(n)) = {... s.t. f(n) >= c g(n)}
+		   lower bound
+
+	\Theta(g(n)) = O(g(n)) \cap  \Omega(g(n))
+
+	asymptotically bigger => the ratio is strictly bigger
+
+	f = o(s) => f(n) / s(n) -> \infty
+
+	Type of functions:
+
+	  constant			\Theta(1)
+	  \log n, \log^{i} n ...	polylogarithmic
+	  n^i				polynomial
+	  2^n, n^n			exponential
+
+	  the rate of change between different types is very big
+
+   Space Complexity: linear
+
+   Input:   G, s, t
+   Output:  path from s to t, or indicate no path
+   	  / distance from s to t = length of shortest path
+   => Optimization Problems
+
+   Traveling Salesman Problem (TSP)
+
+     Input: Complete graph with length on edges
+     Output: Shortest tour that visits all the nodes
+
+***********************
+  Lecture 2	1/23
+***********************
+
+1. Input: String over finite alphabet A
+   	  A ={0,1} or ASCII or ...
+   Size of input x is |x|= length of x
+   Size changes linearly when alphabet changes unless alphabet |A| = 1
+
+2. Graphs Representation input
+   Adjacent list
+   lists of notes and edges
+   1,2,3,4$(1,2),(1,4),...
+
+3. Decision Problems:  Yes/No questions
+     language
+     L \subseteq A^* = set of all finite strings over A
+
+     member problems
+     input: string x over A
+     output: x \in L ?
+
+     decision problems = member problems
+     Why?
+     For decision problems, given a input, it has to be YES/NO. It's
+     just like split a set into 2 subsets.
+     So does member problems.
+
+4. Turing Machine
+
+   Church-Turing thesis: TM can compute all computable functions.
+   * "Everything algorithmically computable is computable by a Turing
+   machine."
+
+   String Church Machine:
+
+   1-tap Truing Machine
+   (1-string)
+
+   finite control (state)
+   | tape head (control)
+   one way infinite(have left, no right)
+
+   R: finite set of states s
+      special state: 'yes' state, 'no' state. (decision problems)
+      h: halting state. (functional problems?)
+   \Sigma: tape alphabet (finite)
+   	   include A(input alphabet)
+	   special symbols: \rhd left end maker symbol
+	 	 	    - blank symbol: nothing to read (end input).
+   \delta: transition function
+   	   K: all possible states
+   	   (K - {yes,no,h}) X \Sigma -> K X \Sigma X {R,L,S}
+	   \delta(q, \alpha) = (q', \alpha', R/L/S)
+	   	  |       |
+		state  input symbol
+   * note that there are several veriation about the definition, like
+     no S,..., but they are all equivalent
+
+   state
+   position of head
+   control of tape: finite steps.
+
+   configuration: state, position of head, control of tape
+   (q, w, u) - q: state; w: left string; u: right string.
+   -> operation of a Turing machine
+
+   move calculation: C -> C', C moves to C' in n step
+
+   transition closure: C -> C if C "eventually" can move to C'
+
+   TM M -> L(M) = {x \in A ^* | M on input x reaches the "yes" state}
+   the language accepted by M
+   M decides L | if x \in L => M reaches 'yes' state
+     	       | if x \notin L => M reaches 'no' state
+   * note yes and no state are only needed for language recognition,
+     and h is only need for function computation like f(1) reach 2.
+     Then got to h.
+
+   Language L is decidable ...
+
+   e.x.
+   L = {x \in {0,1}^* | x has odd numbers of 1's}
+
+   K = {q_0, q_1}
+   \Sigma = {0, 1, \rhd, ...}
+   \delta:
+	\rhd		0		1		-
+   q_0	(q_0, \rhd, R)	(q_0, 0, R)	(q_1, 1, R)	(no,-, S)
+   q_1	(q_1, \rhd, R)	(q_1, 0, R)	(q_0, 1, R)	(yes,-,S)
+
+   finite automata???
+
+   Functional Turing machine??
+     Output = finite string on tape when TM halts
+
+***********************
+  Lecture 3	1/25
+***********************
+
+1. Multiple Turing Machine
+
+   fixed number of tapes
+
+   K = finite set of states
+   \sum = finite tape alphabet
+
+   \delta: transition function
+
+   configuration: state
+   		  content of each tape
+		  position of each tape hand
+
+2. Time complexity of TM M
+
+   for input x: time T_M(x) = number of steps on input x until M halts
+   * may be infinity for some particular input
+
+   Time complexity of M
+   	T_M(n) = max{T_M(x) | |x| <= n}
+
+3. Palindromes
+
+   a) 1 tape
+
+   t01100110-
+    t	   -
+     t    -
+
+   T_M(n) = 2n + 2(n-2) + 2(n-4) + ... +
+   	  = \theta(n^2)
+
+   T_M'(n) = n + n-2 + n-4 +...
+   	   = \theta(n^2)
+
+   It can be proved that it can't be better than n^2
+
+   intuition: middle, and info could be stored is finite
+
+   b) 2 tape
+        <- |
+   t01100110-
+    | ->
+   t01100110-
+
+   T_M(n) = \theta(n)
+
+4. How much can it help?
+
+   For any multitape TM M that decides a language L or computes a
+   function f, there is a 1-tape TM N that decides L (or computes f)
+   such that T_N(n) = O(T_M^2(n)) (assuming T_M(n) >= n)
+
+   Suppose we have a machine
+   M = (K, \sum, \delta, s, \triangle, -) -> N 1-tape
+        k tapes
+       |
+   t1: taba
+       |
+   t2: tris		->	\t' ttt ara bib asr
+       |
+   t3: tabr
+
+   \sum^' = {a,\underline(a)| a\in \sum}^k \cup \sum \cup {\tr', -'}
+
+   k-tape TM M;
+   offer m steps: t1 length max(m,n) +1
+   	   	  t2,3... <= m
+   -> tape length of 1-tape N: <= max(m,n) + 2
+   1 step of M -> <= 2 * (max(m,n) + 2)
+   m steps of M -> <= 2m(max(m,n)+2)
+   T_M(n) steps M <= 2 T_M(n)(T_M(n) + 2)
+
+   TIME(f(n)) = set of languages(functions) that can be decided by
+   some multiple TM of time complexity O(f(m))
+
+   Linear Speedup Theorem: for every k-tape TM machine with k >= 2, time
+   complexity f(n) >= n, /forall \epsilon > 0, there's another k-tape
+   TM that decides the same language or computes the same function
+   that the time complexity \epsilon * f(n) + n + 2
+   (time space trade?)
+
+   2-tape to simulate any k-tape machine. nlgn. ~~~ tlgt
+
+***********************
+  Lecture 4	1/30
+***********************
+
+1. Space Complexity of TM M
+
+   S_M(n) = max{S_M(x) | |x| <= n}
+
+2. Input-output (i-o) Turing Machine:
+
+   input tape - read only
+
+   work tapes 1, 2, 3, ... - space used
+
+   output tape - write only
+
+3. Linear Space Compression Theorem
+
+   If a language can be decided by a i-o TM with a space complexity
+   f(n), then \forall \epsilon > 0, it is decided by a i-o  TM with
+   space complexity \epsilon * f(n) + 2.
+
+4. SPACE(f(n)) = set of languages that can be decided (of functions
+that can be computed) by a i-o TM with a space complexity O(f(n)).
+
+If f(n) >= n, then ordinary TM  are ok 1-tape TM.
+
+5. Regular languages in SPACE(1) <- constant space
+
+   palindromes - logn
+   multiplication - logn
+   addition - logn
+
+6. RANDOM ACCESS MACHINE (RAM) - a different model
+
+   registers: accumulator r_0, r_1, r_2, r_3, ...
+   	      initially all 0
+   program: finite sequence of instructions ?
+   input: sequence of integers I = (i_1, i_2, ....)
+
+   Read: copy a input to a register.
+   Store/Load: copy between registers.
+   Operation of Registers (Add / Subtract)
+     Indirect addressing
+   Half: r_0 = floor(r / 2) chop the last bit
+   Jump: conditional jumps
+   Halt:
+
+   Addition: add x
+	1) 
+	x = explicit constant -> r_0 = r_0 + 9 (constant x = 9)
+	2)
+	x = constant of a register specified by its index
+	-> r_0 = r_0 + r_9 (x = r_9 the register)
+	3)
+	x = constant of a register r_0 = r_0 + r_{r_9}
+
+   Time: Unit(uniform) cost model all operations 1 unit of time
+
+7. Theorem
+
+p1) A TM M with time complexity f(m) can be simulated by a RAM with
+complexity O(f(m));
+
+p2) Every RAM with time complexity f(m) can be simulated by a TM with
+time complexity O(f(m)^3) -- only a polynomial slow time.
+
+length of memory tape: t * (n + t)
+
+Multiplication: n logn
+             = log(numbers) + log(indexs)
+	       	  #bits
+
+***********************
+  Lecture 5	2/01
+***********************
+
+1. Nondeterministic Turing Machine
+
+transition function S: (state, tape symbols initial heads)
+	   	       |
+		       V
+		       any number of tuples
+		       (next state, next tape symbols, direction of
+		       tape heads)
+
+Input x is accepted by a NTM M if on input x, M can eventually reach
+an accepting configuration (state = yes).
+
+L(M): language of all inputs accepted by M.
+
+Time complexity = max time by any computation on input x
+T_M(n) = max {t_m(x) | |x| <= n}
+
+Space complexity = max space by any computation on input x
+S_M(n) = max {s_m(x) | |x| <= n}
+
+NTIME(f(n)) = set of all language that can be accepted by some
+(multitape) NTM with time complexity O(f(n)).
+
+NSPACE(f(n)) = set of all language that can be accepted by some
+(multitape) NTM with space complexity O(f(n)).
+
+TIME(f(n)) \subseteq NTIME(f(n))
+ \subseteq 	     \subseteq
+SPACE(f(n)) \subseteq NSPACE(f(n))
+
+2. Partition Problems
+
+Input: Sequence of positive integers a_1, a_2, ..., a_m in binary
+Question: (Decision Problem) Can we partition them into two sets with
+equal sets.
+
+3. Graph Reachability
+
+Input: Directed Graph G, nodes s, t
+       list of edges (u,v), ...
+Question: Can node s reach t in G?
+
+NSPACE(logn) = NL = NLOGSPACE
+* Just need to store the index.
+
+Basically, this algorithm tries to take one edge available, and go
+on, until it reach t (may never halt if there is a circle in the
+graph).
+
+* For deterministic TM, depth first algorithm can solve this in linear
+  time and linear space.
+
+4. NTM M with space complexity S(n)
+
+input x
+Does M accept x? <=> \exists path from initial configuration s to
+       	      	     accept configuration t in G[M,x]
+
+Assume input output TM
+Configuration: state, contents of work tapes, positions of all tape
+	       heads include input tape head.
+
+How big is the Graph G[M,x]?
+->
+How many configurations?
+# of configs = |k| |\Sigma|^{k * S(n)} * S(n)^k * n
+     	       	   |	       	       	 |
+		   V			 V
+		   exponential		 polynomial
+	     <= n * C^{S(n)}
+
+***********************
+  Lecture 6	2/06
+***********************
+
+1. Any S(n)-space bounded TM (deterministic or nondeterministic)
+       |
+       V
+  O(S(n)) space bounded terminating TM
+
+  # configuration that use space S(n)
+  
+  n c^{S(n)}	if S(n) >= logn
+    		# configs <= c^{S(n)}
+  configuration: (state, work tape content, position of all heads)
+
+  restore the # n c^{S(n)} need O(logn + S(n))
+
+  => NSPACE(S(n)) \subseteq NTIME(2^{O(S(n) + logn)})
+
+2. NSPACE(S(n)) \subseteq TIME(2^{O(S(n) + logn)})
+
+   2^{O(f(n))} = {g(n) <= 2^{k f(n)}}
+
+   NSPACE(S(n))
+
+   NTM M: input x
+   Question: Does M accept x?
+
+   configuration graph G[M,x]
+   	nodes = configurations that use space S(n)
+	edges = moves of TM
+	source node s = m initial configuration
+	target node t = accepting configuration
+
+TM:
+
+   input x
+
+   Reached configurations
+		|
+   processed    unprocessed
+
+   accept configuration
+
+3. NTIME(f(n)) \subseteq SPACE(f(n)) \subseteq TIME(2^{O(f(n))})
+
+   NTM M: input x
+   time f(n)
+
+   d = max # branches of any node
+
+***********************
+   Lecture 7	2/08
+***********************
+
+1. Savith's Theorem
+   NSPACE(f(n)) \subseteq SPACE(f(n)^2) for f(n) >= log(n)
+
+   Graph Reachability \in SPACE(log^2 n)
+
+2. NTM M, input x
+
+   M accept x <=> In configuration graph G[M,x] initial node
+   (configuration) C_0, can reach accepting node C_*.
+
+   # nodes N = C^{S(n)}
+     	     = 2^{c S(n)}
+
+   PEACH(C, C', i) =
+   	    | true,	if \exists path from C to C' of length <= 2^i
+	    | false,	ow
+
+   PEACH(C,C',i) = true iff \exists Z  reach(C, Z, i-1)
+   		   	    	      ^reach(Z, C', i-1)
+   # configuration = 2^{cn}
+
+   each stack 2S(n) + logn <= 3 S(n)
+   space = c S(n) * 3S(n) = O(S(n)^2)
+
+3. f(n): IN->IN
+   Proper function = nondecreasing function such that there is a TM
+   which on input x halts in O(|x|+ f(|x|)) steps using O(f(|x|))
+   space with output = f(|x|) in unaly 
+
+   11....1
+     f(|x|)
+
+4. Graph Reachability \in SPACE((logn)^2)
+   	 	      	  TIME(2^{clog^2n})
+
+   quasi-polynomial 2^{c* (logn)^k}
+
+5. Open question
+
+   Can you do SPACE(o(n)), TIME(polynomial)?
+
+6. Open question
+
+   Can we do graph reachability \in NL = NSPACE(log n)
+       	     	   		\in? L = SPACE(logn)
+
+***********************
+   Lecture 8	2/13
+***********************
+
+1. language Land A -> complement \Sigma = A^* - L
+
+Decision Problem
+       |
+       V
+Complementary problem: switch yes to no
+
+2. Reachability
+
+Original: yes: there's path
+	  no: there is no path
+
+Complementary: yes: there's no path
+	       no: there's one
+(Graph unreachability)
+
+3. 3-Colourability
+
+\in NTIME(n)
+
+Complementary: not that easy
+
+4. NSPACE(f(n))
+
+coC = {\bar {L} | L \in C}
+
+For deterministic classes, coTIME(c) = TIME(c)
+For nondeterministic classes, coNTIME(c) != NTIME(c)
+    		     	      coNSPACE(c) = NSPACE(c), 
+			      for all proper f(n) >= logn
+
+for reachability, nondeterministic requires NSPACE(logn)
+    nonreachability, nondeterministic requires NSPACE(logn) = NL
+
+=>  NL = coNL
+Immofman-Selepscenyi Theorem
+
+NSPACE(f(n)) = coNSPACE(f(n))
+
+Configuration graph G[M,x], initial node C_0 accepting node C^*
+# node N = C^{f(n)}
+
+Unreachability in NSPACE(logN) (N = # nodes)
+
+Phase 1: Compute how many nodes are reachable from C_0
+
+Phase 2: Given r, check if accepting node is one of them.
+* each node only guess once.
+
+r(N) = r;
+r(0) = 1;
+
+***********************
+   Lecture 9	2/15
+***********************
+
+1. Space Hierarchy: For any *proper* function f(n) >= logn and any
+function g(n) = o(f(n))
+
+Here is a language in SPACE(f(n)) - SPACE(g(n))
+     	  	      TIME(f(n)) - TIME(g(n))
+
+SPACE(logn) \subsetneq SPACE(log^2 n)
+
+2. Turing machine -> strings -> numbers
+
+input = program, data
+
+#tapes, tape alphabet, state set, transition function
+
+$1^{#tapes}$1^{|\Sigma|}$1^{|alphabet set|}$$trans1$trans2$trans3$$
+
+3. There is a undecidable language L over Alphabet A
+
+   String 1 2 3
+TM
+1
+2
+3
+
+The number of TM is countable, the number of language is uncountable.
+
+countable of the countables are countable.
+
+4. [fixed-tape version] For all k, for any proper function f(n) >= n
+and any g(n) = o(f(n)),
+    \exists language in TIME(f(n)) that is not accepted by any k-tape
+    TM with complexity g(n)
+
+M k-tape TM all complexity by g(n)
+  input code(M)# 
+  		string over A
+
+N simulates M step by step, and the slow down of the simulation is
+some constant decided by code(M). Because every time you want to make
+a move on N, you have to check M's configuration code(M).
+
+  1) M stops before counter run out, then reverse the result.
+  2) M still runs after counter run out, rejects.
+
+it slows down by c_M g(n) <= f(n). So it can computes all in
+g(n). Since N stops by g(n) steps.
+
+As a result, such a language defined before can not be accepted by any
+M with complexity g(n). (enough time, rejects; not enough time,
+rejects).
+
+5. Any tape machine g(n)
+
+   can be simulated by
+   
+   2-tape machine with g(n)log(g(n))
+
+6. For any function f(n), there is a recursive function such that
+
+TIME(f(n)) = TIME(2^{f(n)})
+
+***********************
+   Lecture 10	2/20
+***********************
+
+1. Robust class for time compleity
+
+*Deterministic
+
+P= U_{TIME(n^c)}	-> tractable
+
+E = U_{TIME(2^{cn})} = TIME(2^{O(n)})
+
+EXP = U_{TIME(2^{n^{c}})}
+
+*Nondeterminstic
+
+NP= U_{NTIME(n^c)}	-> tractable
+
+NE = U_{NTIME(2^{cn})} = NTIME(2^{O(n)})
+
+NEXP = U_{NTIME(2^{n^{c}})}
+
+2.
+
+L = LOGSPACE(E = SPACE(log n))
+=>
+Worst time c^{log n} = c'^{n}
+polynomial change doesn't disturb the L class
+
+NL = NSPACE(log n)
+
+PSPACE = U SPACE(n^c)
+
+ESPACE = U SPACE(2^{n^c})
+
+3. 
+
+L \subseteq NL = coNL 
+\subseteq P \subseteq NP, coNP
+\subseteq PSPACE = NPSPACE
+\subseteq EXP \subseteq NEXP
+\subseteq EXPSPACE \subseteq NEXPSPACE
+
+PSPACE(f(n)) \subseteq SPACE({f(n)}^2)
+
+P!=EXP
+PSPACE!=EXPSPACE
+
+4. 
+
+L language over \Sigma		x \in L => R(x) \in L'
+L' language over\Sigma'		x \notin L => R(x) \notin L'
+
+L <= L'
+
+\Sigma^*		\Simga'^*
+
+	L	 R	L'
+	\bar{L}	--->	\bar{L'}
+
+
+polynomial-time reduction
+R computable in p-time
+
+L  <=_p L'
+
+Pi <=_p	Pi'
+
+Log-space reduction -> poly time
+
+L  <=_log L' => if L' in P then L in P
+   	     	      	 NP	     NP
+
+		if L \notin P => L' \notin P
+		if L \notin Np => L' \notin NP
+ 
+x \in L?
+compute R(x)
+check if R(x) \in L'
+
+* polynomial's polynomial is polynomial
+
+polynomial reductions compose
+
+L_1  <=_p L_2
+L_2  <=_p L_3 => L_1 <=_p L_3
+
+log-space reductions compose
+
+L_1 <=_log L_2
+L_2 \in LOGSPACE  => L_1 \in LOGSPACE
+
+x \in L_1 <=> R(x) \in L_2
+ 
+***********************
+   Lecture 11	2/22
+***********************
+
+1. Reduction
+   p-time	L <=_p L'
+   log-space	L <=_log L'
+
+   x -R-> R(x)
+   x \in L <=> R(x) \in L'
+
+2. L \subseteq NL \subseteq P \subseteq NP
+     	       |
+	       nondeterministc log space
+
+Class C: L' is C-hard under p-time/log-space reduction
+      	 if every language L in C L <=p/log L'
+
+L' is C-complete if 1) L' \in C
+	      	    2) L' is C-hard
+
+L' is p-hard under p-time reduction: L \in P => L <=_p L'
+
+Every nontrivial language in P is p-complete under p-time reductions
+
+*nontrivial:  L' != empty or \Sigma^*
+* Inside p, hard is not a interesting topic since we can solve the
+* original problem in polynomial time.
+
+3. L' is P-complete under log-space conditions
+   L' \in NL  <=> P = NL
+   L' \in L <=> P = L
+
+for L in P: instance x -> R(x)
+      	    	     x \in L  <=>  R(x) \in L'
+
+for example:
+
+B is NP-complete
+B \in P => P = NP
+for every A \in NP: A <=_p B
+       	       	    x -> R(x)
+
+4. A is C-hard under p-reduction
+   A <=_p B			 => B is C-hard
+
+L \subseteq NL
+
+Graph Reachability;
+      Input: Directed graph G, s, t
+      Question: Can s reach t in G?
+
+Undirected graph?
+reduce it into directed graph.
+
+5. L in NL     NTM M for L that uses log space
+
+for input x -> G, s, t
+    x \in L? <=>  s can reach t in G?
+    M accepts x? -> G[M,x]
+      	      	    s = initial config
+		    t = accepting config
+		    * deterministic log space
+
+6. L \subseteq NL \subseteq P
+
+...
+
+7. Boolean values: 0,1
+
+Operations:
+	NOT
+	OR
+	AND
+
+Boolean formula
+
+Boolean Circuit
+	Directed Acyclic Graph (no cycles)
+	  Nodes: inputs (no incoming edges)
+	  	 variables or constants
+		 Gates: labeled by operations
+
+Any directed acyclic graph has a topologic order.
+
+fan-in: in-degree
+fan-out: out-degree (formula: 1; circuit: >= 1)
+circuit monotone: if no NOT gates
+
+***********************
+   Lecture 12	2/27
+***********************
+
+1. circuit value problem
+
+input:  Boolean circuit C_1 (with one output) input assignment \alpha
+question: Is C(\alpha) = 1?
+
+Theorem: Circuit Value problem is P-complete under log space
+reductions.
+
+2. Without loss of generality, we assume that 1-tape TM M that accepts
+L runs in time p(n).
+
+
+
+3. p-complete even if fan-in 2
+   p-complete even if monotone circuit (no NOT gate)
+
+
+
+4. p-complete: Linear programming
+   	       Linear inequalities feasibility
+	       Network Flow
+
+***********************
+   Lecture 13	2/29
+***********************
+
+1. NP
+
+L \subseteq A^*
+L is in NP iff there is a predicate R(.,.)
+  such that L = {x | \exists y \cdot R(x,y)}
+  where: (1) R is "polynomially balanced"
+  	    if R(x,y) then |y| \le ||
+
+  ...
+
+x in L => \exists y, |y|  V(x,y) = Yes
+x \notin L => \forall y v(x,y) = No
+
+y: proof, solution, certificate, witness
+
+if the problem fits in this structure, then it is in NP.
+
+2. Graph 3-Colorability
+
+input: Graph G
+Question: Is G 3-colorable?
+
+General solution: try all 3^n
+
+3. Hamiltonian Cycle
+
+NP
+
+4. Are G, H isomorphic (bijection)
+
+change the node name, then doesn't affect the graph
+
+n^n => NP
+
+5. 
+
+Input: Numbers N => log n
+Question: Is N compusible
+
+sqrt(N) = sqrt(e^{log n}) = e^{(log n)/2}
+=> exponential, NP
+
+6. 
+
+Equation Solution in integers
+
+Input: System of linear equations
+Question: is there a solution in integers?
+
+... ? 
+
+NP
+
+7.
+
+Input: Two NFA
+Question: Do hey accept the same language?
+
+input may be exponential to the definition of NFA.
+NFA -> DNA: translation is exponential
+
+8. First NP complete problem: CIRCUIT SAT is NP-complete
+
+Input: Boolean Circuit
+Question: \exists satisfying input arrangement?
+
+9. L <=_p Circuit SAT
+
+L is NP with  ... V
+x -> circuit C
+x \in L <=> \exists z C(z) = 1
+
+x is fixed, \exists y, C'(x,y) = 1?
+
+\exists y, C''(y) = 1?
+
+10. Circuit SAT with fan-in 2
+
+It's OK, reduction is p
+
+11. Boolean Formula Satisfiability
+
+3SAT
+Input: Boolean formula in Conjunctive Normal Form (CNF) with 3
+       literals per clause.
+Question: Is formula satisfiable?
+
+---- tree ---
+^
+
+V	V	V	V	-> clause
+123	123	123	123	-> literals
+--------------
+
+variables <=> gates and inputs
+
+NOT gate a = !b: (a v b) ^ (!a v !b) 
+OR gate a = b v c: (a v !b) ^ (a v !c) ^ (a v !b v !c)
+
+***********************
+   Lecture 14	3/05
+***********************
+
+1. CIRCUIT SAT
+
+3SAT
+Not-All-Equal 3SAT (NAE-3SAT)
+
+2. Prove one problem is NP
+
+From the already known HARD problem -> Our problem
+3SAT <=_p NAE-3SAT
+
+3 SAT
+
+C_i = a V b V c
+
+C_i is true
+<= poly-time reduction =>
+\exist for y_i s.t. NAE_c is true
+
+(a,b,y_i) (\hat (y_i), c, 0)
+
+symmetric
+
+(a,b,y_i) (\hat {y_i}, c, z)
+if z = 1, flip c to get the answer for the original question
+
+3. Graph 3-Colorability
+
+NAE-3SAT
+=>
+Graph 3-Colorability
+
+4. Optimization problems
+
+input: ...
+problem: Find a solution with min or max value
+	 |
+	 V
+DECISION problems
+
+input: Object, threshold value b
+question: \exists solution with value >= b? for max problem
+	  	  	   	      <= b? for min problem
+
+5. MAX SAT
+
+input: set of clauses
+problem: find assignment that satisfies maximum # clauses
+
+MAX INDEPENDENT SET
+
+input: Graph G
+problem: Find a maximum independent set
+
+no edge connecting between vertex in the set
+
+3SAT <=_p Max-Independent-Set
+
+(x_1 v x_2 v !x_3), (!x_1 v !x_2 v !x_4), (x_2 V x_3 V x_4)
+
+complementary literals -> connect them.
+
+*OPTIMIZATION problems are at least as hard as DECISION problems
+
+***********************
+   Lecture 15	3/07
+***********************
+
+1. Circuit SAT
+   3-SAT   -  INDEPENDENT SET
+   NAE-3SAT   	  |	  \ (complement set)
+   3-COLOR     CLIQUE	  NODE COVER (VERTEX)
+   	       		  
+Question: CLIQUE
+Input: Graph G, b
+Question: >= b clique
+
+Independent set problem
+-complementary graph->
+clique
+
+node cover: nodes not in the "node cover" -> independent node
+
+2. Hamiltonian graph
+
+There is a cycle that visits all nodes once
+<-> Euler path: visits every edge exactly once
+
+NODE COVER: G,k -> Directed graph D
+
+S
+|  _  |
+1  _  3
+|  _  |
+2  _  4
+|     |
+V     V
+
+case 1: 1 2 ... 3,4	(both in node cover)
+case 2: 1 3 4 2 ...	(1.2 in node cover)
+case 3: 3 1 2 4 ...	(3.4 in node cover)
+
+NODE COVER: G,k -> Directed graph D
+
+1    2	   3	4   ...  n
+|    |	   |	|   	 |
+|    |	   |	|	 |
+|    |	   |	|	 |
+|    |	   |	|	 |
+
+3. TSP (Traveling Salesman Problem)
+<-> Chinese Postman Problem (edge version)
+
+threshold n
+
+strong NP-complete
+
+4. SUBSET SUM
+
+Input: Numbers a_1, ..., a_n, target number t
+Q: \exists subset of a_i 's with sum = t?
+
+brute force: O(2^n)
+pseudo-polynomial number: O(n^t)
+
+NP-hard only using binary representation
+weakly NP-complete
+
+***********************
+   Lecture 16	3/19
+***********************
+
+1. coNP = {L | \bar {L} \in NP}
+
+B is in NP <=> B = {x | \exists y, |y| <= |x|^c
+     	       	      		& R(x,y) true}
+				 ^ polynomial-tie predicate
+
+\bar {B} = {x | \forall y, |y| <= |x|^c, R(x,y) false}
+     	      		       	  \bar {R}(x,y) true
+
+2. UNSAT
+   NON 3-COLORABILITY
+   NON HAMILONICITY
+   TAUTOLOGY (always true) -> comp: finding a false input assignment
+   	     	     	      <>SAT: finding a true input assignment
+
+   NODE COVER
+-> decision problem:
+   input: Graph G, k
+   Question: \exists node cover of size <= k?
+
+<> NODE COVER LOWER BOUND
+   all smaller than k cover don't work
+
+3. P \subset NP
+   P \subset coNP
+
+   a) P = NP = coNP
+   b) P = NP \cap coNP
+   c) P \subset NP = coNP
+   d) P \subset NP\cap coNP \subset NP		(current situation)
+      		       	    \subset coNP
+
+4. NP \cap coNP
+
+Bipartite Graph <=> \noexists odd length cycle: one edge in the same
+set
+
+. \ .
+. - .
+. / .
+
+\exists partition of the nodes into two sets V_1, V_2
+s.t. every edge connects a node in V_1 to V_2
+
+Planar Graph <=> \noexists subgraph that is subdivision of K_5 or
+K_{33}
+
+5. Linear programming
+
+Primes <> Composites 
+coNP       	  NP
+
+NP (75')
+\in P (2002)
+
+input: integer N in binary, size = log(N)
+
+Factoring
+input: N is binary
+output: prime factorization
+
+Factoring Decision \in NP \cap coNP
+input: N in binary, b
+Q: \exists nontrivial factor of N that is <= b
+
+factoring \notin P => NP \cap coNP != P
+
+***********************
+   Lecture 17	3/21
+***********************
+
+1. Probabilistic Turing Machine
+
+Prob(M accepts) = \Sum Prob(accepting computation)
+
+2. RP - Random P
+
+L \in RP if there is a polynomial-time PTM M such that
+\forall input x \in L => Prob(M accepts x) >= 1/2 (99%) arbitrary constant
+	      x \notin L => Prob(M accepts x) = 0
+
+3. coRP
+
+L \in RP -> \bar {L} \in coRP
+
+\bar {L} in coRP if for M is for language L
+\forall input x \in L => Prob(M accepts x) = 0
+	      x \notin L => Prob(M accepts x) >= 1/2
+
+4. P \subseteq RP, coRP
+   RP \subseteq NP - Prob(M accepts) = f(n) is not a polynomial of n
+   coRP \subseteq coNP
+
+5. L \in RP if there is a polynomial p and a polynomial time algorithm
+V(x, y) 
+
+x \in L => |{y \in {0,1}^{P(|x|)} | v(x,y) accepts}| >= 1/2*
+2^{P(|x|)}
+
+x \notin L => \forall y \in {0,1}^{P|x|}, v(x,y) rejects
+
+5. Bipartite Perfect Matching
+
+matching = sets of disjoint edges
+perfect matching = every node is matched
+
+We know that this problem is P.
+Now we will show that this problem is in RP
+
+number of nodes on both sides must be equal: n
+
+det(A) = \Sum_{\pi} sign(\pi) \Pi A{i, pi(i)}
+
+no perfect matching: 0
+there are perfect matching: 0 or nonzero
+
+Schwartz Zippel Lemma if P(x_1, ..., x_n) is a nonzero polynomial in m
+variables with total degree d, if we plug in for the variables random
+values from a set of size M then
+
+Prob[p(x1, ..., x_m) != 0] >= 1 - d / M
+
+***********************
+   Lecture 18	3/26
+***********************
+
+1. Fermat's theorem: If p is prime, then for all a \in Z_{p+} = {1,
+..., p-1}   a^{p-1} = 1 mod p
+
+a \in {1, .., p-1}
+
+mod p
+a * 1 	  1	  
+a * 2	  2
+...	= ...
+a * p-1	  p-1	different order
+
+a^{p-1} 1 * 2 * ... * (p - 1) = 1 * 2 * ... * (p - 1) mod p
+
+a^{p - 1} = 1 mod p
+
+2. If p is a prime, then 1 has only two square roots mod p 1, -1 (=
+p - 1)
+
+a^2 = 1 mod p
+
+a^2 - 1 = (a+1)(a-1) = 0 mod p
+p|a+1 or p|a-1
+=> (a + 1) mod p = 0	 (a - 1) mod p = 0
+
+3. MILLER-RABIN TEST
+
+Input: Positive integer N
+
+If N is even then if N = 2 accepts else reject
+Repeat k times
+       pick a random a \in {1, ..., N-1}
+       Let N - 1 = 2^h * S where s is odd
+       Compute a^s, a^{s*2}, a^{s*2^2} ... , a^{s*2^h} mod N
+       If a^{s*2^h} != 1 mod N or the last element that is != 1 is not
+       -1, then reject
+     if reach here then accept
+
+4. ZPP = RP \cap coRP		- Las Vegas algorithm
+       	 no false positive
+	    	 no false negative
+   zero-error probabilistic polynomial time
+
+There is a polynomial-time PTM while outputs Yes, No, or ? such that 
+
+x \in L => Prob(Yes) >= 1 / epsilon (99%) Prob(No) = 0, Prob(?) <= 1/2
+x \notin L =>
+
+... Check notes
+
+5. BPP
+
+Bounded-error probabilistic polynomial
+
+There is a poly-time PTM such that
+
+x \in L => Prob(accepts) >= 3/4
+x \notin L => Prob(rejects) >= 3/4
+
+6. PP - p > 1/2
+
+PP > NP
+     coNP
+
+***********************
+   Lecture 19	3/28
+***********************
+
+1. Circuits: AND, OR, NOT Gates
+
+Language L \subseteq {0, 1}^n is computed by a family of circuits
+{C_1, C_2, C_3, ...} s.t. for all x \in {0,1}^*
+
+x \in L <=> C_{|x|}(x) = 1
+
+2. Size complexity of family C = {C_1, C_2 ...}
+
+s(n) = size(C_m) = # nodes + # edges
+
+3. Depth complexity of family C = {C_1, C_2, ...}
+
+d(n) = depth(C_m)
+
+circuit-size complexity of a language L \subseteq {0,1}^* (depth)
+
+4. Uniformly circuit family: There is a log-space Turing machine which
+on input 1^n outputs C_n
+
+A language L over {0,1} has uniform polynomial size circuit complexity
+iff L \in P
+
+5. Polynomial size circuits: P/poly
+
+BPP \subseteq P/poly
+
+6. Boolean circuit of size s
+
+2 bits /node
+2 logs bits /edge
+
+s(2 + 2logs) bits
+
+2^{s(2 + 2logs)} = s^{O(s)}
+
+if s < 2^n / (2n) then not enough circuits
+
+7. Monotone (problems) functions f
+
+for any two inputs x, x' of some length n
+    where x >= x' (in all coordinates) f(x) >= f(x')
+
+8. The n/2-clique problem requires exponential size monotone circuits
+
+perfect matching problem requires exponential size monotone circuits
+
+***********************
+   Lecture 20	4/02
+***********************
+
+1. Oracle Turing Machine -> access to oracle language
+   	  	 	    the particular language
+
+M^A = oracle TM M with access to oracle A
+
+class C, language A: C^A
+classes C, D: C^D  = U	C^A
+	      	     A \in D
+
+P^{\empty} = P
+
+P^P = P
+
+C^{A} = C^{\bar {A}}
+
+C^{D} = C^{coD}
+
+P^{NP} = P^{coNP}
+
+2. Cook reduction
+(Turing reduction)
+
+B \in P^A
+
+Karp reduction
+(many-one reduction)
+
+B <=_p A
+
+P^{SAT} = P^{UNSAT} \revsub NP & coNP
+
+3. There is an oracle A such that P^A = NP^A
+   There is an oracle B such that P^B = NP^B
+
+Show oracle A s.t. P^A \revsub NP^A
+Let A be PSPACE-complete language
+
+NP^A \sub NPSPACE \sub PSPACE \sub P^A
+
+
+
+There is an oracle P^B != NP^B
+
+For any B \sub {0,1}^*, let L_B = {0^n | \exists x \in B s.t. |x| = n}
+
+L_B \in NP^B
+
+Enumerate all the p-time oracle machines
+
+M_1, M_2, M_3, ...
+
+Assume without lose of generality that M_1 runs in time <= n^i
+
+Stage i: So for have specified for a finite S_i of strings whether
+they are in B or not
+
+Pick n > length of all strings in S_i and such that n^i < 2^n
+
+Run M_i on 0^n
+
+On query | if string \in S_i, answer accordingly
+   	 | if new string, answer no (\in B)
+
+M_i finishes after n^i steps | if accepts, then make all strings of
+    	     	       	       length \notin B
+
+    	     	       	     | if rejects, put any unqueried string of
+                                               length n in B
+
+***********************
+   Lecture 21	4/04
+***********************
+
+1. 
+
+Input: Graph G, k
+Question: Is there a clique of size >= k?	[NP]	\exists
+	  Is the max clique size = k?  		[coNP]	\forall
+
+DP (difference)
+
+L_1 - L_2 where L_1, L_2 \in NP
+
+NP \subseteq DP
+coNP \subseteq DP
+
+2. Critical problems
+
+(minimal) on the border of having that property
+Critical non-3 colorable graphs
+G not 3-colorable
+\forall subgraph obtained by removing a node of edge is 3-colorable
+
+3. Unique Solution problem
+
+Input: formula
+Question: \exists unique satisfying assignment?
+	  NP: \exits satisfying assignment
+	  coNP: \notexits 2 or more satisfying assignment
+
+4. P^{NP}, FP^{NP}
+
+Input: Circuit C, k
+Question: \exits circuit C' of size <= k
+	  s.t. C==C'?
+
+NP^{NP} = NP^{coNP}
+
+5. Polynomial Hierarchy (decision questions)
+
+level i + 1: \Sum_{i+1} = NP^{\Sum_i}, \Pi_{i+1} = co\Sum_{i+1},
+      	     \delta = P^{\Sum_i}
+Level i:     \Sum_i, \Pi_i, \delta_i
+
+...
+
+Level 2: \Sum_2 = NP^{NP}, \Pi_2 = coNP^{NP}, \delta_2 = P^{NP}
+Level 1: \Sum_1 = NP, \Pi_1 = coNP, \delta_1 = P
+Level 0: P = \Sum_0, \Pi_0, \delta_0
+
+6. PH = U \Sum_i = U \Pi_i = U \delta_i
+
+every level i+1 item contains all the lower level items
+
+7.
+
+NP: L = {x | \exits  R(x, y)}	R p-time predicate
+
+coNP: L = {x | \forall y, R(x,y)}
+
+\Sigma_2: L = {x | \exists y_1 \forall y_2, R(x, y_1, y_2)}
+
+\Pi_2: L = {x | \forall y_1, \exists y_2, R(x, y_1, y_2)}
+
+8. 
+
+***********************
+   Lecture 22	4/09
+***********************
+
+1.  NP = P
+
+NP^{NP} = NP^P = NP = P
+
+induction ...
+
+2. NP \subset P/poly
+
+
+
+
+
+3. self-reducibility
+
+
+
+
+
+4.
+
+
+
+***********************
+   Lecture 23	4/11
+***********************
+
+1. QSAT (QBF)
+
+\e x_1 \e x_2 \a x_3 \e x_4...
+
+i blocks
+
+If no variable then return truth value of \phi
+If Q_1 = \exists then
+   return EVAL(Q_2 x_2 ... \phi(0,...)) V EVAL(Q_2 x_2
+   ... \phi(1,...))
+
+space poly n
+time 2^n
+
+2. order is very important
+
+\e y_1 \a y_2	y_1 != y_2	F
+\a y_1 \e y_2	y_1 != y_2	T
+
+3. QSAT is PSPACE-complete
+
+For any L in PSAPCE, L <=_log QSAT
+TM M accepts L, uses p(n) space, 1 tape
+Given input x, does M accept x?
+=
+Does initial config C_0 of M reach the accepting config C_x in the
+configuration graph G[M,x]?  size 2^{c p(n)}
+
+REACH(C, C', i) = | true if C reach C' in <= 2^i step
+	     	  | false else
+
+M accepts x <=> REACH(C_0, C_x, cp(n)) true
+
+Basis: REACH(C, C', 0) that iff C = C' or C->C' in steps of M
+in REACH(C, C', i) = true iff 
+\exists REACH(C, Z, i-1) ^ REACH(Z, C', i-1)
+
+4.
+
+\phi_i(Y, Y') true for two configuration Y, Y' iff REACH(Y, Y', i)
+
+\phi_0(Y, Y'): closes that say Y = Y' or Y->Y' in 1 move of TM M
+
+5.
+
+\phi_i(Y,Y') \exists Z \phi_{i-1}(C,Z) ^ \phi_{i-1}(Z,C')
+
+\phi_i(Y,Y') \exists Z \forall U_i \forall V_i
+	     (U_i != Y v V_i != Z) ^ (U_i != Z v V_i != Y)
+	     V \phi_{i-1} (U_i, V_i)
+
+6. Q3SAT quantifier free \phi is a 3SAT formula
+
+Q_1 y_1 Q_2 y_2 ... Q_m y_m \phi (y_1...y_m)
+
+\phi(y_1, ..., y_m) <=> \exists Z \theta (y_1, ..., y_m, Z)
+
+introduce variables z for gates Z
+
+7. 
+
+\e y_1 \e y_2 \a y_3 \theta'()
+
+existential win?
+universal win?
+
+***********************
+   Lecture 24	4/16
+***********************
+
+1. GEOGRAPHY
+
+You want your opponent lose
+
+\in PSPACE
+
+WIN(G, s)
+
+If s has no outgoing edge then return NO
+for every edg(S, v) of G, compute (G-{s}, v)
+  if one of these calls answer NO
+  then return YES else return NO
+
+recursion depth = n = # nodes
+
+2. Q3SAT
+
+Ey_1 Ay_2 Ey_3 ... Ey_n \phi(y_1,...,y_n)
+
+3. LBA problem - linear bounded automata
+
+There is a LBA A
+whose acceptance problem is PSPACE-complete
+
+REACHABLE DEADLOCK is PSPACE-complete
+
+
+
+
+
+***********************
+   Lecture 26	4/23
+***********************
+
+1. PSPACE proof with alternation
+
+Prover P  	     Disprover D
+unlimited power	     unlimited power
+
+Verifier V
+poly-time
+
+x \in L => \exists P \forall D, prover can convince V (completeness)
+x \notin L => \exists D, \forall P, Disprover D can conivnce V
+(sooundness)
+
+2. Interactive proofs: Class IP
+
+instance x
+
+Prover P	     Verifier V
+unlimited power	     poly-time + randomness
+
+x \in L => \exists P Pr[V interacting with P accepts] >= 3/4
+(completeness)
+x \notin L => \exists P Pr[V interacting with P accepts] >= 1/4
+(soundness)
+
+3. 
+
+NP \subseteq IP
+BPP \subseteq IP
+
+4. Graph Isomorphism \in NP
+   Graph Non-Isomorphism \in NP?
+
+Another example:
+Tell which paper is green, which paper is red
+V: Color-blind guy
+P: Normal guy
+
+5. IP = PSPACE
+
+IP \subseteq PSPACE
+
+PSPACE \subseteq IP
+
+Q3SAT: f = \exists y_1 \forall y_2 \exists y_3 ... \phi(y_1, ..., y_m)
+
+replace \exists with sum, replace \forall with product
+
+***********************
+   Lecture 27	4/25
+***********************
+
+1. approximation ratios of algorithms
+
+For minimization problems
+
+   		cost (solution of algorithm)
+ratio = max   ---------------------------     >= 1
+		OPT cost
+
+For maximization problems
+
+   		OPT cost
+ratio = max   ---------------------------     >= 1
+		cost (solution of algorithm)
+
+2. case 1: generalized algorithm ratio > 1 \forall \epsilon > 0 there is
+a poly-time algorithm that has ratio <= 1 + \epsilon
+
+Polynomial time Approximation Scheme (PTAS)
+
+
+
+3. case 2: Can generlize some constant ratio
+
+Matrix TSP 1,2
+
+...
+
+4. Case 3: NP-based to 
+
+
+
+5. Probabiistically Checkable Proof: PCP(r(n), q(n))
+
+...
+
+
+
+
+
+
+
+
+
+

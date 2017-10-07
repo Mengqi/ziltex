@@ -1,0 +1,804 @@
+Notes - The Not So Short Introduction to LaTeX2e
+
+*************************************
+  Chapter 1 Things You Need to Know
+*************************************
+
+1. Space only count once.
+
+2. \command[optional parameter]{parameter}
+
+3. Comments
+
+    % -> it ignores the rest of the present line.
+
+    --- longer comments ---
+
+    \usepackage{verbatim}
+
+    \begin{comment}
+    ...
+    \end{comment}
+
+    Note: does not work inside complex environments, like math.
+
+    -----------------------
+
+4. Input File Structure
+
+    \documentclass[options]{class} % specify the sort of document
+
+    ------ preamble begins ------
+
+    \usepackage[options]{packages}    % load packages
+
+    ------ preamble ends --------
+
+    \begin{document}    % the start of the text
+
+    \end{document}      % the end of the text, ignore the rest
+
+5. Design Flow
+
+    a. Edit LaTeX input file.
+    b. latex foo.tex -> a .dvi (Device independent file format) file
+    c. view the DVI file.
+        c-1. xdvi foo.dvi   % only works on Unix with X11
+        c-2. yap foo.dvi    % only works on Windows
+        c-3. Convert dvi to POSTSCRIPT with GhostScript.
+             dvips -Pcmz foo.dvi -o foo.ps
+        c-4. Convert dvi to pdf with dvipd tool.
+             dvipdf foo.dvi % works on Unix
+             pdflatex foo.tex   % works on Windows
+
+6. Document classes (p10): article, proc, minimal, report, book,
+slides.
+
+7. Document class options (p11).
+
+8. Some of the packages distributed with LaTeX (p12).
+
+9. texdoc % Unix command for accessing packages documentation.
+
+10. \pagestyle{style}   % style = plain, headings, empty
+    \thispagestyle{style} % page style for current page
+
+11. Files you might encounter (p13).
+
+12. \include{filename} % LaTeX will start a new page before
+                       % processing the file.
+    \includeonly{filename,filename,...} % no spaces between
+                                        % filenames and spaces
+    \input{filename}
+
+13. Syntax only:
+
+    \usepackage{syntonly}
+    \syntaxonly % this line makes no DVI output will be produced
+
+*************************************
+  Chapter 2 Typesetting Text
+*************************************
+
+1. A paragraph is the typographical form that should reflect one
+coherent thought, or one idea.
+
+2. Comma: a short stop in the flow of language.
+
+If you are not sure about where to put a comma, read the sentence
+aloud and take a short breath at every comma. If this feels awkward
+at some place, delete that comma; if you feel the urge to breathe
+(or make a short stop) at some other place, insert a comma.
+
+3. Line Breaking & Page Breaking
+
+    \\ = \newline
+    \\* % additionally prohibits a page break
+    \newpage
+    \linebreak[n], \nolinebreak[n], \pagebreak[n], \nopagebreak[n]
+    % n = 0, 1 , 2, 3, 4.
+
+    \sloppy
+    \fussy
+
+4. Hyphenation
+
+    \hyphenation{world list} % hyphenation suggestions
+    \-  % a hyphenation suggestion for a particular word
+    \mbox{text} % keep text on one line
+    \fbox   % a real box
+
+5. Ready-Made Strings
+
+    \today
+    \TeX
+    \LaTeX
+    \LaTeXe
+
+6. Special Characters and Symbols
+
+    ``Quotation Marks'' % "Quotation Marks"
+                        % " = ''
+    X-rated % hyphen
+    13--67  % en-dash
+    yes---or no? % em-dash
+    $-1$    % minus sign
+
+    \~{}bush    % tilde (~)
+    $\sim$      % ~
+    \~bush      % ~ right above letter "b"
+
+    \slash          % \
+    \textbackslash  % /
+
+    $-30\,^{\circ}\mathrm{C}$   % degree symbol
+
+    \textcelsius{}  % require textcomp package
+    \textdegree{}F  % require textcomp package
+
+    \texteuro   % require textcomp package
+
+    \ldots  % Ellipsis (... != three periods) ldots=low dots
+
+    Not shelfful but shelf\mbox{}ful % prohibit legatures of ff
+
+7. International Language Support
+
+    \usepackage[language]{babel}
+
+    The Unicode option
+
+8. The Space Between Words
+
+    Mr.~Smith       % ~ generate a space, and no line break
+    cf.~Fig.~5
+    I like BASIC\@. % this period terminates a sentence even if it
+                    % follows an uppercase letter <> abbreviations
+    /frenchspacing  % disable the additional space after periods
+                    % no need for \@ if using this
+
+    Note: There are two spaces between period and the word follow it
+
+9. Titles, Chapters, and Sections
+
+    % for the article class
+
+    \section{...}
+    \section*{...}  % not show up in the table
+    \subsection{...}
+    \subsubsection{...}
+    \paragraph{...}
+    \subparagraph{...}
+    \part{...}  % the unit beyond section
+    \appendix   % just changes the numbering to letters
+    \tableofcontents
+
+    \chapter{...}   % require report or book class
+
+    \title{...}
+    \author{authorA \and authorB \and ...}
+    \date{...}
+    \maketitle{...} % the former three should before this command
+
+    % for the book class
+
+    \frontmatter    % Roman numerals
+    \mainmatter     % Arabic page numbering
+    \appendix       % start of additional material in the book
+    \backmatter     % bibliography and index
+
+10. Cross References
+
+    \label{marker}
+    \ref{marker}        % usually X~\ref{marker}
+    \pageref{marker}    % usually X~\pageref{marker}
+
+11. Footnotes
+
+    \footnote{...}
+
+12. Emphasized Words
+
+    \underline{text}
+    \emph{...\emph{normal}...} % emphasized by using italic font.
+
+13. Environments Format
+
+    \begin{aaa}
+    ...
+    \begin{bbb}
+    ...
+    \end{bbb}
+    ...
+    \end{aaa}
+
+14. Itemize, Enumerate and Description
+
+    \flushleft
+    \begin{enumerate}
+    \item Enumerate item 1:
+    \begin{itemize}
+    \item itemize 1.1
+    \item[-] itemize 1.2
+    \end{itemize}
+    \item Enumerate item 2:
+    \begin{description}
+    \item[Stupid] description item 2.1
+    \item[Smart] description item 2.2
+    \end{description}
+    \end{enumerate}
+
+15. Flushleft, Flushright, and Center
+
+    \begin{flushleft}
+    ...                 % left-aligned
+    \end{flushleft}
+
+    \begin{flushright}
+    ...                 % right-aligned
+    \end{flushright}
+
+    \begin{center}
+    ...                 % center-aligned
+    \end{center}
+
+16. Quote, Quotation, and Verse
+
+    A typographical rule of thumb for the line length is:
+    \begin{quote}
+    On average, no line should be longer than 66 characters.
+    \end{quote}
+
+    \begin{verse}
+    line1\\
+    line2\\
+    \end{verse}
+
+17. Abstract
+
+    \begin{abstract}
+    \end{abstract}
+
+18. Printing Verbatim
+
+    The \verb|\ldots| command % "the \ldots command"
+    \verb*|...| % the star version
+
+    \begin{verbatim}
+    print out exactly the same as the input.
+    \end{verbatim}
+
+    \begin{verbatim*}   % the star version
+    ...and space is outlined...
+    \end{verbatim*}
+
+    *note: may not be used with parameters of other commands.
+
+19. Tabular
+
+    \begin{tabular}[pos]{table spec}
+    \hline
+    c1 & c2 & ... \\    % unit combined
+    c1 & ... \\
+    ...
+    \hline
+    \end{tabular}
+
+    % pos: t,b,c=top,bottom,center
+    % alignment: |r|l|c|
+    % column width: p{width}
+    % specify the column separator: @{}
+
+    19.1
+    % align "." (p48): @{.} and 3&14
+
+    \begin{tabular}{c r @{.} l}
+    c1_title &
+    \multicolumn{2}{c}{c2_title} \\
+    \hline
+    c1 & 3&14 \\
+    \hline
+    ...
+    \hline
+    \end{tabular}
+
+    19.2
+    % one title for n columns:
+    \multicolumn{n}{|c|}{title}
+
+    19.3 Grow height and width for the whole table
+    {\renewcommand{\arraystretch}{height}
+    \renewcommand{\tabcolsep}{width}
+    \tabular{...}
+    \end{tabular}
+    }
+
+    19.4 Grow the height of a single row
+    \rule{1pt}{4ex}... \\   % visible & 4ex is the height
+    \hline
+    \rule{0pt}{4ex}... \\   % invisible
+    \hline
+
+20. Floating Bodies
+
+    \begin{figure}[placement specifier]
+
+    \begin{table}[tbp] % h t b p !
+
+    \ref{lb1}
+    \caption{caption text\label{lb1}}
+
+    \listoffigures  % ~= \tablesofcontents
+    \listoftables
+
+21. Protecting Fragile Commands
+
+    \section{I am considerate\protect\footnote{and protect footnotes}}
+
+    % alt1
+    \section[text in toc]{text\footnote{ftnt}}
+
+    % alt2
+    \usepackage[stable][footmisc]
+
+    \section{title\footnote{ftnt}}
+
+***********************************************
+  Chapter 3 Typesetting Mathematical Formulae
+***********************************************
+
+1. The AMS-LaTeX bundle
+
+    AMS: The American Mathematical Society
+
+    \usepackage{amsmath}    % just load it!
+
+2. Single Equations
+
+    ...\\[5pt]
+    100~m$^{3}$ of water\\[5pt] % text style
+    ...
+
+    \smash{$d_{e_{e_p}}$}   % ignore the height off the expression
+
+    \begin{equation}    % display style
+    \lim{n \to \infty}  % equation automatically numbered
+    \sum_{k=1}^n \frac{1}{k^2}
+    =\frac{pi^2}{6}
+    \label{lb}
+    \tag {tg}
+    \end{equation}
+
+    \begin{equation*}
+    ...         % equation not numbered
+    \end{equation*}
+
+    \[ ... \]   % also not numbered
+
+3. Math Mode
+
+    a. Most spaces and line breaks do not have any significance.
+       For space: \, \quad \qquad
+    b. Empty lines are not allowed.
+    c. Each letter is considered to be the name of a variable. For
+       normal text: \text{...}
+
+    $\forall x \in \mathbf{R}:
+     \qquad x^{2} \geq 0$
+
+4. Building Blocks of a Mathematical Formula
+
+    4.1 Lowercase Greek Letters
+
+    $\lambda,\xi,\pi,\theta,\mu,\Phi,\Omega,\Delta$
+
+    4.2 Exponents, Superscripts (^{...}) and Subscripts (_{...})
+
+    \p^3_{ij}
+    m_\text{Knuth}
+
+    4.3 Miscellaneous
+
+    \sqrt[outside]{inside}
+    \surd
+    \neq
+    \Leftrightarrow & \leftrightarrow
+    \cdot
+    \ldots
+
+    \overline{...}
+    \underline{\underline{...}}
+    \overbrace{middle}^upper
+    \underbrace{middle}_lower
+
+    \hat{XY}
+    \widehat{XY}
+    \bar{x}_0
+    \vec{AB}
+    \overrightarrow{AB}
+
+    \DeclareMathOperator{\argh}{argh} % works only in the preamble
+
+    \sum^upper_lower middle
+
+    \{a,b,c\} % "{a,b,c}"
+
+    \left. \ddagger \frac{~}{~}\right)  % auto size
+
+     \big\} < \Big\} < \bigg\} < \Bigg\}
+
+5. Single Equations that are Too Long: multline
+
+    5.1 Wrap an equation before an equality sign or an operator
+    5.2 A wrap before = is preferable to a wrap before any operator
+    5.3 A wrap before + or - is preferable to a wrap before *
+    5.4 Any other type of wrap should be avoided if at all possible
+
+    \begin{multline}    % from amsmath
+     a + b + c +d + e + f + g + h + i\\
+     = j + k + l + m + n
+    \end{multline}
+
+6. Multiple Equations
+
+    6.1 Bad examples
+
+    \begin{align}
+    a & = b + c \\  % mark 1
+      & = d + e     % mark 2
+    \end{align}
+
+    \begin{align}
+    a & = b + c \\
+      & = d + e + f + g + h + i
+        + j + k + l \nonumber \\    % \nonumber will yield no mark
+        & + m + n + o \\            % + will align with =
+      & = p + q + r + s
+    \end{align}
+
+    6.2 Better solution
+
+    \begin{eqnarray}
+      a & = & b + c \\
+        & = & d + e + f + g + h + i
+        + j + k + l \nonumber \\
+        && +\: m + n + o \\     % still not optimal
+        & = & p + q + r + s
+    \end{eqnarray}
+
+    \begin{eqnarray}
+      a & = & a = a % spaces around the equality sings are too long
+    \end{eqnarray}
+
+    \begin{eqnarray}
+      a & = & b + c \\
+        & = & d + e + f + g + h^2
+        + i^2 + j       % overlaps with the mark
+        \label{eq:faultyeqnarray}
+    \end{eqnarray}
+
+    6.3 Better better solution
+
+    \begin{eqnarray}
+      \lefteqn{a + b + c + d
+        + e + f + g + h} \nonumber\\
+        & = & i + j + k + l + m \\
+        & = & n + o + p + q + r + s
+    \end{eqnarray}
+
+    \begin{eqnarray}    % is not optimal as the RHS is too short
+      \lefteqn{a + b + c + d
+        + e + f + g + h} \nonumber\\
+        & = & i + j
+    \end{eqnarray}
+
+    6.4 IEEEeqnarray Environment
+
+    \begin{IEEEeqnarray}{rCl}   % require package IEEEtrantolls
+      a & = & b + c             % rCl i.e. {right-center-left}
+      \\                        % 1st column right-justified
+      & = & d + e +f + g + h    % 2nd column more space around it
+      + i + j + k \nonumber\\   % 3rd column left-justified
+      && +\: l + m + n + o      % capital C means more space
+      \\
+      & = & p + q + r + s
+    \end{IEEEeqnarray}
+
+    6.5 IEEEeqnarray Common Usage (Not Finished)
+
+    \begin{IEEEeqnarray}{rCl}
+      a & = & b + c
+      \\
+      & = & d + e + f + g + h
+      + i + j + k
+      \IEEEeqnarraynumspace\\   % \IEEEeqnarraynumspace
+      & = & l + m + n           % the whole equation is shifted by
+    \end{IEEEeqnarray}          % the size of the equation numbers
+
+    \begin{IEEEeqnarray}{rCl}
+      \IEEEeqnarraymulticol{3}{l}{  %identical to \multicolumns
+        a + b + c + d + e + f
+        + g + h
+      }\nonumber\\ \quad        % inserting\quad can easily adapt
+      & = & i + j               % the depth of the equation signs
+      \\
+      & = & k + l + m
+    \end{IEEEeqnarray}
+
+    \begin{IEEEeqnarray}{rCl}
+      a & = & b + c
+      \\
+      & = & d + e + f + g + h
+      + i + j + k \nonumber\\
+      && +\: l + m + n + o      % \: for additional space
+      \\
+      & = & p + q + r + s
+    \end{IEEEeqnarray}
+
+7. Arrays and Matrices
+
+    7.1 Simple arrays example
+
+    \begin{equation*}
+      \mathbf{X} = \left(
+        \begin{array}{ccc}
+          x_1 & x_2 & \ldots \\
+          x_3 & x_4 & \ldots \\
+          \vdots & \vdots & \ddots
+        \end{array} \right)
+    \end{equation*}
+
+    7.2 Piecewise functions
+
+    \begin{equation*}
+     |x| = \left\{
+       \begin{array}{rl}
+        -x & \text{if } x < 0,\\
+         0 & \text{if } x = 0,\\
+         x & \text{if } x > 0.
+       \end{array} \right.      % \right. as an invisible delimiter
+    \end{equation*}
+
+    % amsmath syntax
+
+    \begin{equation*}
+     |x| =
+     \begin{cases}
+       -x & \text{if } x < 0,\\
+        0 & \text{if } x = 0,\\
+        x & \text{if } x > 0.
+     \end{cases}
+    \end{equation*}
+
+    7.3 Matrix
+
+    matrix(none)
+    pmatrix (
+    bmatrix [
+    Bmatrix {
+    vmatrix |
+    Vmatrix ||
+
+    % maximum column number is 10, but it is customizable
+
+8. Spacing in Math Mode
+
+    \,  % 3/18 quad
+    \:  % 4/18 quad
+    \;  % 5/18 quad
+
+    \begin{equation*}
+      \int_1^2 \ln x \, \mathrm{d}x % \mathrm = math roman
+    \end{equation*}
+
+    % for spacing that is too wide between integrals: \!
+
+    \int\!\!\!\intf(x)g(y) \, \mathrm(d) x \mathrm(d) y
+
+    % \iint \iiint \idotsint
+
+    \iint f(x)g(y) \, \mathrm(d) x \mathrm(d) y
+
+9. Phantoms
+
+    \begin{equation*}
+    {}^{14}_{6}\text{C}
+    \qquad \text{versus} \qquad
+    {}^{14}_{\phantom{1}6}\text{C}  % \phantom for reserving spaces
+    \end{equation*}
+
+10. Fiddling with the Math Fonts
+
+    \begin{equation*}
+     \Re            \qquad
+     \mathcal{R}    \qquad
+     \mathfrak{R}   \qquad  % require package amssymb
+     \mathbb{R}     \qquad  % require package amsfonts
+    \end{equation*}
+
+    % set font size in math mode
+    \displaystyle(123)
+    \textstyle(123)
+    \scriptstyle(123)
+    \scriptscriptstyle(123)
+
+    % if \sum is placed in \frac, it'll be typeset in text style
+    % but you could change it by \displaystyle{\sum_{low}^up mid}
+
+    10.1 Bold Symbols
+
+    $\mu, M$
+    $\mathbf{\mu}, \mathbf{M}$
+    \boldmath{$\mu, M$}
+    $\boldsymbol{\mu}, \boldsymbol{M}$
+
+11. Theorems, Lemmas, ...
+
+    % in the preamble: counter=other_name, section=under_curr_section?
+
+    \newtheorem{name}[counter]{text}[section]
+
+    % in the document
+
+    \begin{name}[text]
+    This is my interesting theorem.
+    \end{name}
+
+    % require package amsthm
+
+    \theoremstyle{definition}   \newtheorem{law}{Law}
+    \theoremstyle{plain}        \newtheorem{jury}[law]{Jury}
+    \theoremstyle{remark}       \newtheorem*{marg}{Margaret}
+
+    \begin{law} \label{law:box}
+    Don't hide in the witness box
+    \end{law}
+    \begin{jury}[The Twelve]
+    It could be you! So beware and see law~\ref{law:box}.
+    \end{jury}
+    \begin{marg}
+    No, No, No
+    \end{marg}
+
+    11.1 Proofs and End-of-Proof Symbol
+
+    \begin{proof}
+     Trivial, use
+     \begin{equation*}
+       E=mc^2.  \qedhere    % \qedhere move "eop" symbol around for
+     \end{equation*}        % situations where it could end up on a
+    \end{proof}             % line, does NOT work for IEEEeqnarray
+
+    \begin{proof}
+      This is a proof that ends with an equation array:
+      \begin{equation}
+        a = b + c. \qedhere
+      \end{equation}
+    \end{proof}
+
+12. List of Mathematical Symbols (p75)
+
+***************************
+  Chapter 4 Specialities
+***************************
+
+1. Including Encapsulated PostScript
+
+    % steps to include a picture into your document:
+    a) Export the picture from your graphics program in EPS format.
+    b) Load the graphicx package in the preamble of the input file
+       with \usepackage[driver]{graphicx}
+       * driver is the name of your "dvi to POSTSCRIPT" converter
+       * program, like dvips. Convert .eps into .dvi file.
+    c) \includegraphics[key=value,...]{file}
+       * key = width | height | angle | scale
+
+        % code example
+
+        \begin{figure}
+        \centering
+        \includegraphics[angle=90,
+                         width=0.5\textwidth]{text}
+        \caption{This is a test.}
+        \end{figure}
+
+2. Bibliography
+
+    \bibitem[label]{marker}
+
+    \cite{marker}
+
+    % bibliography
+    \begin{thebibliography}{99}     % 99 means item numbers will
+    \bibitem{pa} H.~Part1:          % not be wider than number 99
+    Press...
+    \end{thebibliography}
+
+    % For larger projects, use BibTeX program.
+
+3. Indexing
+
+    \usepackage{makeidx}
+
+    \makeindex  % in the preamble
+
+    \index{key@formatted_entry}
+
+    \printindex
+
+    % formatted_entry will appear in the index and key will be used
+    % for sorting. if no key, formatted_entry will be used for
+    % sorting.
+
+    *.tex -> *.idx
+
+    makeindex *.idx -> *.ind    % prompt command
+
+4. Fancy Headers
+
+    \usepackage{fancyhdr}
+
+5. The Verbatim Package
+
+    \usepackage{verbatim}
+
+    \verbatiminput{filename}
+
+6. Installing Extra Packages (p89)
+
+    *.ins
+    *.dtx
+
+    % first part
+    6.1.1 latex *.ins -> *.sty
+    6.1.2 move *.cfg & *.sty -> tex/latex/geometry/...
+    6.1.3 Refresh distribution's file-name database:
+        TeXlive:    texhash
+        MiKTeX:     initexmf --update-fndb
+
+    % second part
+    6.2.1 latex *.dtx -> *.dvi
+    6.2.2 *.idx? Yes
+          makeindex -s gind.ist name
+          latex *.dtx
+    6.2.3 *.idx? No
+          make .ps or .pdf file
+
+7. Working with pdfLaTeX (skip)
+
+   The main differences concern three areas:
+   a) the fonts to use
+   b) the format of images to include
+   c) the manual configuration of hyperlinks
+
+8. Working with XeLaTeX (skip)
+
+   ......
+
+9. Creating Presentations (skip)
+
+   ......
+
+**********************************************
+  Chapter 5 Producing Mathematical Graphics
+**********************************************
+
+ (skip)
+
+*******************************
+  Chapter 6 Customizing LaTeX
+*******************************
+
+1. New Commands, Environments and Packages
+
+2. Fonts and Sizes
+
+3. Spacing
+
+4. Page Layout
+
+5. More Fun With Lengths
+
+6. Boxes
+
+6. Rules

@@ -1,0 +1,77 @@
+\documentclass[12pt]{article}
+\parindent=.25in
+
+\setlength{\oddsidemargin}{0pt}
+\setlength{\textwidth}{440pt}
+\setlength{\topmargin}{0in}
+
+\usepackage{amsmath}
+\usepackage[dvips]{graphicx}
+\usepackage{verbatim}
+\usepackage{appendix}
+
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{latexsym}
+\usepackage[center]{subfigure}
+\usepackage{epsfig}
+\usepackage{hyperref}
+
+\title{Stat 4201 Homework 9}
+\author{Mengqi Zong $<mz2326@columbia.edu>$}
+
+\begin{document}
+
+\maketitle
+
+% no paragraph indentation
+\setlength{\parindent}{0in}
+
+\section*{Question 1}
+
+The number of mates in this in this population increased with the body
+size. There is evidence that the distribution of number of mates in
+this population is related to body size (The two-sided p-value for
+bodysize is 0.002). The estimated mean number of mates for a 95 mm
+body size male bullfrog is 0.0685, and the mean increased by a factor
+of 1.77 for each 10-mm increase in body size up to about 150 mm (95\%
+confidence interval for the multiplicative factor: 0.02332
+0.0964). \\
+
+
+The coefficients from the Poisson Log-Linear Model is as follow:
+
+\begin{verbatim}
+Coefficients:
+            Estimate Std. Error z value Pr(>|z|)   
+(Intercept) -8.11840    2.59380  -3.130  0.00175 **
+bodysize     0.05723    0.01851   3.092  0.00199 **
+\end{verbatim}
+
+Here is the confidence interval:
+
+\begin{verbatim}
+                   2.5 %      97.5 %
+(Intercept) -13.66943377 -3.43561440
+bodysize      0.02332952  0.09636363
+\end{verbatim}
+
+Here is the Pearson Chi-Squared Goodness-of-Fit Test:
+
+\begin{verbatim}
+         Df Deviance Resid. Df Resid. Dev P(>|Chi|)    
+NULL                        37     39.956              
+bodysize  1   11.952        36     28.003 0.0005458 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+\end{verbatim}
+
+\appendix
+\appendixpage
+\addappheadtotoc
+
+The R code is listed below:
+
+\verbatiminput{hmwk9.r}
+
+\end{document} 

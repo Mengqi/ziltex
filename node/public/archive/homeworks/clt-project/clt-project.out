@@ -1,0 +1,21 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}
+\BOOKMARK [1][-]{section.2}{Part I: PAC-learning and Occam algorithm}{}
+\BOOKMARK [2][-]{subsection.2.1}{PAC-learning}{section.2}
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Preliminary notation and definitions}{subsection.2.1}
+\BOOKMARK [3][-]{subsubsection.2.1.2}{PAC-learnability}{subsection.2.1}
+\BOOKMARK [2][-]{subsection.2.2}{Occam's Razor and Occam algorithm}{section.2}
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Occam learning}{subsection.2.2}
+\BOOKMARK [3][-]{subsubsection.2.2.2}{Occam algorithm}{subsection.2.2}
+\BOOKMARK [3][-]{subsubsection.2.2.3}{Occam's Razor}{subsection.2.2}
+\BOOKMARK [2][-]{subsection.2.3}{PAC-learnability and Occam algorithm}{section.2}
+\BOOKMARK [3][-]{subsubsection.2.3.1}{Exception lists}{subsection.2.3}
+\BOOKMARK [3][-]{subsubsection.2.3.2}{Results for finite representation alphabets}{subsection.2.3}
+\BOOKMARK [1][-]{section.3}{Part II: Learning and data compression}{}
+\BOOKMARK [2][-]{subsection.3.1}{Learning versus Prediction}{section.3}
+\BOOKMARK [2][-]{subsection.3.2}{Occam algorithm and compression}{section.3}
+\BOOKMARK [2][-]{subsection.3.3}{Lossless data compression and learning r-junta}{section.3}
+\BOOKMARK [3][-]{subsubsection.3.3.1}{Preliminary definitions}{subsection.3.3}
+\BOOKMARK [3][-]{subsubsection.3.3.2}{Description length}{subsection.3.3}
+\BOOKMARK [3][-]{subsubsection.3.3.3}{A model for a simple lossless compression problem}{subsection.3.3}
+\BOOKMARK [2][-]{subsection.3.4}{Summary on learning and compression}{section.3}
+\BOOKMARK [1][-]{section.4}{References}{}

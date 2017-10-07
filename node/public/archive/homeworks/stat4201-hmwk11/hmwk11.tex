@@ -1,0 +1,89 @@
+\documentclass[12pt]{article}
+\parindent=.25in
+
+\setlength{\oddsidemargin}{0pt}
+\setlength{\textwidth}{440pt}
+\setlength{\topmargin}{0in}
+
+\usepackage{amsmath}
+\usepackage[dvips]{graphicx}
+\usepackage{verbatim}
+\usepackage{appendix}
+
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{latexsym}
+\usepackage[center]{subfigure}
+\usepackage{epsfig}
+\usepackage{hyperref}
+
+\title{Stat 4201 Homework 11}
+\author{Mengqi Zong $<mz2326@columbia.edu>$}
+
+\begin{document}
+
+\maketitle
+
+% no paragraph indentation
+\setlength{\parindent}{0in}
+
+\section*{Question 1}
+
+1. Here is the Cox porportional hazards model:
+
+\begin{verbatim}
+Call:
+coxph(formula = Surv(time, status) ~ rx, data = colon.2)
+
+
+             coef exp(coef) se(coef)      z      p
+rxLev     -0.0266     0.974    0.110 -0.241 0.8100
+rxLev+5FU -0.3717     0.690    0.119 -3.130 0.0017
+
+Likelihood ratio test=12.2  on 2 df, p=0.0023  n= 929, number of events= 452
+\end{verbatim}
+
+The hazard rate for Levamisole relative to 5-FU is 0.690. \\
+
+2. The value ``exp(coef)'' is the hazard rate of the specified
+treatment. For example, ``exp(coef)'' 0.974 is the hazard rate for
+treatment ``rxLev''. \\
+
+The 95\% confidence interval for hazard rate is:
+
+\begin{verbatim}
+> exp(confint(fitcox.p1))
+              2.5 %    97.5 %
+rxLev     0.7844054 1.2087109
+rxLev+5FU 0.5463673 0.8702657
+\end{verbatim}
+
+3. Form part 1, we can see that the p-value for Levamisole relative to
+5FU is 0.0017. This means that the proportional hazards assumption for
+Levamisole relative to 5FU is valid. \\
+
+4. Here is the Cox proportional hazards model adjusting for Age and Sex:
+
+\begin{verbatim}
+Call:
+coxph(formula = Surv(time, status) ~ rx + age + sex, data = colon.2)
+
+
+               coef exp(coef) se(coef)        z      p
+rxLev     -0.027482     0.973  0.11034 -0.24907 0.8000
+rxLev+5FU -0.373819     0.688  0.11885 -3.14528 0.0017
+age        0.002368     1.002  0.00405  0.58528 0.5600
+sex       -0.000424     1.000  0.09431 -0.00449 1.0000
+
+Likelihood ratio test=12.5  on 4 df, p=0.014  n= 929, number of events= 452
+\end{verbatim}
+
+\appendix
+\appendixpage
+\addappheadtotoc
+
+The R code is listed below:
+
+\verbatiminput{hmwk11.r}
+
+\end{document} 

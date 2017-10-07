@@ -1,0 +1,973 @@
+Advanced Data Analysis 101
+
+1. What is the topics of this course?
+
+   1) Exploratory data analysis
+   2) Model formulation, goodness of fit testing
+   3) Standard and non-standard statistical procedures, including:
+      a) Linear regression
+      b) Analysis of variance
+      c) Nonlinear regression
+      d) Generalized linear models
+      e) Survival analysis
+      f) Time series analysis
+      g) Bayesian methods
+   4) Individual original project
+
+2. What is exploratory data analysis?
+
+In statistics, exploratory data analysis (EDA) is an approach to
+analysing data sets to summarize their main characteristics in
+easy-to-understand form, often with visual graphs, without using a
+statistical model or having formulated a hypothesis.
+
+John Tukey held that too much emphasis in statistics was placed on
+statistical hypothesis testing (confirmatory data analysis); more
+emphasis needed to be placed on using data to suggest hypotheses to
+test.
+
+The objectives of EDA:
+
+    a) Suggest hypotheses about the causes of observed phenomena
+    b) Assess assumptions on which statistical inference will be based
+    c) Support the selection of appropriate statistical tools and
+    techniques
+    d) Provide a basis for further data collection through surveys or
+    experiments
+
+3. What is statistical inference?
+
+In statistics, statistical inference is the process of drawing
+conclusions from data that are subject to random variation, for
+example, observational errors or sampling variation. More
+substantially, the terms statistical inference, statistical induction
+and inferential statistics are used to describe systems of procedures
+that can be used to draw conclusions from data sets arising from
+systems affected by random variation.
+
+* note random variation means not determined, like a random number
+  generator.
+
+4. What is survival analysis?
+
+Survival analysis is a branch of statistics which deals with death in
+biological organisms and failure in mechanical systems. The topic is
+called reliability theory or reliability analysis in engineering, and
+duration analysis or duration modeling in economics or sociology. More
+generally, survival analysis involves the modeling of time to event
+data; in this context, death of failure is considered an "event" in
+the survival analysis literature - traditionally only a single event
+occurs, after which the organism or mechanism is dead or broken.
+
+The object of primary interest is the survival function,
+conventionally denoted S, which is defined as
+
+    S(t) = Pr(T > t)
+
+where t is some time, T is a random variable denoting the time of
+death, and "Pr" stands for probability. That is, the survival function
+is the probability that the time of death is later than some specified
+time t.
+
+5. What is Bayesian method?
+
+In statistics, Bayesian inference is a method of statistical inference
+in which Bayes' theorem is used to calculate how the degree of belief
+in a proposition changes due to evidence.
+
+   P(P|E) * P(E) = P(E|P) * P(P)
+   =>
+   P(P|E) = P(E|P) / P(E) * P(P)
+
+6. What is observational study?
+
+In epidemiology and statistics, an observational study draws
+inferences about the possible effect of a treatment on subjects, where
+the assignment of subjects into a treated group versus a control group
+is outside the control of the investigator.
+
+7. What is RCT?
+
+Randomized controlled trial.
+
+8. What is double-blind?
+
+A blind or blinded experiment is a scientific experiment where some of
+the people involved are prevented from knowing certain information
+that might lead to conscious or subconscious bias on their part,
+invalidating the results.
+
+Double-blind describes an especially stringent way of conducting an
+experiment, usually on human subjects, in an attempt to eliminate
+subjective bias on the part of both experimental subjects and the
+experimenters. In most cases, double-blind experiments are held to
+achieve a higher standard of scientific rigor.
+
+In a double-blind experiment, neither the individuals nor the
+researchers know who belongs to the control group and the experimental
+group. Only after all the data have been recorded (an in some cases,
+analysed) do the researchers learn which individuals are
+which. Performing an experiment in double-blind fashion is a way to
+lessen the influence of the prejudices and unintentional physical cues
+on the results(the placebo effect, observer bias, and experimenter's
+bias).
+
+10. What is proposition?
+
+(logic) a statement that affirms or denies something and is either
+true or false.
+
+11. What is "inferential statistical techniques"?
+
+For the most part, statistical inference makes propositions about
+populations, using data drawn from the population of interest via some
+form of random sampling. Given a parameter or hypothesis about which
+one wishes to make inference, statistical inference most often uses:
+
+   a) a statistical model of the random process that is supposed to
+   generate the data, and
+   b) a particular realization of the random process.
+
+The conclusion of a statistical inference is a statistical
+proposition. Some common forms of statistical proposition are:
+
+   a) an estimate
+   b) a confidence interval
+   c) a credible interval
+   d) rejection of a hypothesis
+   f) clustering or classification of data points into groups
+
+Statistical inference is generally distinguished from descriptive
+statistics. In simple terms, descriptive statistics can be thought of
+as being just a straightforward presentation of facts, in which
+modeling decisions made by a data analyst have had minimal
+influence. In other words, descriptive statistics aim to summarize a
+data set, rather than use the data to learn about the population that
+the data are thought to represent (Occam's Razor vs Original PAC
+Learning Model?).
+
+If we perform a formal hypothesis test on the scores, we are doing
+inductive rather than descriptive analysis.
+
+12. What is box plot?
+
+In descriptive statistics, a box plot is a convenient way of
+graphically depicting groups of numerical data through their
+five-number summaries: the smallest observation (sample minimum),
+lower quartile (Q1), median (Q2), upper quartile (Q3), and largest
+observation (sample maximum). A box plot may also indicate which
+observations, if any, might be considered outliers.
+
+13. What is outlier?
+
+A point in a sample that has a substantially different value from the
+rest.
+
+Outliers can occur by chance in any distribution, but they are often
+indicative either of measurement error or that the population has a
+heavy-tailed distribution. In the former case one wishes to discard
+them or use statistics that are robust to outliers, while in the
+latter case they indicate that the distribution has high kurtosis and
+that one should be very cautious in using tools or intuitions that
+assumes a normal distribution. A frequent cause of outliers is a
+mixture of two distributions, which may be two distinct
+sub-populations, or may indicate 'correct trial' versus 'measurement
+error'; this is modeled by a mixture model.
+
+14. What is heavy-tailed distribution?
+
+The heavy-tailed distributions are probability distributions whose
+tails are not exponentially bounded: that is, they have heavier tails
+than the exponential distribution.
+
+The distribution of a random variable X with distribution function F
+is said to have a heavy right tail if
+
+\lim{x \to \infty} e^{\lambda x} Pr[X > x] = \infty for all \lambda > 0
+
+15. What is kurtosis?
+
+Kurtosis is any measure of the "peakedness" of the probability
+distribution of a real-valued random variable. In similar way to the
+concept of skewness, kurtosis is a descriptor of the shape of a
+probability distribution and, just as for skewness, there are
+different ways of quantifying it for a theoretical distribution and
+corresponding ways of estimating it from a sample from a population.
+
+16. What is exponential distribution?
+
+In probability theory and statistics, the exponential distribution
+(a.k.a. negative exponential distribution) is a family of continuous
+probability distributions. It describes the time between events in a
+Poisson process, i.e. a process in which events occur continuously and
+independently at a constant average rate.
+
+Note that the exponential distribution is not the same as the class of
+exponential families of distributions.
+
+The probability density function of an exponential distribution is
+
+  f(x; \lambda) =
+  \begin{cases}
+    \lambda e^{-\lambda x}, & x >= 0
+    0,	    		    & x < 0.
+  \end{cases}
+
+An important property of the exponential distribution is that it is
+memoryless. That means that if a random variable T is exponentially
+distributed, its conditional probability obeys
+
+   Pr(T > s + t | T > s) = Pr(T > t) for all s,t >= 0.
+
+This says that the conditional probability that we need to wait, for
+example, more than another 10 seconds before the first arrival, given
+that the first arrival has not yet happened after 30 secons, is equal
+to the initial probability that we need to wait more than 10 seconds
+for the first arrival. So, if we waited for 30 seconds and the first
+arrival didn't happen (T > 30), probability that we'll need to wait
+another 10 seconds for the first arrival (T > 30 + 10) is the same as
+the initial probability that we need to wait more than 10 seconds for
+the first arrival (T > 10).
+
+17. What is Poisson process?
+
+In probability theory, a Poisson process is a stochastic process which
+counts the number of events and the time that these events occur in a
+given time interval. The time between each pair of consecutive events
+has an exponential distribution with parameter \lambda and each of
+these inter-arrival times is assumed to be independent of other
+inter-arrival times.
+
+The process is a good model of radioactive decay, telephone calls, and
+request for a particular document on a web server.
+
+17. What is Q-Q plot?
+
+In statistics, a Q-Q plot ("Q" stands for quantile) is a probability
+plot, which is a graphical method for comparing two probability
+distributions by plotting their quantiles agiainst each other. First,
+the set of intervals for the quantiles are chosen. A point (x,y) on
+the plot corresponds to one of the quantiles of the second
+distribution (y-coordinate) plotted against the same quantile of the
+first distribution (x-coorinate). Thue the line is a parametric curve
+with the parameter which is the (number of the) interval for the
+quantile.
+
+If the two distributions being compared are similar, the points in the
+Q-Q plot will approximately lie on the line y = x. If the distribution
+are linearly related, the points in the Q-Q plot will approximately
+lie on a line, but not necessarily on the line y = x. Q-Q plots can
+also be used as a graphical means of estimating parameters in a
+location-scale family of distributions.
+
+18. What is quantile?
+
+Quantiles are points taken at regular intervals from the cumulative
+distribution function(CDF) of a random variable. Dividing ordered data
+into q essentially equal-sized data subsets is the motivation for
+q-quantiles; the quantiles are the data values marking the boundaries
+between consecutive subsets. Put another way, the k^th q-quantile for
+a random variable is the value x such that the probability that the
+random variable will be less than x is at most k / q and the
+probability that the random variable will be more than x is at most
+(q - k) / q. There are q - 1 of the quantiles, one for each integer k
+satisfying 0 < k < q.
+
+* The 2-quantile is called the median
+  The 3-quantiles are called tertiles or terciles -> T
+  The 4-quantiles are called quartiles -> Q
+
+19. What is location?
+
+In statistics, a location family is a class of probability
+distributions that is parametrized by a scalar- or vector-valued
+parameter \mu, which determines the "location" or shift of the
+distribution. Formally, this means that the probability density
+functions or probability mass functions in this class have the form
+
+	  f_{\mu} (x) = f_{\mu} (x - \mu)
+
+Here, \mu is called the location parameter.
+
+In other words, when the function is graphed, the location parameter
+determines where the origin will be located. If \mu is positive, the
+origin will be shifted to the tight, and if \mu is negative, it will
+be shifted to the left.
+
+20. What is IQR?
+
+In descriptive statistics, the interquartile range (IQR), also called
+the midspread or middle fifty, is a measure of statistical dispersion,
+being equal to the difference between the upper and lower
+quartiles. IQR = Q_3 - Q_1
+
+21. What is tail?
+
+One of the extreme ends of a probability density function.
+
+22. What is confidence interval?
+
+In statistics, a confidence interval (CI) is a particular kind of
+interval estimate of a population parameter and is used to indicate
+the reliability of an estimate. It is an observed interval (i.e. it is
+calculated from the observations), in principle different from sample
+to sample, that frequently includes the parameter of interest, if the
+experiment is repeated. How frequently the observed interval contains
+the parameter is determined by the confidence level or confidence
+coefficient.
+
+A confidence interval with a particular confidence level is intended
+to give the assurance that, if the statistical model is correct, then
+taken over all the data that might have been obtained, the procedure
+for constructing the interval would deliver a confidence interval that
+included the true value of the parameter the proportion of the time
+set by the confidence level. More specifically, the meaning of the
+term "confidence level" is that, if confidence intervals are
+constructed across many separate data analyses of repeated (and
+possibly different) experiments, the proportion of such intervals that
+contain the true value of the parameter will approximately match the
+confidence level; this is guaranteed by the reasoning underlying the
+construction of confidence intervals.
+
+A confidence interval does not predict that the true value of the
+parameter has a particular probability of being in the confidence
+interval given the data actually obtained (An interval intended to
+have such a property, called a credible interval, can be estimated
+using Bayesian methods, but such methods bring with them their own
+distinct strengths and weakness).
+
+23. What is interval estimate?
+
+In statistics, interval estimation is the use of sample data to
+calculate an interval of possible (or probable) values of an unknown
+population parameter, in contrast to point estimation, which is a
+single number.
+
+24. What is interval?
+
+In mathematics, a (real) interval is a set of real numbers with the
+property that any number that lies between two numbers in the set is
+also included in the set. e.g. [0,1], (0,1), [0,1)
+
+25. What is p-value?
+
+In statistical significance testing, the p-value is the probability of
+obtaining a test statistic at least as extreme as the one that was
+actually observed, assuming that the null hypothesis is true. One
+often "rejects the null hypothesis" when the p-value is less than the
+significance level \alpha, which is often 0.05 or 0.1. When the null
+hypothesis is rejected, the result is said to be statistically
+significant.
+
+A closely related concept is the E-value, which is the average number
+of times in multiple testing that one expects to obtain a test
+statistic at least as extreme as the one that was actually observed,
+assuming that the null hypothesis is true. The E-value is the product
+of the number of tests and the p-value.
+
+* coin flipping example: coin turning up heads 14 times out of 20
+  total flips.
+  alternative hypothesis: coin flip is unfairly biased.
+  null hypothesis: coin flip is fair.
+
+  p-value(null hypothesis is correct for at least 14 times)
+  = Pr(14 heads) + ... + Pr(20 heads) ~= 0.058
+  => if significance level is 0.1, then the result (coin flip is
+  unfairly biased) is statistically significant(likely to happen).
+
+26. What is statistical significance?
+
+In statistics, a result is called "statistically significant" if it
+is unlikely to have occurred by chance. As used in statistics,
+significant does not mean important or meaningful, as it does in
+everyday speech.
+
+* more significant = more likely.
+
+The amount of evidence required to accept that an event is unlikely to
+have arisen by chance is known as the significance level or critical
+p-value: in traditional Fisherian statistical hypothesis testing, the
+p-value is the probability of observing data at least as extreme as
+that observed, given that the hypothesis is true. If the obtained
+p-value is small then it can be said ether the null hypothesist is
+false or an unusual event has occurred. P-values do not have any
+repeat sampling interpretation.
+
+If a test of significance (statistical hypothesis test) gives a
+p-value lower than the significance level \alpha, the null hypothesis
+is rejected. Such results are informally referred to as statistically
+significant.
+
+* p-value: the higher, the more likely the null hypothesis is
+  true. When the p-value is lower than the significance level, that
+  means the null hypothesis is not likely to be true, so the null
+  hypothesis is rejected. In other words, when p-value is lower than
+  the significance level, the alternative hypothesis is very likely
+  to happen. Then the result is significant.
+
+27. What is null hypothesis?
+
+The practice of science involves formulating and testing hypotheses,
+assertions that are capable of being proven false using a test of
+observed data. The null hypothesis typically corresponds to a general
+or default position. For example, the null hypothesis might be that
+there is no relationship between two measured phenomena or that a
+potential treatment has no effect.
+
+It is typically paired with a second hypothesis, the alternative
+hypothesis, which asserts a particular relationship between the
+phenomena.
+
+28. What is statistical hypothesis testing?
+
+A statistical hypothesis test is a method of making decisions using
+data, whether from a controlled experiment or an observational study
+(not controlled). In statistics, a result is  called statistically
+significant if it is unlikely to have occurred by chance alone,
+according to a pre-determined threshold probability, the significant
+level.
+
+Hypothesis testing is sometimes called confirmatory data analysis, in
+contrast to exploratory data analysis. In frequency probability, these
+decisions are almost always made using null-hypothesis tests (i.e.,
+tests that answer the question assuming that the null hypothesis is
+true, what is the probability of observing a value for the test
+statistic that is at least as extreme as the value that was actually
+observed?) One use of hypothesis testing is deciding whether
+experimental results contain enough information to cast doubt on
+conventional wisdom.
+
+A result that was found to be statistically significant is also called
+a positive result; conversely, a result that is not unlikely under the
+null hypothesis is called a negative result or a null result.
+
+* Courtroom trial example
+  H_0 (null hypothesis): the defendant is not guilty;
+  H_1 (alternative hypothesis): the defendant is guilty.
+
+  It is the H_1 tries to prove.  The hypothesis of innocence is only
+  rejected when an error is very unlikely, because one doesn't want to
+  convict an innocent defendant. Such an error is called error of the
+  first kind (i.e. the conviction of an innocent person), and the
+  occurrence of this error is controlled to be rare. As a consequence
+  of this asymmetric behavior, the error of the second kind
+  (acquitting a person who committed the crime), is often rather
+  large.
+
+30. What is breakdown point?
+
+Intuitively, the breakdown point of an estimator is the proportion of
+incorrect observations (i.e. arbitrarily large observations) an
+estimator can handle before giving an arbitrarily large result.
+
+The higher the breakdown point of an estimator, the more robust it
+is. Intuitively, we can understand that a breakdown point cannot
+exceed 50% because if more than half of the observations are
+contaminated, it is not possible to distinguish between the underlying
+distribution and the contaminating distribution. Therefore, the
+maximum breakdown point is 0,5 and there are estimators which achieve
+such a breakdown point.
+
+31. What is an estimator?
+
+In statistics, an estimator is a rule for calculating an estimate of a
+given quantity based on observed data: thus the rule and its result
+(the estimate) are distinguished.
+
+There are point and interval estimators.
+
+32. What is resampling?
+
+In statistics, resampling is any of a variety of methods for doing one
+of the following:
+
+   a) Estimating the precision of sample statistics (median,
+   variances, percentiles) by using subsets of available data
+   (jackknifing) drawing randomly with replacement from a set of data
+   points (bootstrapping)
+   b) Exchanging labels on data points when performing significance
+   tests (permutation tests, also called exact tests, randomization
+   test, or re-randomization tests)
+   c) Validating models by using random subsets (bootstrapping, cross
+   validation)
+
+33. What is skewness?
+
+In probability theory and statistics, skewness is a measure of
+asymmetry of the probability distribution of a real-valued random
+variable. The skewness value can be positive or negative, or even
+undefined. Qualitatively, a negative skew indicates that the tail on
+the left side of the probability density function is longer than the
+right side and the bulk of the values (possibly including the median)
+lie to the right of the mean.
+
+34. What is t-distribution?
+
+Student's t-distribution (or simply the t-distribution) is continuous
+probability distribution that arises when estimating the mean of a
+normally distributed population in situations where the sample size is
+small and population standard deviation is unknown. It plays a role in
+a number of widely-used statistical analyses, including the Student's
+t-test for assessing the statistical significance of the difference
+between two sample means, the construction of confidence intervals for
+the difference between two population means, and in linear regression
+analysis.
+
+The t-distribution is symmetric and bell-shaped, like the normal
+distribution, but has heavier tails, meaning that it is more prone to
+producing values that fall far from its mean. This makes it useful for
+understanding the statistical behavior of certain types of ratios of
+random quantities, in which variation in the denominator is amplified
+and may produce outlying values when the denominator of the ratio
+falls close to zero.
+
+* t-distribution does not assumes that the sample mean is the true
+  (underlying) mean.
+
+35. What is regression?
+
+The relation between selected values of x and observed values of y
+(from which the most probable value of y can be predicted for any
+value of x).
+
+36. What is Empirical Rule?
+
+In statistics, the 68-95-99.7 rule, or three-sigma rule, or empirical
+rule, states that for a normal distribution, nearly all values lie
+within 3 standard deviations of the mean.
+
+About 68.27% of the values lie within 1 standard deviation of the
+mean. Similarly, about 95.45% of the values lie within 2 standard
+deviations of the mean. Nearly all (98.73%) of the values lie within 3
+standard deviations of the mean.
+
+Statisticians might express these intervals as confidence intervals:
+\mu +_ 2\sigma is approximately 95% confidence interval.
+
+37. What is standard deviation?
+
+Standard deviation is a widely used measure of variability or
+diversity used in statistics and probability theory. It shows how much
+variation or "dispersion" exists from the average (mean, or expected
+value). A low standard deviation indicates that the data points tend
+to be very close to the mean, whereas high standard deviation
+indicates that the data points are spread out over a large range of
+values.
+
+Let X be a random variable with mean value \mu:
+
+    E[X] = \mu
+
+Here the operator E denotes the average or expected value of X. Then
+the standard deviation of X is the quantity
+
+\sigma = \sqrt {E[X - \mu]}
+
+The standard deviation of a (univariate) probability distribution is
+the same as that of a random having that distribution. Not all random
+variables have a standard deviation, since these expected values need
+not exist. For example, the standard deviation of a random variable
+that follows a Cauchy distribution is undefined because its expected
+value \mu is undefined.
+
+38. What is stemplot?
+
+A stemplot (or stem-and-leaf display), in statistics, is a device for
+presenting quantitative data in a graphical format, similar to a
+histogram, to assist in visualizing the shape of a distribution.
+
+39. What is Haphazard Sampling?
+
+Haphazard sampling is a sampling method that does not follow any
+systematic way of selecting participants. An example of Haphazard
+Sampling would be standing on a busy corner during rush hour and
+interviewing people who pass by.
+
+Haphazard sampling gives little guarantee that your sample will be
+representative of the entire population.
+
+40. What is variance?
+
+In probability theory and statistics, the variance is a measure of how
+far a set of numbers is spread out. It is one of the several
+descriptors of a probability distribution, describing how far the
+numbers lie form the mean (expected value). In particular, the
+variance is one of the moments of a distribution. In that context, it
+forms part of a systematic approach to distinguishing between
+probability distributions.
+
+Unlike expected absolute deviation, the variance of a variable has
+units that are the square of the units of the variable itself. For
+example, a variable measured in inches will have a variance measured
+in square inches. For this reason, describing data sets via their
+standard deviation or root mean square deviation is often preferred
+over using the variance.
+
+41. What is a statistic?
+
+A datum that can be represented numerically.
+
+Any function of a random sample whose objective is to approximate a
+parameter is called a statistic, or an estimator. If \theta is the
+parameter being approximated, its estimator will be denoted
+\hat{\theta}. When an estimator is evaluated (by substituting the
+actual measurements recorded), the resulting number is called an
+estimate.
+
+See also #31 (What is an estimator).
+
+42. What is test statistic?
+
+Test statistic is a function of the sample; it is considered as a
+numerical summary of a set of data that reduces the data to one or a
+small number of values that can be used to perform a hypothesis
+test. Given a null hypothesis and a test statistic T, we can specify a
+"null value" T_0 such taht values of T close to T_0 present the
+strongest evidence in favor of the null hypothesis, whereas values of
+T far from T_0 present the strongest evidence against the null
+hypothesis. An important property of a test statistic is that we must
+be able to determine its sampling distribution under the null
+hypothesis, which allows us to calculate p-values.
+
+43. What is parameter?
+
+A parameter is an unknown numerical value describing a feature of a
+probability model.
+
+* Difference between a parameter and a statistic
+  A parameter is a number that describes a population and is typically
+  unknown. A statistic is a numerical description of a sample and can
+  be directly calculated.
+
+44. Why sample standard deviation using n - 1 instead of n?
+
+When you compute the difference between each value and the mean of
+those values, You don't know the true mean of the population, and all
+you know is the mean of your sample. Except for the rare cases where
+the sample mean happens to equal the population mean, the data will be
+closer to the sample mean than it will be to the true mean. So the
+value you compute will probably be a bit smaller (and can't be larger)
+than what it would be if you sued the true population mean. To make
+up for this, divide by n - 1 rather than n.
+
+But why n - 1? If you knew the sample mean, and all but one of the
+values, you could calculate what that last value must
+be. Statisticians say there are n - 1 degrees of freedom, which is the
+amount of independent data that is being used.
+
+45. What is t-test?
+
+A t-test is any statistical hypothesis test in which the test
+statistic follows a Student's t distribution if the null hypothesis is
+supported. It is most commonly applied when the test statistic would
+follow a normal distribution if the value of a scaling term in the
+test statistic were known. When the scaling term is unknown and is
+replaced by an estimate baed on the data, the test statistic (under
+certain conditions) follows a Student's t distribution.
+
+46. What is the central limit theorem?
+
+The central limit theorem (CLT) states conditions under which the mean
+of a sufficiently large number of independent random variables, each
+with finite mean and variance, will be approximately normally
+distributed.
+
+47. What is frequentist inference?
+
+Frequentist inference is one of a number of possible ways of
+formulating generally applicable shcemes for making statistical
+inference: that is, for drawing conclusions from statistical
+samples. This is the inference framework in which the well-established
+methodologies of statistical hypothesis testing and confidence
+intervals are based.
+
+To a large extent, frequentist inference has been associated with
+frequency interpretation of probability, specifically that any given
+experiment can be considered as one of an infinite sequence of
+possible repetitions of the same experiment, each capable of producing
+statistically independent results. In this view, the frequentist
+inference approach to drawing conclusions from data is effectively to
+require that the correct conclusion should be drawn with a given
+(high) probability, among this notional set of repetitions.
+
+48. What is UMVU?
+
+In statistics, a uniformly minimum-variance unbiased estimator is an
+unbiased estimator that has lower variance than any other unbiased
+estimator for all possible values of the parameter.
+
+The question of determining the UMVUE, if one exists, for a particular
+problem is important for practical statistics, since less-than-optimal
+procedures would naturally be avoided, other things being equal.
+
+To estimate a parameter, there are multiple different ways to do the
+estimation (i.e. many estimators). If one estimator has a lower
+variance, that means its estimation is more accurate. So we prefer to
+use an UMVUE.
+
+49 What is iid?
+
+In probability theory and statistics, a sequence or other collection
+of random variables is independent and identically distributed
+(i.i.d.) if each random variable has the same probability distribution
+as the others and all are mutually independent.
+
+50. What is variable?
+
+Something that is likely to vary; something that is subject to
+variation.
+
+A symbol (like x or y) that is used in mathematical or logical
+expressions to represent a variable quantity.
+
+51. What is method of moments?
+
+In statistics, the method of moments is a method of estimation of
+population parameters such as mean, variance, median, etc. (which need
+not be moments), by equating sample moments with unobservable
+population moments and then solving those equations for the quantities
+to be estimated.
+
+52. What is sufficient?
+
+In statistics, a sufficient statistic is a statistic which has the
+property of sufficiency with respect to a statistical model and its
+associated unknown parameter, meaning that "no other statistic which
+can be calculated from the same sample provides any additional
+information as to the value of the parameter".
+
+53. What is a prior distribution?
+
+In Bayesian statistical inference, a prior probability distribution,
+often called simply the prior, of an uncertain quantity p (for
+example, suppose p is the proportion of voters who will vote for the
+politician named Smith in a future election) is the probability
+distribution that would express one's uncertainty about p before the
+"data" (for example, an opinion poll) is taken into account. It is
+meant to attribute uncertainty rather than randomness to the uncertain
+quantity. The unknown quantity may be a parameter or latent variable.
+
+54. What is a conjugate prior?
+
+In Bayesian probability theory, if the posterior distributions
+p(\theta | x) are in the same family as the prior probability
+distribution p(\theta), the prior and posterior are then called
+conjugate distributions, and the prior is called a conjugate prior for
+the likelihood.
+
+For example, the Gaussian family is conjugate to itself (or
+self-conjugate) with respect to a Gaussian likelihood function: if the
+likelihood function is Gaussian, choosing a Gaussian prior over the
+mean will ensure that the posterior distribution is also Gaussian.
+
+55. What is a posterior distribution?
+
+In Bayesian statistics, the posterior probability of a random event or
+an uncertain proposition is the conditional probability that is
+assigned after the relevant evidence is taken into account. Similarly,
+the posterior probability distribution is the distribution of an
+unknown quantity, treated as a random variable, conditional on the
+evidence obtained from an experiment of survey.
+
+The posterior probability distribution of one random variable given
+the value of another can be calculated with Bayes' theorem by
+multiplying the prior probability distribution by the likelihood
+function, and then dividing by the normalizing constant.
+
+* School kids and costumes: Basically, Bayes' theorem can be treated
+  as two different classifications. All we know is there are some kids
+  with different costumes. So, you can first classify costumes, then
+  gender. Or you can first classify gender, then costumes.
+
+56. What is retrospective?
+
+Concerned with or related to the past. In statistics, if the data are
+retrospective, it means that samples were taken from each response
+group rather than from each explanatory group.
+
+57. Intuition of the method of maximum likelihood
+
+The basic idea behind maximum likelihood estimation is that it sees
+plausible to choose as the estimate for \theta that value of the
+parameter that maximizes the "likelihood" of the sample. The latter is
+measured by a likelihood function, which is simply the product of the
+underlying pdf evaluated for each of the data points.
+
+58. What is a fitted value?
+
+The values predicted by a model fitted to a set of data.
+
+59. What is BLUE?
+
+In statistics, the Gauss-Markov theorem, states that in a linear
+regression model in which the errors have expectation zero and
+are uncorrelated and have equal variance, the best linear unbiased
+estimator (BLUE) of the coefficients is given by the ordinary least
+squares estimator. Here "best" means giving the lowest possible mean
+squared error of the estimate. The errors need not be normal, nor
+independent and identically distributed (only uncorrelated and
+homoscedastic).
+
+60. What is uncorrelated?
+
+In probability theory and statistics, two real-valued random variables
+are said to be uncorrelated if their covariance is zero.
+
+Uncorrelatedness is by definition pairwise; i.e. to say that more than
+two random variables are uncorrelated simply means that any two of
+them are uncorrelated.
+
+Uncorrelated random variable have a correlation coefficient of zero,
+except in the trivial case when either variable has zero variance (is
+a constant). In this case the correlation is undefined.
+
+If X and Y are independent, then they are uncorrelated. However, not
+all uncorrelated variables are independent.
+
+61. What is homoscedastic?
+
+In statistics, a sequence or a vector of random variables is
+homoscedastic if all random variables in the sequence or vector have
+the same finite variance. This is also known as homogeneity of
+variance.
+
+Serious violations in homoscedasticity of data (assuming a
+distribution of data is homoscedastic when in actuality it is
+heteroscedastic) may result in overestimating the goodness of fit as
+measured by the Pearson coefficient.
+
+62. What is multicollinearity?
+
+Mullticolinearity is a statistical phenomenon in which two or more
+predictor variables in a multiple regression model are highly
+correlated. In this situation the coefficient estimates may change
+erratically in response to small changes in the model or the
+data. Multicolinearity does not reduce the predictive power or
+reliability of the model as a whole, at least within the sample data
+themselves; it only affects calculations regarding individual
+predictors. That is, a multiple regression model with correlated
+predictors can indicate how well the entire bundle of predictors
+predicts the outcome variable, but it may not give valid results about
+any individual predictor, or about which predictors are redundant with
+respect to others.
+
+Note that in statements of assumptions underlying regression analyses
+such as ordinary least squares, the phrase "no multicollinearity" is
+sometimes used to mean the absence of perfect multicollinearity, which
+is an exact (non-stochastic) linear relation among the regressions.
+
+63. What are type I and type II errors?
+
+A type I error, also known as an error of the first kind, is the wrong
+decision that is made when a test rejects a true null hypothesis
+(H_0). A type I error may be compared with a so called false positive
+in other test situations. Type I error can be viewed as the error of
+excessive credulity. In terms of folk tales, an investigator may be
+"crying wolf" (raising a false alarm) without a wolf in sight (H_0: no
+wolf).
+
+THe rate of the type I error is called the size of the test and
+denoted by the Greek letter \alpha. It usually equals the significance
+level of a test.
+
+A type II error, also known as an error of the second kind, is the
+wrong decision that is made when a test accepts a false null
+hypothesis. A type II error can be compared with a so-called false
+negative in other test situations. Type II error can be viewed as the
+error of excessive skepticism. In terms of folk tales, an investigator
+may fail to see the wolf ("failing to raise an alarm"). Again, H_0: no
+wolf.
+
+64. What is statistical power?
+
+The power of a statistical test is the probability that the test will
+reject the null hypothesis when the null hypothesis is actually false
+(i.e. the probability of not committing a Type II error, or making a
+false negative decision). The power is in general a function often
+possible distributions, often determined by a parameter, under the
+alternative hypothesis. As the power increases, the chances of a Type
+II error occurring decrease. The probability of a Type II error
+occurring is referred to as the false negative rate (\beta). Therefore
+power is equal to 1 - \beta, which is also known as the sensitivity.
+
+65. What is multivariate normal distribution?
+
+In probability theory and statistics, the multivariate normal
+distribution or multivariate Gaussian distribution, is a
+generalization of the one-dimensional (univariate) normal distribution
+to higher dimensions. A random vector is said to be p-variate normally
+distributed if every linear combination of its p components has a
+univariate normal distribution. The multivariate normal distribution
+is often used to describe, at least approximately, any set of possibly
+correlated real-valued random variables each of which clusters around
+a mean value.
+
+66. What is ANCOVA?
+
+In statistics, analysis of covariance (ANCOVA) is a general linear
+model with a continuous outcome variable (quantitative, scaled) and
+two or more predictor variables where at least one is continuous
+(quantitative, scaled) and at least one is categorical (nominal,
+nonscaled). ANCOVA is a merger of ANOVA and regression for continuous
+variables. ANCOVA tests whether certain factors have an effect on the
+outcome variable after removing the variance for which quantitative
+predictors (covariates) account. The inclusion of covariates can
+increase statistical power because it accounts for some of the
+variability.
+
+67. What is a covariate?
+
+In statistics, a covariate is a variable that is possibly predictive
+of the outcome under study. A covariate may be of direct interest or
+it may be confounding or interacting variable.
+
+68. What is generalized linear model?
+
+In statistics, the generalized linear model (GLM) is a flexible
+generalization of ordinary linear regression that allows for response
+variables that have other than a normal distribution. The GLM
+generalizes linear regression by allowing the linear model to be
+related to the response variable via a link function and by allowing
+the magnitude of the variance of each measurement to be a funcion of
+its predicated value.
+
+69. What is link function?
+
+The link function provides the relationship between the linear
+predictor and the mean of the distribution function.
+
+For example, the logit link for binary response:
+
+logit(\pi) = log[\pi / (1 - \pi)]
+
+The regression structure is
+
+g(\mu) = \beta_0 + \beta_1 X_1 + ... + \beta_p X_p
+
+Then the link between the linear predictor and the mean of the
+distribution function is
+
+logit(\pi) = g(\mu)
+
+log[\pi / (1 - \pi)] = \beta_0 + \beta_1 X_1 + ... + \beta_p X_p
+
+70. What is AIC?
+
+The Akaike information criterion is a measure of the relative goodness
+of fit of a statistical model. It is grounded in the concept of
+information entropy, in effect offering a relative measure of the
+information lost when a given model is used to describe reality. It
+can be said to describe the trade off between bias and variance in
+model construction, or loosely speaking between accuracy and
+complexity of the model.
+
+71. What is a mixture model?
+
+In statistics, a mixture model is a probabilistic model for
+represneting the presence of sub-populations within an overall
+population, without requiring that an observed data-set should
+identify the sub-population to which an individual observation
+belongs. Formally a mixture model corresponds to the mixture
+distribution that represents the probability distribution of
+observations in the overall population.
+

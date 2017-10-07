@@ -1,0 +1,111 @@
+********************************************************
+	On the Necessity of Occam Algorithms
+********************************************************
+
+1. Abstract 
+
+In this paper it is shown that for all concept classes satisfying a
+natural closure property the converse is also true; 
+
+the PAC-learnability of the class implies the existence of an Occam
+algorithm for the class.
+
+This results in a complete combinatorial characterization of the
+PAC-learnability of a wide variety of concept classes.
+
+2. 
+
+Although the PAC-learnability (or nonlearnability) of a number of
+concept classes has been established, ad hoc probabilistic arguments
+have typically been employed. This is due in part to the lack of a
+complete combinatorial characterization of those classes that are
+PAC-learnable, and to the lack of natural necessary and sufficient
+conditions for PAC-learnability.
+
+3. Occam algorithm
+
+An Occam algorithm is an algorithm that, when given a finite set of
+examples of any concept in the class, outputs a description of a
+"simple" concept in the class that is consistent with the given
+sample.
+
+a) It was shown that the existence of a polynomial-time Occam
+algorithm for a concept class implies that the concept class is
+PAC-learnable. 
+
+b) the domain is continuous, the definition of "simple" corresponds to
+the complexity of the class of possible hypotheses output by the
+algorithm, as measured by a combinatorial parameter called the
+Vapnik-Chervonenkis dimension [3].
+
+4. Open Problem
+
+Whether PAC-learnability is equivalent to the existence of Occam
+algorithm, i.e., whether the existence of an Occam algorithm is also a
+necessary condition for PAC-learnability.
+
+5. "Our" main results
+
+(Theorem 6 and 14, and Corollaries 7 and 15) are that for a wide
+variety of concept classes the existence of an Occam algorithm is in
+fact a necessary condition for PAC-learnability.
+
+Such classes include Boolean formulas, circuits, deterministic finite
+automata, decision-lists, decision-trees and various
+geometrically-defined concept classes.
+
+The results are proved by showing that for any concept class that is
+polynomially closed under exception lists, a PAC-learning algorithm
+may be used to obtain an Occam algorithm for the class.
+
+6. 
+
+A concept class C is polynomially closed under exception lists if
+there is a polynomial-time algorithm that, when given the
+representation r_c of a concept c \in C and a finite list E of
+examples (an exception list), outputs the representation r__{c'} of a
+concept c' \in C such that the concepts c and c' agree except on the
+set of E. That is, c' = c \bigoplus E (the symmetric difference of c
+and E).
+
+7. Our result in two parts
+
+The first applies to concept classes over discrete domains, and the
+second to classes over continuous domains.
+
+In the case of continuous domains, the simple closure property
+described above is sufficient to show the equivalence of
+PAC-learnability and the existence of Occam algorithms.
+
+For discrete domains, a slightly more restrictive property (strong
+polynomial closure) is necessary.
+
+8. Our results have a number of interesting implications
+
+a) The model of PAC-learning requires that a learning algorithm work
+for arbitrary probability distributions over the domain of possible
+examples of the concept to be learned.
+
+Our results imply that for concept classes with the required closure
+properties, PAC-learnability is established by the existence of a
+learning algorithm that need only perform correctly on uniform
+distributions over finite subsets of the domain.
+
+b) The PAC-learnability of concept classes which have the required
+closure properties is exactly captured by a related combinatorial
+optimization problem.
+
+By definition, the existence of an Occam algorithm for a concept class
+is equivalent to the existence of a very weak approximation algorithm
+for the minimum consistent representation problem that is associated
+with the class.
+
+For example, the minimum consistent DFA problem.
+
+
+
+
+
+
+
+

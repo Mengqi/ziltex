@@ -1,0 +1,159 @@
+Computational Learning Theory 101
+
+1. What is Linear Threshold Function?
+
+   Threshold: gate; the point at which a physiological or
+   psychological effect begins to be produced.
+
+2. What is Unsupervised Learning?
+
+   In machine learning, unsupervised learning refers to the problem of
+   trying to find hidden structure in unlabeled data. Since the
+   examples given to the learner are unlabeled, there is no error or
+   reward signal to evaluate a potential solution.
+
+   Unsupervised learning is closely related to the problem of density
+   estimation in statistics.
+
+3. What is clustering?
+
+   Cluster analysis or clustering is the task of assigning a set of
+   objects into groups (called clusters) so that the objects in the
+   same cluster are more similar (in some sense or another) to each
+   other than to those in other clusters.
+
+4. What is half-space?
+
+   In geometry, a half-space is either of the two parts into which a
+   plane divides the three-dimensional euclidean space. More
+   generally, a half-space is either of the two parts into which a
+   hyperplane divides an affine space.
+
+   upper half-space:
+   a_1 * x_1 + a_2 * x_2 + ... + a_n * x_n > b
+
+5. What do you mean by "classes of functions"
+
+   Classes of Boolean functions that considered in COLT.
+
+   1) Disjunctive Normal Form Formulae
+      term: a conjunction of literals.
+      DNF:  a disjunction of terms.
+
+   2) Conjunctive Normal Form Formulae
+      clause: a disjunction of literals.
+      CNF:    a conjunction of clauses
+
+      * K-TERM-DNF != K-CNF
+      n-CNF can represent every function with input from x_1 to x_n
+      (also negated symbols). But it takes 2^n-TERM DNF to represent
+      every function with input from x_1 to x_n. In other words,
+      there are some functions that n-TERM DNF cannot represent but
+      n-CNF can. With So K-TERM-DNF \subseteq K-CNF, we can say that
+      K-TERM-DNF \subset K-CNF
+
+  3) Decision Trees
+     Decision Lists
+
+6. What do you mean by co-dimension?
+
+   ???????????????????????????????
+
+7. What is cardinality?
+
+   The cardinality of a set is a measure of the "number of elements of
+   the set".
+
+8. What deos H_{n,m} mean?
+
+   I guess H_{n,m} is the representation class over X_{n,m}. And
+   X_{n,m} means the input space with input x_1,...,x_n and m.
+
+   At AICLT spage 35, H_n = \sum_{m>=1} H_{n,m}. As we can see, n
+   represents the original n inputs x_1,...,x_n. m just represents the
+   number of samples.
+
+9. What is the union bound?
+
+   For any finite or countable set of events, the probability that at
+   least one of the events happens is no greater than the sum of the
+   probabilities of the individual events.
+
+10. What is hyperplane?
+
+A hyperplane is any codimension-1 vector subspace of a vector
+space. Let a_1, a_2, ..., a_n be scalars not all equal to 0. Then the
+set S consisting of all vectors X = (x_1, x_2, ..., x_n) in R^n such
+that a_1 x_1 + a_2 x_2 + ... + a_n x_n = c for c a constant is a
+subspace of R^n called a hyperplane. 
+
+11. What is the norm of a vector?
+
+In linear algebra, a norm is a function that assigns a strictly
+positive length or size to all vectors in a vector space, other than
+the zero vector.
+
+|v| = \sqrt {a_1^2 + a_2^2 + ... + a_n^2}
+
+12. What is the distance from a point to a hyperplane?
+
+Let P = (x_1, y_1, z_1),
+    hyperplane: A(x - x_0) + B(y - y_0) + C(z - z_0) = 0
+    	     => Ax + By + Cz + D = 0
+	     	D = -Ax_0 - By_0 - Cz_0
+		Q (x_0, y_0, z_0)
+
+Let v = vector P to Q = (x_1 - x_0, y_1 - y_0, z_1 - z_0)
+    N = (A, B, C) -- the normal vector of the hyperplane
+ -> n = N / |N| = (A, B, C) / \sqrt {A^2 + B^2 + C^2}
+
+d = |v*n|
+  = |(x_1 - x_0, y_1 - y_0, z_1 - z_0) * n|
+  = |A(x_1 - x_0) + B(y_1 - y_0) + C(z_1 - z_0)| / \sqrt {A^2 + B^2 + C^2}
+
+ ** since D = -Ax_0 - By_0 - Cz_0, we have
+
+  = |Ax_1 + By_1 + Cz_1 + D| / \sqrt {A^2 + B^2 + C^2}
+
+13. What is support vector machine?
+
+A support vector machine (SVM) is a concept in statistics and computer
+science for a set related supervised learning methods that analyze
+data and recognize patterns, used for classification and regression
+analysis. The standard SVM takes a set of input data and predicts, for
+each given input, which of two possible classes forms the input,
+making the SVM a non-probabilistic binary linear classifier. Given a
+set of training examples, each marked as belonging to one of two
+categories, an SVM training algorithm builds a model that assigns new
+examples into one category or the other.
+
+14. What is gradient descent?
+
+Gradient descent is a first-order optimization algorithm. To find a
+local minimum of a function using gradient descent, one takes steps
+proportional to the negative of the gradient (or of the approximate
+gradient) of the function at the current point. If instead one takes
+steps proportional to the positive of the gradient, one approaches a
+local maximum of that function; the procedure is then known as
+gradient ascent.
+
+15. What is the intuition of halfspace's weight? And why intersection
+of two weight W halfspaces has PTF degree O(log W)?
+
+
+
+16. Convex functions, so what?
+
+f(tx_1 + (1-t)x_2 ) < t f(x_1) + (1-t) f(x_2)
+
+17. What is symmetric difference?
+
+In mathematics, the symmetric difference of two sets is the set of
+elements which are in either of the sets and not in their
+intersection. 
+
+18. 
+
+
+
+

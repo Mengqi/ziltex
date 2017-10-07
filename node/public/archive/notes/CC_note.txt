@@ -1,0 +1,175 @@
+Note - Computational Complexity
+
+Chapter 2 Turing Machines
+
+1. Definition 2.1
+
+Formally, a Turing machine is a quadruple M = (K. \Sigma, \delta,
+s). Here K is a finite set of states; s \in K is the initial
+state. \Sigma is a finite set of symbols (we say \Sigma is the
+alphabet of M). We assume that K and \Sigma are disjoint sets. \Sigma
+always contains the special symbols \sqcup and \rhd: The bland and the
+first symbol. Finally, \delta is a transition function, which maps
+K * \Sigma to (K \cup {h, "yes", "no"}) * \Sigma * {<-,->,-}. We
+assume that h (the halting state), "yes" (the accepting state), "no"
+(the rejecting state), and the cursor directions <- for "left", -> for
+"right", and - for "stay", are not in K \cup \Sigma.
+
+Function \delta is the "program" of the machine. It specifies, for
+each combination of current state q \in K and current symbol \sigma
+\in \Sigma, a triple \delta(q, \sigma) = (p, \rho, D). p is the next
+state, \rho is the next symbol to be overwritten on \sigma, and D \in
+{<-, ->, -} is the direction in which the cursor will move. For \rhd
+we require that, if for states q and p, \delta(q, \rhd) = (p, \rho,
+D), then \rho = \rhd and D = ->. That is, \rhd always directs the
+cursor to the right, and is never erased.
+
+2. Definition 2.2
+
+Let us fix a Turing machine M. We say that configuration (q, w, u)
+yields configuration (q', w', u') in one step, denoted (q, w, u) -M->
+(q', w', u'), intuitively if a step of the machine from configuration
+(q, w, u) results in configuration (q', w', u').
+
+3. Definition 2.3
+
+Let L \subset (\Sigma - {\sqcup})^* be a language, that is, a set of
+strings of symbols. Let M be a Turing machine such that, for any
+string x \in (\Sigma - {\sqcup})^*, if x \in L, then M(x) = "yes", and
+if x \notin L, then M(x) = "no". Then we say M decides L. If L is
+decided by some Turing machine M, then L is called a recursive
+language.
+
+We say that M simply accepts L whenever, for any string x \in (\Sigma
+- {\sqcup})^*, if x \in L, then M(x) = "yes"; however, if x \notin L,
+then M(x) = \nearrow. If L is accepted by some Turing machine M, then
+L is called recursive enumerable.
+
+We shall not only deal with the decision and acceptance of languages,
+but also occasionally with the computation of string
+functions. Suppose that f is a function from (\Sigma - {\sqcup})^* to
+\Sigma^*, and let M be a Turing machine with alphabet \Sigma. We say
+that M computes f if, for any string x \in (\Sigma - {\sqcup})^*,
+M(x) = f(x). If such a M exists, f is called a recursive function.
+
+4. Proposition 2.1
+
+If L is recursive, then it is recursively enumerable.
+
+5. Definition 2.4
+
+A k-string Turing machine, where k >=1 is an integer, is a quadruple
+M = (K, \Sigma, \delta, s), where K, \Sigma, and s are exactly as in
+ordinary Truing machines. \delta is a program that must reflect the
+complexities of multiple strings. Intuitively, \delta decides the next
+state as before, but also decides for each string the symbol
+overwritten, and the direction of cursor motion by looking at the
+current state and the current symbol at each string. Formally, \delta
+is a function from K * \Sigma^* to (K \cup {h, "yes", "no"}) * (\Sigma
+* {<-, ->, -})^k. Intuitively, \delta(q, \sigma_1, ..., \sigma_k) =
+(p, \rho1, D_1, ..., \rho_k, D_k) means that, if M is in state q, the
+cursor of the first string is scanning a \sigma_1, that of the second
+a \sigma_2m and so on, then the next state will be p, the first cursor
+will write \rho_1 and move in the direction indicated by D_1, and so
+on for the other cursors. \rhd still cannot be overwritten or passed
+on to the left: If \sigma_i = \rhd, then \rho_i = \rhd and D_i =
+->. Initially, all strings start with a \rho; the first string also
+contains the input. The outcome of the computation of a k-string
+machine M on input x is as with ordinary machines, with one
+difference: IN the case of machines that compute functions, the output
+can be read from the last (kth) string when the machine halts.
+
+6. Definition 2.5
+
+If for a k-string Turing machine M and input x we have (s, \rhd, x,
+\rhd, \epsilon, .., \rhd, \epsilon) -M^t-> (H, w_1, u_1..., w_k, u_k)
+for some H \in {h, "yes", "no"}, then the time required by M on input
+x is t. That is, the time required is simply the number of steps to
+halting. If M(x) = \nearrow, then the time required by Mon x is
+thought to be \infty.
+
+Let f be a function from the nonnegative integers to the nonnegative
+integers. We say that machine M operates within time f(n) if, for any
+input string x, the time required by M on x is at most f(|x|) (by |x|
+we denote the length of string x). Function f(n) is a time bound for
+M.
+
+Suppose now that a language L \subseq (\Sigma - {\sqcup})^* is decided
+by a multistring Turing machine operating in time f(n). We say that L
+\in TIME(f(n)). That is, TIME(f(n)) is a set of languages. It contains
+exactly those languages that can be decided by Turing machines with
+multiple strings operating within the time bound f(n).
+
+7. Theorem 2.1
+
+Given any k-string Turing machine M operating within time f(n), we can
+construct a Turing machine M' operating within time O(f(n)^2) and such
+that, for any input x, M(x) = M'(x).
+
+8. Theorem 2.2
+
+Let L \in TIME(f(n)). Then, for any \epsilon > 0, L \in TIME(f'(n)),
+where f'(n) = \epsilon f(n) + n + 2.
+
+* Note: this indicates that we can speed up the constant factor by
+  improving the hardware only. In other words, the constants are not
+  important so long as we can use hardware to speed it up. However,
+  hardware cannot improve the rate of growth. So, computer scientists
+  could focus on rate of growth only since the constants can be
+  handled by upgrading the hardware.
+
+9. A New Definition of k-string Turing machine
+
+A k-string Turing machine with input and output is an ordinary
+k-string Turing machine, with one important restriction on the program
+\delta: Whenever \delta(q, \sigma_1, ..., \sigma_k) = (p, \rho_1, D_1,
+..., \rho_k, D_k), then (a) \rho_1 = \sigma_1, and (b) D_k !=
+<-. Furthermore, (c) if \rho_1 = \sqcup then D_1 = <-.
+
+* Note: a) At each move, the symbol "written" on the first string is
+  	always the same as the old symbol, and hence the machine
+  	effectively has a read-only input string.
+  	b) In the last (output) string the cursor never moves to the
+  	left, and hence the ouput string is effectively write-only.
+	c) The cursor of the input string odes not wander off into the
+  	\sqcup s after the end of the input. Not necessary.
+
+10. Proposition 2.2
+
+For any k-string Turing machine M operating within time bound f(n)
+there is a (k + 2)-string Turing machine M' with input and output,
+which operates within time bound O(f(n)).
+
+11. Definition 2.6
+
+Suppose that, for a k-string Turing machine M and an input x (s, \rhd,
+x, ..., \rhd, \epsilon) -M^*-> (H, w_1, u_1, ..., w_k, u_k), where
+H \in {h, "yes", "no"} is a halting state. Then the space require by M
+on input x is \sum_{i = 1}^{k} |w_i u_i|. If, however, M is a machine
+with input and ouput, then the space required by M on input x is
+\sum_{i=2}^{k-1} |w_i u_i|. Suppose now that f is a function from N to
+N. We say that Turing machine M operates within space bound f(n) if,
+for any input x, M requires space at most f(|x|).
+
+Finally, let L be a language. We say that L is in the space complexity
+class SPACE(f(n)) if there is a Turing machine with input and output
+that decides L and operates within space bound f(n). For example,
+palindromes were shown to be in the space complexity class
+SPACE(log n). This important space complexity class is usually
+referred to as L.
+
+12. Theorem 2.3
+
+Let L be a language in SPACE(f(n)). Then, for any \epsilon > 0, L \in
+SPACE( 2 + \epsilon * f(n)).
+
+13. Theorem 2.4
+
+Suppose that language L is in TIME(f(n)). Then there is a RAM program
+which computes the function \phi_L in time O(f(n)).
+
+14. Theorem 2.5
+
+If a RAM program \Pi computes a function \phi in time f(n), then there
+is a 7-string Turing machine M which computes \phi in time O(f(n)^3).
+

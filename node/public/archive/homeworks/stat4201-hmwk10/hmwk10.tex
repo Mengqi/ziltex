@@ -1,0 +1,96 @@
+\documentclass[12pt]{article}
+\parindent=.25in
+
+\setlength{\oddsidemargin}{0pt}
+\setlength{\textwidth}{440pt}
+\setlength{\topmargin}{0in}
+
+\usepackage{amsmath}
+\usepackage[dvips]{graphicx}
+\usepackage{verbatim}
+\usepackage{appendix}
+
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{latexsym}
+\usepackage[center]{subfigure}
+\usepackage{epsfig}
+\usepackage{hyperref}
+
+\title{Stat 4201 Homework 10}
+\author{Mengqi Zong $<mz2326@columbia.edu>$}
+
+\begin{document}
+
+\maketitle
+
+% no paragraph indentation
+\setlength{\parindent}{0in}
+
+\section*{Question 1}
+
+For this problem, I first get the data with etype = 2:
+
+\begin{verbatim}
+colon.2 <- subset(colon, etype == 2)
+\end{verbatim}
+
+Then I used Kaplan-Meier and Fleming-Harrington method to estimate the
+curve:
+
+\begin{verbatim}
+fit.kaplan <- survfit(Surv(time, status)~rx, data=colon.2,
+                      type = "kaplan-meier")
+fit.felming <- survfit(Surv(time, status)~rx, data=colon.2,
+                       type = "fleming-harrington")
+\end{verbatim}
+
+Since the results are quite long, I put them in the appendix.
+
+\section*{Question 2}
+ 
+For Kaplan-Meier method, the medians are shown belown:
+
+\begin{verbatim}
+Call: survfit(formula = Surv(time, status) ~ rx, data = colon.2, type = "kaplan-meier")
+
+           records n.max n.start events median 0.95LCL 0.95UCL
+rx=Obs         315   315     315    168   2083    1656    2789
+rx=Lev         310   310     310    161   2152    1540      NA
+rx=Lev+5FU     304   304     304    123     NA    2725      NA
+\end{verbatim}
+
+For treatment Lev+5FU, since it never gets to the point where s(t) =
+0.5, the median for Lev+5FU is NA. \\
+
+For Fleming-Harrington method, the medians are shown belown:
+
+\begin{verbatim}
+Call: survfit(formula = Surv(time, status) ~ rx, data = colon.2, type = "fleming-harrington")
+
+           records n.max n.start events median 0.95LCL 0.95UCL
+rx=Obs         315   315     315    168   2083    1656    2789
+rx=Lev         310   310     310    161   2152    1540      NA
+rx=Lev+5FU     304   304     304    123     NA    2725      NA
+\end{verbatim}
+
+For treatment Lev+5FU, since it never gets to the point where s(t) =
+0.5, the median for Lev+5FU is NA.
+
+\appendix
+\appendixpage
+\addappheadtotoc
+
+The R code is listed below:
+
+\verbatiminput{hmwk10.r}
+
+The survival curve estimated using Kaplan-Meier method:
+
+\verbatiminput{kaplan-meier}
+
+The survival curve estimated using Fleming-Harrington method:
+
+\verbatiminput{fleming-harrington}
+
+\end{document} 

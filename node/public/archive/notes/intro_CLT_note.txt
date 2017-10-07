@@ -1,0 +1,836 @@
+Notes - An Introduction to Computational Learning Theory
+
+***************************************************************
+  Chapter 1 The Probably Approximately Correct Learning Model
+***************************************************************
+
+What is a PAC Learning Model?
+    >=			    <=
+   (1 - \delta) * |Right| + \delta * |Wrong|
+
+   \delta the probability that h is not qualified. That is the chance
+   of the algorithm doesn't work.
+
+   Right: h is qualified, error(h) <= \epsilon
+   Wrong: h is not qualified, error(h) > \epsilon
+
+   As to error, we can define it by using the fact that h \subseteq
+   X. If under uniform distribution, error means the chance that
+   h(x) != c(x). That is, if there are m inputs in the future, then
+   there will be error * m inputs that h(x) != c(x).
+
+   In this case, Right means the difference between h and c is less
+   than or equal \epsilon. Wrong means the difference between h and c
+   is greater than \epsilon.
+
+1. A Rectangle Learning Game
+
+   Euclidean plane R_2
+   the target rectangle R
+   a hypothesis rectangle R'
+
+   Claim:
+   For any target rectangle R and any distribution D, and for any small
+   \epsilon and \delta (0 < \epsilon, \delta <= 1/2), for a suitably
+   chose value of the sample size m, we can assert that with probability
+   at least 1 - \delta, the tightest-fit rectangle has error at most
+   \epsilon with respect to R and D.
+
+   The tighest-fit rectangle R' is always contained in the target
+   rectangle R (that is, R' \subseteq R and so
+   R \triangle R' = R - R').
+
+   Proof:
+   Try to guarantee the weight under D of each strip is at most
+   \epsilon / 4, then we can conclude that the error of R' is at most
+   4(\epsilon / 4) = \epsilon (We have erred on the side of pessimism
+   by counting each overlap region twice).
+
+   Define T to be the rectangular strip along the inside top of R
+   which encloses exactly weight \epsilon / 4 under D.
+   =>
+   T' has the weight exceeding \epsilon / 4 if and only if T' includes
+   T (T' \supset T).
+   =>
+   T' includes T if and only if no point in T appears in the sample S.
+   =>
+   The probability that m independent draws from D all miss the region
+   T is exactly (1 - \epsilon / 4)^m. This is also the probability of
+   T' has a weight greater than \epsilon / 4.
+   =>
+   By union bound Pr[A \cup B] <= Pr[A] + Pr[B], the probability that
+   any of the four strips of R - R' has weight greater than
+   \epsilon / 4 is at most 4(1 - \epsilon / 4)^m.
+   =>
+   The probability that one of the four error strips has weight
+   exceeding \epsilon / 4 is at most four times the probability that a
+   fixed error strip has weight exceeding \epsilon / 4 (one of them
+   <= 4 * one fixed).
+
+   Choose m to satisfy 4(1 - \epsilon / 4)^m <= \delta, then with
+   probability 1 - \delta over the m random examples, the weight of
+   the error region R - R' will be bounded by \epsilon, as claimed.
+
+   That is, there is a probability of 4(1 - \epsilon / 4)^m that this
+   whole thing doesn't work. If it works, then error region R - R' is
+   at most \epsilon.
+
+   Using inequality
+   	 (1 - x) <= e^{-x}
+   we see that any value of m satisfying 4e^{-\epsilon m / 4} <= \delta
+   also satisfies the previous condition.
+   =>
+	m >= (4 / \epsilon) ln(4 / \delta)
+
+   Comment:
+    a) As we ask for greater accuracy by decreasing \epsilon  or greater
+    confidence by decreasing \delta, our algorithm requires more
+    examples to meet those demands.
+    b) This algorithm is efficient: the required sample size is a
+    slowly growing function of 1 / \epsilon and 1/ \delta (linear and
+    logarithmic, respectively), and once the sample is given, the
+    computation of the tightest-fit hypothesis can be carried out
+    rapidly.
+
+2. A General Model
+
+   The Probably Approximately Correct or PAC model of learning.
+
+   2.1 Definition of the PAC Model
+
+   Let X be a set called the instance space.
+
+   A concept over X is just a subset c \subseteq X of the instance
+   space. (concept c is a set)
+
+   A concept can thus be thought of as the set of all instances that
+   positively exemplify some simple or interesting rule. We can
+   equivalently define a concept to be a boolean mapping
+   c: X -> {0, 1}, which c(x) = 1 indicating that x is a positive
+   example of c and c(x) = 0 indicating that x is a negative
+   example. (concept c is a boolean function).
+
+   A concept class C over X is a collection of concepts over X.
+
+   In our model, a learning algorithm will have access to positive and
+   negative examples of an unknown target concept c, chosen from a
+   known concept class C.
+
+   In our model, learning algorithms "KNOW" the target class C, in the
+   sense that the designer of the learning algorithm is guaranteed
+   that the target concept will be chosen from C.
+
+   Let D be any fixed probability distribution over the instance space
+   X. We will refer to D as the target distribution. If h is any
+   concept over X, then error between h and the target concept c:
+   namely, we define
+      error(h) = Pr_{x \in D} [c(x) != h(x)]
+   We regard the concepts c and h as boolean functions.
+
+   Let EX(c, D) a be procedure (oracle) that runs in unit time, and on
+   each call returns a labeled example <x, c(x)>, where x is drawn
+   randomly and independently according to D.
+
+   Definition 1 (The PAC Model, Preliminary Definition) Let C be a
+   concept class over X. We say that C is PAC learnable if there
+   exists an algorithm L with the following property: for every
+   concept c \in C, for , and for all 0 < \epsilon < 1/2 and
+   0 < \delta < 1/2, if L is given access to EX(c, D) and inputs
+   \epsilon and \delta, then with probability at least 1 - \delta, L
+   outputs a hypothesis concept h \in C satisfying error(h) <=
+   \epsilon. This probability is taken over the random examples drawn
+   by calls to EX(c, D), and any internal randomization of L.
+
+   If L runs in time polynomial in 1 / \epsilon and 1 / \delta, we say
+   that C is efficiently PAC learnable.
+
+   concept class: one type of problems.
+   concept: a particular problem of a particular type.
+   \epsilon: the error parameter
+   \delta: the confidence parameter.
+
+   2.2 Representation Size and Instance Dimension
+
+   A representation scheme for a concept class C is a function
+   R: \sum^{\ast} -> C, where \sum is a finite alphabet of symbols. We
+   call any string \sigma \in \sum^{\ast} such that R(\sigma) = c a
+   representation of c (under R). Note that there maybe many
+   representations of a concept c under the representation scheme R.
+
+   We define size(c) = min_{R(\sigma)=c} {size(\sigma)}.
+
+   For a concept class C, we shall refer to the representation class C
+   to indicate that we have in mind some fixed representation scheme R
+   for C. In fact, we usually define the concept classes we study by
+   their representation scheme. (Representation class C is the default
+   representation scheme R for C).
+
+   If we let C_n be the class of concepts over X_n, and write
+   X = \cup_{n>=1} X_n and C = \cup_{n>=1} C_n, then X and C define an
+   infinite family of learning problems of increasing dimension.
+
+   Definition 2 (The PAC Model, Modified Definition) Le C_n be a
+   representation class over X_n, (where X_n is either {0, 1}^n or
+   n-dimensional Euclidean space R^n), and let X = \cup_{n>=1} X_n and
+   C = \cup_{n>=1} C_n. The modified definition of PAC learning is the
+   same as the preliminary definition (Definition 1), except that now
+   we allow the learning algorithm time polynomial in n and size(c)
+   (as well as 1 / \epsilon and 1 / \delta as before) when learning a
+   target concept c \in C_n.
+
+   Definition 2 incorporates the notions of target concept size and
+   instance space dimension into the model. Basically, it means the
+   running time of atomic procedure EX(c, D) is being considered in
+   this model. That is because the C is the union of representation
+   classes C_n over X_n for n >= 1. Every c in C has a size now. And
+   the atomic procedure EX(c, D actually takes time polynomial in n,
+   not simply 1.
+
+   The notion of efficiently PAC learnable is also changed because it
+   now has to consider factors like n and size(c) (actually just n in
+   most time).
+
+3. Learning Boolean Conjunctions
+
+   Instance space X_n = {0, 1}^n
+
+   Each a \in X_n is interpreted as an assignment to the n boolean
+   variables x_1, ..., x_n, and we use the notation a_i to indicate
+   the ith bit of a.
+
+   Let the representation class C_n be the class of all conjunctions of
+   literals over x_1, ..., x_n.
+
+   A literal is either a variable x_i or its negation \overline{x}_i.
+
+   size(c) <= 2n for any conjunction c \in C_n. A standard binary
+   encoding of any conjunction c \in C_n has length O(nlogn).
+
+   Claim:
+   Conjunctions of boolean literals are efficiently PAC learnable.
+
+   Proof:
+   Seek an algorithm that runs in time polynomial in n, 1 / \epsilon,
+   and 1 / \delta.
+
+   The hypothesis conjunction at the very beginning:
+   h = x_1 \land \overline{x}_1 \land ... \land x_n \land \overline{}_n
+
+   For the algorithm, it ignores the negative examples and only updates
+   h when there are positive examples. So, h will never err on a
+   negative example of c (h is more specific than c).
+
+   Consider a literal z that occurs in h but not in c.
+
+   * example a \in {a | a \in c & a \notin h}
+
+   =>
+   z (no overline) causes h to err only on those positive examples
+   of c in which z = 0; also note that it is exactly such positive
+   examples that would have caused our algorithm to delete z from
+   h. That means z causes h to err because none of those positive
+   examples occurs in our samples. Let p(z) denote the total
+   probability of such instances under the distribution D, that is,
+
+       p(z) = Pr_{a \in D} [c(a) = 1 \land z is 0 in a].
+
+   p(z) is the probability of literal z causing h to err. p(z) is also
+   the probability of instances causing our algorithm to delete z from
+   h to appear under distribution D.
+
+   Since every error of h can be "blamed" on a least one literal z of
+   h,  by the union bound we have error(h) <= \sum_{z \in h} Pr(z).
+
+   We say that a literal is bad if p(z) >= \epsilon / 2n.
+   If h contains no bad literals, then
+
+       error(h) <= \sum_{z \in h} p(z) <= 2n(\epsilon / 2n)
+   =>  error(h) <= \epsilon
+
+   That is, the difference between h and c is less than \epsilon if no
+   bad literals at all.
+
+   * We are now trying to calculate the probability to fail,
+     i.e. there is some bad literal z in h.
+
+   For any fixed bad literal z, the probability that this literal is
+   not deleted from h after m calls of our algorithm to EX(c, D) is at
+   most (1 - \epsilon / 2n)^m, because the probability of the literal
+   z is deleted by a single call to EX is p(z) (which is at least
+   \epsilon / 2n for a bad literal).
+
+   	p(z) >= \epsilon / 2n		(at least)
+	-p(z) <= - \epsilon / 2n
+	1 - p(z) <= 1 - \epsilon / 2n	(at most)
+
+   =>
+   The probablity that there is some bad literal that is not deleted
+   from h after m calls is at most 2n(1 - \epsilon / 2n)^m (union
+   bound).
+   =>
+	2n(1 - \epsilon / 2n)^m <= \delta
+   =>					  (using  1 - x <= exp^{-x})
+	m >= (2n / \epsilon)(ln(2n) + ln(1 / \delta))
+   =>
+   If our algorithm takes at least this number of examples, then with
+   probability at least 1 - \delta the resulting conjunction h will
+   have error at most \epsilon with respect to c and D in future.
+
+   Since this algorithm takes linear time to process each example, the
+   running time is bounded by mn, and hence is bounded by a polynomial
+   in n, 1 / \epsilon and 1 / \delta, as required.
+
+4. Intractability of Learning 3-Term DNF Formulae
+
+   3-Term DNF formulae is not 3-SAT.
+
+   3-SAT is (x_1 \lor x_2 \lor x_3) \land ... with each clause
+   containing exact 3 literals.
+
+   The class of disjunctions of three boolean conjunctions (3-term
+   disjunctive normal form (DNF) formulae) is not efficiently PAC
+   learnable unless every problem in NP can be efficiently solved in a
+   worst-case sense by a randomized algorithm.
+
+   In technical language, our hardness for 3-term DNF is based on the
+   widely believed assumption that RP != NP. Because if RP = NP, then
+   NP-complete problems can be solved with high probability by a
+   probabilistic polynomial-time algorithm. Then 3-term DNF is
+   efficiently PAC learnable, which contradicts our claim.
+
+   The representation class C_n of 3-term DNF formulae is the set of
+   all disjunctions T_1 \lor T_2 \lor T_3, where each T_i is a
+   conjunction of literals over the boolean variables x_1,..., x_n.
+
+   Theorem 1.3 If RP != NP, the representation class of 3-term DNF
+   formulae is not efficiently PAC learnable.
+
+   Proof:
+   Try to reduce an NP-compete language A to the problem of PAC
+   learning 3-term DNF formulae.
+
+   NP:	    	 \alpha	           \in		    language A
+   3-term DNF:	S_{\alpha}  is consistent with  some concept c \in C
+   	  	S_{\alpha}      \subseteq 	 c's representation
+
+   The key property we desire of the mapping of \alpha to S_{\alpha}
+   is that \alpha \in A if and only if S_{\alpha} is consistent with
+   some concept c \in C. We just know there exists such a concept for
+   S_{\alpha} if \alpha \in A. But we don't know what it is in the
+   very beginning.
+
+   Definition 3 Let S = {<x_1, b_1>, ..., <x_m, b_m>} be any labeled
+   set of instances, where each x_i \in X and each b_i \in {0, 1}. Let
+   c be a concept over X. Then we say that c is consistent with S ( or
+   equivalently, S is consistent with c) if for all 1 <= i <= m,
+   c(x_i) = b_i.
+
+   Suppose that now \alpha \in A if and only if S_{\alpha} is
+   consistent with some concepts in C. We now try to show how a PAC
+   learning algorithm L for C can be used to determine if there exists
+   a concept in C that is consistent with S_{\alpha} (and thus whether
+   \alpha \in A) with high probability.
+
+   Set the error parameter \epsilon = 1 / (2|S_{\alpha}|).
+   Doing PAC learning on S_{\alpha} -> h.
+
+   Basically, h \subseteq c_{S_{\alpha}} \subseteq c. And due to the
+   PAC learning procedure, h -> c_{S_{\alpha}} has a probability of
+   1 - \delta to be correct. And due to the \epsilon we choose, if it
+   is correct, then no errors at all. That is, h is consistent with
+   S_{\alpha}.
+
+   Note that h is also a concept in C. So if h is consistent with
+   S_{\alpha}, then h is the qualified concept c that we are looking
+   for. The probability of h is the c that we are looking for is
+   1 - \delta.
+
+   What if h is not consistent with S_{\alpha}? Then two possible
+   situations: a) There is a concept c but L doesn't find it; b) There
+   is no such concept at all.
+
+   error(h is not consistent with S_{\alpha})
+     = Pr(a) * \delta + Pr(b) * (1 - 1)
+     = Pr(a) * \delta
+     <= \delta			(Pr(a) + Pr(b) = 1 = > Pr(a) <= 1)
+
+   a: there exists some c that is consistent with S_{\alpha}
+   b: there does not exist some c that is consistent with S_{\alpha}
+
+   So, when h is not consistent with S_{\alpha}, with probability at
+   least 1 - \delta, there is no such concept c in C at all.
+
+   In sum, we can correctly know whether there is a concept c that is
+   consistent with S_{\alpha} with probability 1 - \delta. Thus, we
+   can determine whether \alpha is in A with probability 1 - \delta.
+
+   Since we believe NP-complete problems can not be solved by a
+   probabilistic polynomial-time algorithm with high probability, then
+   3-term DNF is not efficiently PAC learnable. Because if it is
+   efficiently PAC learnable, then NP-complete problems will be solved
+   by a probabilistic algorithm in polynomial-time.
+
+   The Graph 3-Coloring Problem. Given as input an undirected graph
+   G = (V, E) with vertex set V = {1,..., n} and edge set
+   E \subseteq V \times V, determine if there is an assignment of a
+   color to each element of V such that at most 3 different colors are
+   used, and for every edge (i,j) \in E, vertex i and vertex j are
+   assigned different colors.
+
+   mapping: G = (V, E) to  S_G = S_G^+ \cup S_G^-. For each 1 <= i <= n,
+   S_G^+ will contain the labeled example <v(i),1>, where
+   v(i) \in {0,1}^n is the vector with a 0 in the ith position and 1's
+   everywhere else. For each edge (i,j) \in E, the set S_G^- will
+   contain the labeled example <e(i,j),0>, where e(i,j) \in {0,1}^n is
+   the vector with 0's in the ith and jth positions, and 1's
+   everywhere else.
+
+   G is 3-colorable if and only if S_G is consistent with some 3-term
+   DNF formula.
+
+   a) Suppose G is 3-colorable and fix a 3-coloring of G, then there
+   exists some 3-term DNF that is consistent with S_G. Let R be the
+   set of all vertices colored red and let T_R be the conjunction of
+   all variables in x_1,...,x_n whose index does not appear in R. Then
+   for each i \in R, v(i) must satisfy T_R because the variable x_i
+   does not appear in T_R. Furthermore, no e(i,j) \in S_G^- can
+   satisfy T_R because both i and j cannot be colored red.
+
+   b) Suppose that the formula T_R \lor T_B \lor T_Y is consistent
+   with S_G. Define a coloring of G as follows: the color of vertex i
+   is red if v(i) safisfies T_R, blue if v(i) satisfies T_B, and
+   yellow if v(i) satisfies T_Y (we break ties arbitrarily if v(i)
+   satisfies more than one term). Since the formula is consistent with
+   S_G,  every v(i) must satisfy some term, and so every vertex must
+   be assigned a color by this process. WE can also proof that it is a
+   legal 3-coloring (skip).
+
+   Thus, 3-term DNF formulae are not efficiently PAC learnable under
+   the assumption that NP-complete problems cannot be solved with high
+   probability by a porbabilistic polynomial-time algorithm.
+
+   Note that our reduction relied critically on our demand in the
+   definition of PAC learnning that learning algorithm output a
+   hypothesis from the same representation class from which the target
+   formula is drawn (h \in C & c \in C) -- we used each term of the
+   hypothesis 3-term formula to define a color class in the graph. If
+   we allow the algorithm output a hypothesis from a different
+   representation class, then there is a possibility that we can not
+   recover the color class from the hypothesis in polynomial
+   time.
+
+5. Using 3-CNF Formulae to Avoid Intractability
+
+   If we  allow the learning algorithm to output a more expressive
+   hypothesis representation, then the class of 3-term DNF formulae is
+   efficiently PAC learnable.
+
+   For boolean algebra, \lor distributes over \land
+   (u \land v) \lor (w \land x)
+   = (u \lor w) \land (u \lor x) \land (v \lor w) \land (v \lor x)
+   =>
+   T_1 \lor T_2 \lor T_3
+   = \bigwedge_{u \in T_1, v \in T_2, w \in T_3} (u \lor v \lor w)
+
+   We can reduce the problem of PAC learning 3-CNF formulae to the
+   problem of PAC learning conjunctions.
+
+   High-level idea: given an oracle for random examples of an unknown
+   3-CNF formula, there is a simple and efficient method by which we
+   can transform each positive or negative example into a
+   corresponding positive or negative example of an unknow conjunction
+   (over a large set of variables). We then give the transformed
+   examples to the learning algorithm for conjunctions that we have
+   already described in section 3. The hypothesis ouutput by the
+   learning algorithm for conjunctions can then be transformed into a
+   good hypothesis for the unknown 3-CNF formula.
+
+   The number of new variables y_{u,v,w} is (2n)^3 = O(n^3). For any
+   assignment a \in {0,1}^n to the original variables x_1,...,x_n, we
+   can in time O(n^3) compute the corresponding assignment a' to the
+   new variables {y_{u,v,w}}. Furthermore, it is clear that any 3-CNF
+   formula c over x_1,...,x_n is equivalent to a simple conjunction c'
+   over the new variables (just replace any clause (u \lor v \lor w)
+   by an occurrence of the new variable y_{u,v,w}). Thus we can run
+   our algorithm for conjunctions from section 3. We can then convert
+   the resulting hypothesis conjunction h' over the y_{u,v,w} back to
+   a 3-CNF h in the obvious way, by expanding an occurrence of the
+   variable y_{u,v,w} to the clause (u \lor v \lor w).
+
+   Theorem 1.4 The representation class of 3-CNF formulae is
+   efficiently PAC learnable.
+
+   We can PAC learn 3-term DNF formulae if we allow the hypothesis to
+   be represented as a 3-CNF formula, but not if we insist that it be
+   represented as a 3-term DNF formula!
+
+   An important principle: even for a fixed concept class from which
+   target concepts are chosen, the choice of hypothesis representation
+   can sometimes mean the difference between efficient algorithms and
+   intractability.
+
+   The specific cause of intractability: the problem of just
+   predicting the classification of new examples of a 3-term DNF
+   formula is tractable (we can use a 3-CNF formula for this purpose),
+   but expressing the prediction rule in a particular form (namely,
+   3-term DNF formulae) is hard.
+
+   Basically, it's hard to recover the original 3-term DNF formula
+   from the 3-CNF formula. Note that CNF is commutative.
+
+   Definition 4 (The PAC Model, Final Definition) If C is a concept
+   class over X and H is a representation class over X, we will say
+   that C is (efficiently) PAC learnable using H is our basic
+   definition of PAC learning (Definition 2) is met by an algorithm
+   that is now allowed to output a hypothesis from H. Here we are
+   implicitly assuming that H is at least as expressive as C, and so
+   there is a representation in H of every function in C. We will
+   refer to H as the hypothesis class of the PAC learning algorithm.
+
+   Definition 5 We say that the representation class H is polynomially
+   evaluatable if there is an algorithm that on input any instance
+   x \in X_n and any representation h \in H_n, outputs the value h(x)
+   in time polynomial in n and size(h).
+
+   We will always be implicitly assuming that PAC learning algorithms
+   use polynomially evaluatable hypothesis classes. Using our new
+   language, our original definition was for PAC learning C using C,
+   and now we shall simply say that C is efficiently PAC learnable to
+   mean that C is efficiently PAC learnable using H for some
+   polynomially evaluatable hypothesis class H.
+
+   Theorem 1.5 The representation class 1-term DNF formulae
+   (conjunctions) is efficiently PAC learnable using 1-term DNF
+   formulae. For any constant k >= 2, the representation class of
+   k-term DNF formulae is not PAC learnable using k-term DNF formulae
+   (unless RP = NP), but is efficiently PAC learnable using k-CNF
+   formulae.
+
+   The Graph 3-Coloring Problem
+      (P) |     	^
+          V	    (P) |
+   3-Term DNF Formulae PAC Learning using 3-term DNF formulae
+      (P) |   	        ^
+	  V	   (NP) |
+   3-Term DNF Formulae PAC learning using 3-CNF formulae
+
+   * Note 1: For n inputs, it takes 2^n-Term DNF to represent every
+     function. 2^n-Term DNF -> 2^n-CNF -> n-CNF. Because if one
+     clause has more than n literals, it can always be simplified into
+     a clause with at most n literals due to there are n inputs. Then
+     2^n-Term DNF = n-CNF. That's why k-CNF is more expressive.
+
+*****************************
+  Chapter 2 Occam's Razor
+*****************************
+
+Instead of measuring the predicative power of a hypothesis, the new
+definition judges the hypothesis by how succinctly it explains the
+observed data. The crucial difference between PAC learning and the new
+definition is that in PAC learning, the random sample drawn by the
+learning algorithm is intended only as an aid for reaching an accurate
+model of some external process(the target concept and distribution),
+while in the new definition we are concerned only with the fixed
+sample before us, and not any external process.
+
+0.1) How do PAC learning model measure the predicative power of a
+hypothesis?
+
+Because PAC learning model make the assumption that the instances are
+drawn independently from a fixed probability distribution D, and then
+measured predictive power with respect to this same distribution.
+
+Even thought we don't know the distribution D in the very beginning,
+but D exists, then we are able to measure the predictive power with
+respective to this same distribution. Why? Because:
+
+  With distribution D, we know using \epsilon, D, n, and m,
+       p1 = P(x_i \in h & x_i \notin c)
+       p2 = P(x_i \in h & x_i \in c)
+       p3 = P(x_i \notin h & x_i \in c)
+       p4 = p(x_i \notin h & x_i \notin c)
+  are all calculable, and we can also calculate
+       p(correct) = \sum_{x_i  \in X} p(x_i & correct)
+       		  = \sum_{x_i  \in X} (p1 + p3)
+		  <= \delta
+  to get the desired m.
+
+In general, with a fixed distribution D, we are able to measure the
+predicative power of a hypothesis with respect to distribution D.
+
+Note that by saying concept class C is PAC learnable, there exists a
+PAC learning algorithm that can satisfy the condition.
+
+If algorithm can be consistent with (1 - \epsilon)m samples for any m,
+then when m = (1 - \epsilon)|c|, we can learn concept c with respect
+to \epsilon.
+
+0.2) What kind of concept class C that is not PAC learnable?
+
+First, PAC learning has an assumption that the instances are drawn
+independently from a fixed distribution D.
+
+Under this circumstance, any concept class C that has only one c(x)
+for a given x for a given c will be PAC learnable. Because, when m =
+(1 - \epsilon)|c|, we can learn concept c with respect to \epsilon.
+
+Random number generator is not PAC learnable. Because given a input x,
+the random number generator will generate a random number. But we
+can't represent such a concept class under current definition of
+"concept".
+
+So, every concept class C is PAC learnable, but not necessary
+efficiently PAC learnable (In this case, it is
+information-theoretically learnable). And when we are referring to PAC
+learnable, we always mean that whether it is efficiently PAC
+learnable.
+
+However, if instances are not drawn *independetly* from a fxied
+distribution. Then PAC learning model does not work. Because you can't
+use that way to directly calculate the predictive power of a
+hypothesis.
+
+0.3) What is the difference between Occam's Razor and PAC learning
+model?
+
+They are two different ways of giving the bound the m in order to
+satisfy the model condition. Original PAC Learning Model is from
+inferential statistics, it has to know the info of the
+distribution. Occam's Razor is from descriptive statistics, it doesn't
+need to know the info about the distribution. Two bounds of m are
+different in form since they are derived from the two different
+ways. But the minimum of the two bounds is sufficient to satisfy the
+condition of \epsilon and \delta.
+
+PAC learning original:
+
+With at least such a predictive power (error(h) <= \epsilon), what is
+the probability that h is consistent with all m examples but
+error(h) > \epsilon? Pr = f(n,m,\epsilon). Let Pr <= \delta, how many
+m do we need?
+
+* Note this probability is constructed with information about specific
+  problems. e.g. In learning conjunctions, Pr is constructed by
+  knowing how error is generated in that learning algorithm. That is
+  we must know the distribution.
+
+Occam's Razor:
+
+What is the probability that h doesn't has such a predictive power
+(error(h) > \epsilon) but h is consistent with all m examples?
+
+* note this probability is not constructed without any further
+  information about the specific problems. e.g. In learning
+  conjunctions, Pr is constructed with only knowing how many possible
+  hypothesis (or equivalently concepts) in concept class c. So, we
+  don't need to know the distribution.
+
+Also note that PAC learning is a *model*, Occam's Razor is a way to
+deal with things (under the PAC learning model).
+
+1. Occam Learning and Succinctness
+
+   Definition 6 Let \alpha >= 0 and 0 <= \beta < 1 be constants. L is
+   an (\alpha, \beta)-Occam Learning algorithm for C using H if on
+   input a sample S of cardinality m labeled according to c \in C_n, L
+   outputs a hypothesis h \in H such that:
+
+     h is consistent with S.
+     size(h) <= (n * size(c))^{\alpha} * m^\beta.
+
+   We say that L is an efficient (\alpha, \beta)-Occam algorithm if
+   its running time is bounded by a polynomial in n, m and size(c).
+
+   Any efficient Occam algorithm is also an efficient PAC learning
+   algorithm.
+
+   Theorem 2.1 (Occam's Razor) Let L be an efficient
+   (\alpha, \beta)-Occam algorithm for C using H. Let D be the target
+   distribution over the instance space X, let c \in C_n be the target
+   concept, and 0 < \epsilon, \delta <= 1. Then there is a constant
+   a > 0 such that if L is given as input a random sample S of m
+   examples drawn from EX(c,D), where m satisfies
+
+   m >= a((1 / epsilon) * log(1 / \delta) + (((n * size(c))^{\alpha})
+   / \epsilon)^{1 / (1 - \beta)})
+
+   then with probability at least 1 - \delta the output h of L
+   satisfies error(h) <= \epsilon. Moreover, L runs in time polynomial
+   in n, size(c), 1 / \epsilon, 1 / \delta.
+
+   Note that as \beta tends to 1, the exponent in the bound for m
+   tends to infinity. This corresponds with our intuition that as the
+   length of the hypothesis approaches that of the data itself, the
+   predictive power of the hypothesis is diminishing.
+
+   Let H_n = U_{m >= 1} H_{n,m}. Consider a learning algorithm for C
+   using H that on input a labeled sample S of cardinality m outputs a
+   hypothesis from H_{n,m}. The following theorem shows that if
+   |H_{n,m}| is small enough, then the hypothesis output by L has
+   small error with high confidence.
+
+   Theorem 2.2 (Occam's Razor, Cardinality Version) Let C be a concept
+   class and H a representation class. Let L be an algorithm such that
+   for any n and any c \in C_n, if L is given as input a sample S of m
+   labeled examples of c, then L runs in time polynomial in n, m and
+   size(c), and outputs an h \in H_{n,m} that is consistent with
+   S. Then there is a constant b > 0 such that for any n, any
+   distribution D over X_n, and any target concept c \in C_n , if L is
+   given as input a random sample from EX(c,D) of m examples, where
+   |H_{n,m}| satisfies
+   	     log|H_{n,m}| <= b * \epsilon * m - log(1 / \delta)
+   (or equivalently, where m satisfies
+       m <= (1 / (b * \epsilon))* (log|H_{n,m}| + log(1 / \delta)))
+   then L is guaranteed to find a hypothesis h \in H_n that with
+   probability at least 1 - \delta obeys error(h) <= \epsilon.
+
+   Basically, it the cardinality of the hypothesis is constrained by a
+   value and also h is able to be consistent with m examples, then it
+    means that C is not that hard to represent (If C is infinitely
+   hard to represent, then there is no way h can be consistent with m
+   examples with such a small class cardinality). If C is not that
+   hard to represent, then the complexity is under a constraint, and
+   we can show that we can guarantee the parameter \epsilon and \delta
+   for a learning algorithm L.
+
+   Note we do not necessarily claim that L is an efficient PAC
+   learning algorithm. In order to assert L is an efficient PAC
+   algorithm, we have to bound m by some polynomial in n, size(c),
+   1 / \epsilon and 1 / \delta. The proof of Theorem 2.1 relies on the
+   fact that in the case of (\alpha, \beta)-Occam algorithm,
+   log|H_{n,m}| grows only as m^{\beta}, and therefore given any
+   \epsilon, this is smaller than b * \epsilon * m for a small value
+   of m.
+
+   Proof of Theorem 2.2
+
+   1) If the error rate is less than \epsilon, then actually we can
+   use it to represent the original c even if they are not the same
+   thing. Because it's tolerable to us.
+
+   And we don't want a bad hypothesis. If we get a bad hypothesis, that
+   means using this hypothesis to predict future result will yield a
+   error rate of more than \epsilon, which we can't tolerant.
+
+   2) A bad hypothesis has a chance to be consistent with our
+   samples. Because we assume that h is consistent with our samples
+   means we can use h to represent concept c (or equivalently, h has a
+   error rate at most \epsilon). However, in this case, it's
+   not. The probability of this happens is p = (1 - error(h))^m.
+
+   From error(h) > \epsilon, we have
+   	 p = (1 - error(h))^m < (1 - \epsilon)^m
+
+   * Note that here we are still assuming that instances are drawn
+     independently.
+
+   3) We want the confident parameter to be \delta. The probability of
+   "If h is consistent with all the samples then h has an error rate
+   at most \epsilon with respect to c)" is at least 1 - \delta.
+
+   Since there are many bad hypothesis in a given representation
+   class, we have to consider every situation. Let H'_n be the set of
+   all bad hypothesis in H'_{n,m}. Then for any h_i \in H', we have
+
+       p(h_i & consistent) = p(h_i) * p(consistent)
+       	      		   = p(h_i) * (1 - \epsilon)^m
+			   <= (1 - \epsilon)^m
+
+       * note we don't know the exact distribution D, and D is not
+         necessarily uniform. So we have to assume p(h_i) < 1. Because
+         there are chances that the distribution D makes the algorithm
+         just forms one exact hypothesis. Thus for this hypothesis
+         h_k, p(h_k) = 1. And maybe it is the bad one.
+
+       By union bound, we have
+
+       p(a) = \sum_{i <= |H'|} p(h_i & consistent)
+       	    = |H'| p(h_i & consistent)
+	    <= |H'| * (1 - \epsilon)^m
+
+       Sine H' \in H_{n,m}, |H'| <= |H_{n,m}|. Then we have
+
+       p(a) <= |H_{n,m}| * (1 - \epsilon)^m
+
+       By the requirement, p(a) <= \delta, we have
+
+       |H_{n,m}| * (1 - \epsilon)^m <= \delta
+       =>
+       log|H_{n,m}| + m * log(1 - \epsilon) <= log(\delta)
+       =>
+       log|H_{n,m}| <= log(\delta) - m * log(1 - \epsilon)
+       =>
+       log|H_{n,m}| <= -log(\delta)^{-1} - m * log(1 - \epsilon)
+       =>
+       log|H_{n,m}| <= -log(1 / \delta) + m * log( 1 / (1 - \epsilon))
+       =>
+       log|H_{n,m}| <= m * log( 1 / (1 - \epsilon)) - log(1 / \delta)
+
+       From 1 - x <= e^{-x}, we have
+       	    log(1 - x) <= -x
+	    =>
+	    -log(1 - x) >= x
+	    =>
+	    log(1 / (1 - x)) >= x
+	    ~=>
+	    log(1 / (1 - x)) = \theta(x)	(This is a fact)
+
+       Then using log(1 / (1 - x)) = \theta(x), former inequality could
+       written as
+
+       log|H_{n,m}| <= m * \theta(\epsilon) - log(1 / \delta)
+
+       using \theta(x) = b * \epsilon, we have
+
+       log|H_{n,m}| <= m * b * \epsilon - log(1 / \delta)
+
+2. Improving the Sample Size for Learning Conjunctions
+
+   Since Occam's Razor just require h to be consistent with the sample
+   examples only, then for learning conjunctions.
+
+   Pr(Wrong) = |H_{n,m}| * (1 - \epsilon)^m
+   	     = 3^n * (1 - \epsilon)^m
+
+   |H_{n,m}| = 3^n
+   =>
+   log|H_{n,m}| = n
+
+   Using theorem 2.2, we have
+
+   m = (1 / (b * epsilon)) * (log|H_{n,m}| + log(1 / \delta))
+     = O((1 / \epsilon) * log(1 / \delta) + n / \epsilon)
+
+  Compared 1.3, in 1.3
+
+  Pr(Wrong) = 2n * (1 - \epsilon / 2n)^m
+  =>
+  m >= (2n / \epsilon) * (ln2n + ln(1 / \delta))
+     = O(n * (1 / \epsilon) * log(1 / \delta) + (n / \epsilon) * log2n)
+
+  Since original PAC learning needs extra information, or additional
+  assumptions, then by Occam's Razor, it will generate a less accurate
+  result compared with Occam's Razor method, that is, a bigger upper
+  bound.
+
+3. Learning Conjunctions with Few Relevant Variables
+
+   An interesting feature of the new algorithm is that it makes use of
+   the negative examples.
+
+   3.1 The Set Cover Problem
+   Given as input a collection S of subsets of U = {1,...,m}, find a
+   subcollection T \subseteq S such that |T| is minimized, and the
+   sets in T form a cover of U:
+
+   	\bigcup_{t \in T} t = U
+
+   We assume that the entire collection S is itself a cover. For any
+   instance S of the Set Cover Problem, we let opt(S) denote the number
+   of sets in a minimum cardinality cover.
+
+   Finding an optimal cover is a well-known NP-hard problem. However,
+   there is an efficient greedy heuristic that is guaranteed to find a
+   cover R of cardinality at most O(opt(S) * logm).
+
+   

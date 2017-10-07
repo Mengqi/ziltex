@@ -1,0 +1,10 @@
+1. What is Shannon's Entropy?
+
+In information theory, entropy is a measure of the uncertainty
+associated with a random variable. In this context, the term usually
+refers to the Shannon entropy, which quantifies the expected value of
+the information contained in a message, usually in units such as
+bits. In this context, a 'message' means a specific realization of the
+random variable. 
+
+2. 

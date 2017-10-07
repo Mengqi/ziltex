@@ -1,0 +1,183 @@
+1. Dictionary Data Compression
+
+Here is the text we are going to compress:
+
+"ABCCBAAABCCBABABCCBACABCCBAD"   28 words
+ --p--- --p--- --p--- --p---
+
+ * --p--- is a pattern that occurs frequently in the text: "ABCCBA"
+
+a) Regular Encoding
+
+   Alphabet = {A, B, C, D}
+
+   A 00
+   B 01
+   C 10
+   D 11
+
+   * Every word is 2 bits
+
+   Size = 28 * 2 = 56 bits
+
+b) An alternative encoding
+
+   A      000
+   B	  001
+   C	  010
+   D	  011
+   ABCCBA 100
+   ...
+   XX...  111
+
+   * Every word is 3 bits
+
+   Size = 8 * 3 = 24 words
+
+c) Key point of dictionary based compression algorithm
+
+One sentence: Dictionary based algorithm can take advantage of the
+structure in the data in order to increase the amount of compression.
+
+When referring to "ABCCBA", regular encoding requires 6 * 2 = 12 bits.
+However, "ABCCBA" encoded with "100" only need 3 bits. 
+
+"ABCCBA" only needs 1/4 spaces of the regular encoding, but the
+pattern "ABCCBA" counts as 86% (24/28) of the total input. As to the
+rest of the input, the encoding need 150% (3/2) spaces of the regular
+encoding, but it only counts as 14% (4/28) of total input.
+
+d) Why not Huffman encoding?
+
+Huffman Encoding: Assuming the input is a sequence of independent
+symbols.
+
+Huffman encoding is only effective when some of the literals are very
+frequent. In the former example, Pr(A) = Pr(B) = Pr(C) = Pr(D) =
+0.25. In this case, Huffman encoding will not save any space.
+
+2. Adaptive dictionary based algorithm
+
+a) Fact
+
+On most cases, the most frequently used pattern will be changing with
+time. That's why we need the our compression algorithm to be adaptive.
+
+b) But for real time application...
+
+Adaptive means consuming more CPU resources. Adaptive dictionary based
+algorithm needs to process every single symbol. And after processing
+every single symbol, it also needs to adjust some data structures (a
+search tree with a maximum fan out 256).
+
+To sum up, the consumption is unacceptable for real time application.
+
+*Note: Try to check out binary search tree later.
+
+3. Possible Solution - From stochastic to genetic algorithm
+
+a) Stochastic?
+
+Fact: For adaptive dictionary based compression algorithms, the
+"dictionary" is automatically generated during the
+compression/decompression procedure based on the input it has been
+processed.
+
+The fact above tells us that the algorithm needs to process EVERY
+single literal of the input in order to avoid sending dictionaries
+now and then.
+
+Stochastic means the algorithm choose a subset of the whole input to
+process in order to reduce its work load. This means if stochastic, we
+have to send the dictionary (average 500K) periodically, which is a
+remarkable size (1MB per hour data before compression for every
+client).
+
+b) Experiment tells us that we have to be stochastic
+
+The workload is way above what we can accept if the algorithm is not
+stochastic.
+
+c) How is the result?
+
+Compression Rate: 30% (Reduce 30% of the raw data, doesn't count the
+size of dictionary).
+
+Really poor. Because another important reason for adaptive dictionary
+based compression algorithm to process every single literal is that it
+counts frequency of every possible pattern.
+
+Stochastic means the sample size for counting is too small to be
+accurate enough. 
+
+4. My old approach - Genetic Algorithm
+
+a) The algorithm: ZSA (Zong's Sub-Adaptive Compression Algorithm)
+
+1) Counting Period: Counts the number of appearance times for every
+pattern.
+2) Evolution Period: Eliminate the least frequently used 20% patterns
+in the dictionary, and randomly choose the same amount of new patterns
+into the dictionary.
+
+b) Performance?
+
+Compression Rate: 60% - 80%
+
+c) Comparison with WinRAR
+
+Fact: WinRAR is not a real time (online) compression algorithm.
+
+WinRAR: 86%
+GA-based Dictionary Algorithm: 63%
+
+* the result is not quite exact
+* 50% is where the line is drawn for real time compression.
+
+5. Comments on ZSA
+
+1) Genetic algorithm is generally a slow algorithm
+2) I believe there's a certain distribution that describes the
+generation procedure of the data from online gaming.
+3) Use knowledge learned from computational learning theory to make
+analysis for real-time compression
+
+**************************************************************
+**************************************************************
+
+6. How does this relate to COMSE6253 Advanced Topics in Computational
+*Learning* Theory?
+
+In CLT, we know that we have a low degree algorithm for certain type of
+problem. And then we try to use transformation and math induction to
+calculate the bound for different types of problems.
+
+So, is my topic related with learning?
+
+I think we can treat dictionary based data compression as a learning
+procedure, learn (find out / compute) the most useful patterns.
+
+8. The notion of "useful"
+
+We want to quantify the notion of useful, so for a pattern X,
+
+Let f(X) = |x| * p(X)
+
+We want to find given input w, find k patterns such that
+
+F(X) = max \Sigma_{i=1}^{k} f(x)
+
+9. What I should do?
+
+a) Read some papers on Shannon's source coding theorem.
+   * Should be pretty fast because I already know some basics about
+   that and my previous research project on compression last nearly
+   one year.
+b) Classic PAC Learning. And the representation form of a dictionary
+is a DT. Is that related?
+
+10. If that's not related, I may...
+
+PAC learning algorithms via PTF degree upper bounds. Learning decision
+trees in quasipolynomial time.
+

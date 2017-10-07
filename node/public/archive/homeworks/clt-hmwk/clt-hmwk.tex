@@ -1,0 +1,93 @@
+\documentclass[12pt]{article}
+
+\parindent=.25in
+\setlength{\oddsidemargin}{0pt}
+\setlength{\textwidth}{440pt}
+\setlength{\topmargin}{0in}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[dvips]{graphicx}
+\usepackage{verbatim}
+\usepackage{appendix}
+
+\newcommand{\sign}{\mathrm{sign}}
+
+\title{COMS 6253 Problem 1}
+\author{Mengqi Zong $<mz2326@columbia.edu>$}
+
+\begin{document}
+
+\maketitle
+
+\setlength{\parindent}{0in}
+
+{\bf Problem 1.} The parity function on k 0/1-valued variables is
+
+\begin{equation*}
+PAR(x_1,...,x_k) = x_1 + ... + x_k \text { mod } 2,
+\end{equation*}
+
+a)  Show that the parity function on $\log s$ variables can be
+computed by a decision tree of size $s$. \\
+
+b)  Show that any PTF for the parity function on $k$ variables must
+have degree at least k. \\
+
+{\bf Answer:} \\
+
+a) Since decision tree is an universal representation scheme, any
+Boolean function with $k$ variables can be computed by a complete
+decision tree with depth $k$ and $2^k$ leaves that exhaustively
+queries all $k$ variables on every path. \\
+
+For the parity function with $\log s$ variables, its complete decision
+tree has depth $\log s$ with $2^{\log s} = s$ leaves. So the parity
+function on $\log s$ variables can be computed by a decision tree of
+size $s$. \\
+
+b) We know from class that polynomial threshold function is an
+universal representation scheme. So any Boolean function with $k$
+variables can be computed by a PTF with degree at most $k$. As a
+result, the parity function can also be represented by a PTF with
+degree at most $k$. \\
+
+Observed from $PAR(x_1,...,x_k) = x_1 + ... + x_k \text { mod } 2$,
+we can see that one important property of parity function is that the
+value of a parity function depends only on the sum of all $k$
+variables. In other words, $PAR(x_1,  ..., x_k)$ is invariant under
+permutation of its input. That is, $PAR(x_1,  ..., x_k)$ is a
+symmetric polynomial. \\
+
+One property of symmetric polynomial is that \emph {for any symmetric
+  polynomial $p$ of degree $d$, there exists a polynomial $q$ of
+  degree $d$ such that}
+
+\begin{equation*}
+p(x_1,...,x_n) = q(x_1 + ... + x_n)
+\end{equation*}
+
+Suppose $PAR(x_1,  ..., x_k)$ can be computed by a symmetric
+polynomial threshold function $p(x_1,  ..., x_k)$ of degree $d$. Then
+$PAR(x_1,  ..., x_k)$ can also be computed by an univariate polynomial
+threshold function $q(x_1 + ... + x_k)$ of degree $d$. \\
+
+Note that for all $x_1, ..., x_k \in \{0,1\}^k$, $x_1 + ... + x_k \in
+\{0, 1, ..., k\}$. Since $q(x_1 + ... + x_k)$ compute the parity, we
+have
+
+\begin{eqnarray*}
+q(0) < 0 \\
+q(1) > 0 \\
+q(2) < 0 \\
+q(3) > 0 \\
+\vdots \\
+\end{eqnarray*}
+
+So, in order to fit the $k+1$ input values, function $q$ must have at
+least $k$ roots. As a result, we get $d \ge k$. \\
+
+To sum up, any PTF for the parity function on $k$ variables must have
+degree at least $k$.
+
+\end{document} 

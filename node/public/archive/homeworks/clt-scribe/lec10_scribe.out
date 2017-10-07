@@ -1,0 +1,10 @@
+\BOOKMARK [1][-]{section.1}{Last Time and Today}{}
+\BOOKMARK [1][-]{section.2}{Introduction}{}
+\BOOKMARK [1][-]{section.3}{Description Length}{}
+\BOOKMARK [1][-]{section.4}{Observations and Approaches}{}
+\BOOKMARK [1][-]{section.5}{Main Result}{}
+\BOOKMARK [2][-]{subsection.5.1}{High level idea of the method}{section.5}
+\BOOKMARK [2][-]{subsection.5.2}{Find 1 relevant variable efficiently is enough}{section.5}
+\BOOKMARK [2][-]{subsection.5.3}{Fourier-based learning}{section.5}
+\BOOKMARK [2][-]{subsection.5.4}{GF\(2\)-based learning}{section.5}
+\BOOKMARK [2][-]{subsection.5.5}{The Algorithm to find a relevant variable}{section.5}
