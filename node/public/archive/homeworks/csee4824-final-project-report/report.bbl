@@ -1,0 +1,15 @@
+\begin{thebibliography}{1}
+
+\bibitem{clrs}
+T.~H. Cormen, C.~E. Leiserson, R.~L. Rivest, and C.~Stein.
+\newblock {\em Introduction to Algorithms}.
+\newblock MIT Press, 2001.
+
+\bibitem{parallel}
+Yi~Shang Jiaoyun~Yang, Yun~Xu.
+\newblock An efficient parallel algorithm for longest common subsequence
+  problem on gpus.
+\newblock {\em Processings of the World Congress on Engineering 2010 Vol I},
+  2010.
+
+\end{thebibliography}
