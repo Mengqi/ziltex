@@ -4,7 +4,7 @@
 #
 
 user=zongmengqi
-name=nginx
+name=ziltex-nginx
 image_name=${user}/${name}
 internal_port=80
 external_port=80
