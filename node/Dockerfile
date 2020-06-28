@@ -1,24 +1,19 @@
-FROM node:boron
+FROM node:12
 
 # Create app directory
-WORKDIR /src
-ADD . /src
+WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY package.json .
-# For npm@5 or later, copy package-lock.json as well
-#COPY package.json package-lock.json ./
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
 
-RUN npm install --no-optional -g nodemon
-
-# Provides cached layer for node_modules
-ADD package.json /tmp/package.json
-RUN cd /tmp && npm install
-RUN mkdir -p /src && cp -a /tmp/node_modules /src/
+RUN npm install
+# If you are building your code for production
+# RUN npm ci --only=production
 
 # Bundle app source
 COPY . .
 
 EXPOSE 8080
-CMD [ "nodemon", "/src/app.js" ]
-
+CMD [ "node", "server.js" ]

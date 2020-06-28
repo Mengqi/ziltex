@@ -3,17 +3,14 @@
     "version": "1.0.0",
     "description": "www.ziltex.com front end",
     "author": "Mengqi Zong <zongmengqi@gmail.com>",
-    "main": "app.js",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js"
+    },
     "license": "ISC",
-    "repository": {
-	"type": "git",
-	"url": "git://github.com/username/repository.git"
-    },
     "dependencies": {
-	"express": "^4.16.1",
-	"mocha": "^4.0.1",
-	"redis": "^2.8.0"
-    },
-    "license": "ISC"
+        "express": "^4.16.1",
+        "mocha": "^4.0.1",
+        "redis": "^2.8.0"
+    }
 }
-
