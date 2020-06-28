@@ -5,6 +5,10 @@
     "author": "Mengqi Zong <zongmengqi@gmail.com>",
     "main": "app.js",
     "license": "ISC",
+    "repository": {
+	"type": "git",
+	"url": "git://github.com/username/repository.git"
+    },
     "dependencies": {
 	"express": "^4.16.1",
 	"mocha": "^4.0.1",
